@@ -32,10 +32,20 @@ function handleHttpRequest (request, response){
         fs_.exists(full_path, function(exists){
             /* accessing file and it exists so send it */
             if(exists){
-                /* everything worked fine */
-                response.writeHeader(200);
-                response.write(file, "binary");
-                response.end();
+                fs_.readFile(full_path, "binary", function (err, file){
+                    if(err){
+                        /* couldnt read file */
+                        response.writeHeader(500, {"Content-Type": "text/plain"});
+                        response.write(err+'\n');
+                        response.end();
+                    }
+                    else{
+                        /* everything worked fine */
+                        response.writeHeader(200);
+                        response.write(file, "binary");
+                        response.end();
+                    }
+                });
             }
             /* possibly accessing DB */
             else if (my_path == "/letsAccessDataBase!"){
