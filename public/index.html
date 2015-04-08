@@ -10,13 +10,18 @@
         <meta name="authors" content="Holland Herbert, Yingbin Liang, Cullen Prestegard">
 
         <title>LoLMinuteStatistics</title>
-
+        <!-- Scripts go below -->
+        <script src="lib/angular/angular.min.js"></script>
+        <script src="app.js"></script>
         <link rel="stylesheet" type="text/css" href="styles/style.css">
     </head>
 
-    <body>
-        <h1> hello world!</h1>
-        <script src="scripts/main.js"></script>
-        <script src="scripts/angular.min.js"></script>
+    <body ng-app="LolApp">
+        <div ng-controller="MainCtrl">
+            <h1>{{header}}</h1>
+            <div>
+                <p>This is our Main Application.</p>
+            </div>
+        </div>
     </body>
 </html>

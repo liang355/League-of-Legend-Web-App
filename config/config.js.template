@@ -1,0 +1,21 @@
+//config.js
+
+//set your db_password for MongoLab
+var db_username ="";
+var db_password ="";
+
+//riot api_key
+var api_key="";
+
+
+var app_port=8080;
+var scraper_port=1337;
+
+
+//EXPORT CONFIG TO REST OF APP//
+module.exports = {
+    db_uri:"mongodb://"+db_username+":"+db_password+"@ds061691.mongolab.com:61691/lolapp",
+    api_key:api_key,
+    app_port: app_port,
+    scraper_port: scraper_port
+}

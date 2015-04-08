@@ -1,0 +1,9 @@
+{
+  "name": "LeagueWebApplication5117",
+  "description": "",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "angular": "1.3.x"
+  }
+}
