@@ -1,0 +1,19 @@
+{
+  "name": "league-web-application",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.umn.edu/herbe139/LeagueWebApplication5117.git"
+  },
+  "main": "server.js",
+  "authors": "Holland Herbert, Yingbin Liang, Cullen Prestegard",
+  "dependencies": {
+    "mongoose": "~4.0.0",
+    "express":"~4.0.0",
+    "bower":"~1.4.0"
+  },
+  "scripts": {
+    "postinstall":"node ./node_modules/bower/bin/bower install",
+    "start": "node server.js"
+  }
+}
