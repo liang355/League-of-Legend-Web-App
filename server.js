@@ -11,9 +11,6 @@ var config = require("./config/config");
 //app
 var app = express();
 
-//router
-var router = express.Router();
-
 //connect to database
 mongoose.connect(config.db_uri);
 
@@ -27,6 +24,6 @@ app.use('/api', router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 //startup app at http://localhost:<config.port>
-app.listen(config.port);
-console.log('server running at localhost:'+config.port);
+app.listen(config.app_port);
+console.log('server running at localhost:'+config.app_port);
 
