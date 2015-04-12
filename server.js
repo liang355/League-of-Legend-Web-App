@@ -2,7 +2,7 @@
 
 //modules
 var express = require('express');
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'); //api framework to db
 var path = require('path');
 
 //config
