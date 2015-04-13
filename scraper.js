@@ -131,10 +131,10 @@ var howMany404Players = function(callback){
     });
 };
 
-var resolveUnknownPlayerTiers = function(){
+var resolveUnknownPlayerTiers = function(numplayers404){
     var err = false;
     Summoner.find({tier:404}, function(err, summoners) {
-        var summonerID = summoners[0]['sID'];
+        var summonerID = summoners[numplayers404-1]['sID'];
 
         var api_key = config.api_key;
         var region = "na";
@@ -154,8 +154,8 @@ var resolveUnknownPlayerTiers = function(){
                 var numeric = tierN[tier] + divisionN[division];
                 console.log(printLog+summonerID+" "+tier+"_"+division);
                 //update db
-                summoners[0]['tier'] = numeric;
-                summoners[0].save();
+                summoners[numplayers404-1]['tier'] = numeric;
+                summoners[numplayers404-1].save();
 
             });
 
@@ -207,7 +207,8 @@ var resolveUnknownPlayerTiers = function(){
 //        }
 //    },2000);
 //};
-
+//
+//addLoLKingSeeds(lolKingSeeds);
 
 /*===================================
  *  find recent matches by summonerID
@@ -215,32 +216,36 @@ var resolveUnknownPlayerTiers = function(){
 
 var currTier = 1;
 
+var findOneAdd = function (matchID, mapID, queueType, tier){
+    Match.findOne({'id':matchID}, function(err, match){
+        if(match == null){
+            console.log("match added, mapID:"+mapID+", queueType:",queueType);
+            console.log(printLog+printMatch+matchID+", "+tier);
+            Match.create({id:matchID, tier:tier, hasBeenQueried:false});
+        }
+        else{
+            console.log("match not added, already in DB");
+        }
+    });
+};
+
 // (3) parse matches and store ones that are not already in DB
 var addMatchesToDB = function(matches, tier){
     var err = false;
-    var matchID;
+    //var matchID;
 
     try{
+
         for(var i=0; i<matches['matches'].length; i++){
+           // console.log(matches['matches'].length);
             //console.log(matches['matches'][i]);
 
 
-            matchID = matches['matches'][i]['matchId'];
+            var matchID = matches['matches'][i]['matchId'];
             var mapID = matches['matches'][i]['mapId'];
             var queueType = matches['matches'][i]['queueType'];
             if(( mapID == 11) && (queueType == "RANKED_SOLO_5x5")){
-
-                Match.findOne({'id':matchID}, function(err, match){
-                    if(match == null){
-                        console.log("match added, mapID:"+mapID+", queueType:",queueType);
-                        console.log(printLog+printMatch+matchID+", "+tier);
-                        Match.create({id:matchID, tier:tier, hasBeenQueried:false});
-                    }
-                    else{
-                        console.log("match not added, already in DB");
-                    }
-                });
-
+                findOneAdd(matchID, mapID, queueType, tier);
             }
             else{
                 console.log("match not added, mapID:"+mapID+", queueType:",queueType);
@@ -282,6 +287,7 @@ var queryForRecentMatches = function(summonerID, tier){
             //console.log(output);
             var obj = JSON.parse(output);
             err = addMatchesToDB(obj, tier);
+           //console.log(output);
         });
 
     });
@@ -290,7 +296,7 @@ var queryForRecentMatches = function(summonerID, tier){
 };
 
 // (1) find next player based on currTier
-var findRecentMatches = function(tier){
+var findRecentMatches = function(tier, nummatchhistorys){
     var err = false;
     var summonerID = 0;
     //look up next summoners by tier from DB
@@ -300,14 +306,14 @@ var findRecentMatches = function(tier){
             console.log("null returned for tier query");
             return;
         }
-        summonerID = summonerlist[0]['sID'];
+        summonerID = summonerlist[nummatchhistorys-1]['sID'];
         //console.log(summonerID);
 
 
         var d = new Date();
         var n = d.getTime();
-        summonerlist[0]['lastQueried'] = n;
-        summonerlist[0].save();
+        summonerlist[nummatchhistorys-1]['lastQueried'] = n;
+        summonerlist[nummatchhistorys-1].save();
 
         err = queryForRecentMatches(summonerID, tier);
 
@@ -762,20 +768,20 @@ var storePlayers = function (obj){
 };
 
 //(1) grab match data from api
-var queryMatchFromTier = function(currTier){
+var queryMatchFromTier = function(currTier, numMatches){
     var err = false;
     try {
         Match.find({tier:currTier, hasBeenQueried:false}, function(err, matches){
             var api_key = config.api_key;
             var region = "na";
             var host = "https://na.api.pvp.net";
-            var matchID = matches[0]['id'];
+            var matchID = matches[numMatches-1]['id'];
 
             var matchPath = "/api/lol/"+region+"/v2.2/match/"+matchID+"?includeTimeline=true&api_key=";
 
             //update db to show we have looked at match
-            matches[0]['hasBeenQueried'] = true;
-            matches[0].save();
+            matches[numMatches-1]['hasBeenQueried'] = true;
+            matches[numMatches-1].save();
 
             //send API request
             https.get(host + matchPath + api_key, function(response){
@@ -871,7 +877,7 @@ var mainLoop = function(){
 
         if(matchesToLookAt){
             console.log("there are "+nummatches+" matches to look at");
-            queryMatchFromTier(currTier);
+            queryMatchFromTier(currTier,nummatches);
             nummatches = nummatches-1;
             if(nummatches<=0){
                 matchesToLookAt = false;
@@ -881,7 +887,7 @@ var mainLoop = function(){
 
         if(players404ToLookAt){
             console.log("there are "+numplayers404+" players to look at");
-            resolveUnknownPlayerTiers();
+            resolveUnknownPlayerTiers(numplayers404);
             numplayers404 = numplayers404-1;
             if(numplayers404<=0){
                 players404ToLookAt = false;
@@ -892,7 +898,7 @@ var mainLoop = function(){
 
         if(matchHistoryToLookAt){
             console.log("there are "+nummatchhistorys+" match histories to look at");
-            findRecentMatches(currTier);
+            findRecentMatches(currTier, nummatchhistorys);
             nummatchhistorys = nummatchhistorys-1;
             if(nummatchhistorys<=0){
                 matchHistoryToLookAt = false;
@@ -910,4 +916,5 @@ var mainLoop = function(){
 };
 
 mainLoop();
+
 
