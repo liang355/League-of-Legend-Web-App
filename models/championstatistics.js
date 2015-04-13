@@ -3,29 +3,47 @@
  */
 var mongoose = require('mongoose');
 
-var ChampionStatisticsSchema = new mongoose.Schema({
-    id:String,
-    name:String,
+var Timeline = new mongoose.Schema({
+    minute:Number,
+    visionWardsPlaced:Number,
+    sightWardsPlaced:Number,
+    yellowTrinketPlaced: Number,
+    jungleMinionsKilled:Number,
+    minionsKilled:Number,
+    level:Number,
+    totalGold:Number,
+    currentGold:Number
+});
 
-    role:String,
-    tier:Number,
-
-    numberOfGames:Number,
-
+var RawData = new mongoose.Schema({
     assists:Number,
     kills:Number,
     deaths:Number,
-    damage:Number,
+    magicDamageTotal:Number,
+    magicDamageChamp:Number,
+    magicDamageTaken:Number,
+    physicalDamageTotal:Number,
+    physicalDamageChamp:Number,
+    physicalDamageTaken:Number,
     heals:Number,
-    damageTaken:Number,
     wardsKilled:Number,
-    pinkWardsPlaced:Number,
-
-    wardsPlacedByM:JSON,
-    csByM:JSON,
-    baronByM:JSON,
-    dragonByM:JSON,
-    elderLizardByM:JSON,
-    ancientGolemByM:JSON
+    wardsPlaced:Number,
+    minionsKilled:Number,
+    enemyJungleMinionsKilled:Number,
+    timeline: [ Timeline ]
 });
+
+
+var ChampionStatisticsSchema = new mongoose.Schema({
+    id:String,
+    name:String,
+    role:String,
+    tier:Number,
+    numberOfGames:Number,
+    rawData: [ RawData ]
+
+});
+
 module.exports = mongoose.model('ChampionStatistics', ChampionStatisticsSchema);
+
+

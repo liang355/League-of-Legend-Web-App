@@ -4,7 +4,7 @@
 var mongoose = require('mongoose');
 
 var MatchSchema = new mongoose.Schema({
-    id:String,
+    id:Number,
     hasBeenQueried:Boolean,
     tier:Number
 });
