@@ -15,7 +15,17 @@ var Timeline = new mongoose.Schema({
     currentGold:Number
 });
 
-var RawData = new mongoose.Schema({
+//var RawData = new mongoose.Schema({
+//
+//});
+
+
+var ChampionStatisticsSchema = new mongoose.Schema({
+    id:String,
+    name:String,
+    role:String,
+    tier:Number,
+    numberOfGames:Number,
     assists:Number,
     kills:Number,
     deaths:Number,
@@ -31,16 +41,6 @@ var RawData = new mongoose.Schema({
     minionsKilled:Number,
     enemyJungleMinionsKilled:Number,
     timeline: [ Timeline ]
-});
-
-
-var ChampionStatisticsSchema = new mongoose.Schema({
-    id:String,
-    name:String,
-    role:String,
-    tier:Number,
-    numberOfGames:Number,
-    rawData: [ RawData ]
 
 });
 
