@@ -26,15 +26,22 @@ var printLog    = "[LOG]           :";
 
 
 var findOneAdd = function (matchID, mapID, queueType, tier){
-    Match.findOne({'id':matchID}, function(err, match){
-        if(match == null){
-            console.log(printLog+"match added, matchID:"+matchID);
-            Match.create({id:matchID, tier:tier, hasBeenQueried:false});
-        }
-        else{
-            console.log(printLog+"match not added, already in DB");
-        }
-    });
+    try {
+
+
+        Match.findOne({'id': matchID}, function (err, match) {
+            if (match == null) {
+                console.log(printLog + "match added, matchID:" + matchID);
+                Match.create({id: matchID, tier: tier, hasBeenQueried: false});
+            }
+            else {
+                console.log(printLog + "match not added, already in DB");
+            }
+        });
+    }
+    catch(e){
+        console.log(printERR+"findOneAdd, "+e);
+    }
 };
 
 // (3) parse matches and store ones that are not already in DB
@@ -66,48 +73,54 @@ var addMatchesToDB = function(matches, tier){
 // (2) make request to API for recent matches
 var queryForRecentMatches = function(summonerID, tier, callback){
     var err = false;
-    //construct API request
-    var api_key = config.api_key;
-    var region = "na";
-    var host = "https://na.api.pvp.net";
-    console.log("summonerID = "+summonerID);
+    try {
 
-    if(summonerID == 0){
-        console.log("error with nextSummoner(), returned 0");
-        err = true;
-        return err;
+
+        //construct API request
+        var api_key = config.api_key;
+        var region = "na";
+        var host = "https://na.api.pvp.net";
+        console.log("summonerID = " + summonerID);
+
+        if (summonerID == 0) {
+            console.log("error with nextSummoner(), returned 0");
+            err = true;
+            return err;
+        }
+
+        var matchPath = "/api/lol/" + region + "/v2.2/matchhistory/" + summonerID + "?api_key=";
+
+        //send API request
+        https.get(host + matchPath + api_key, function (response) {
+            var statusCode = response.statusCode;
+            var output = '';
+            response.on("data", function (chunk) {
+                output += chunk;
+            });
+            response.on("end", function () {
+                if (statusCode == 200) {
+                    var obj = JSON.parse(output);
+                    addMatchesToDB(obj, tier);
+                }
+                else if ((statusCode == 500) || (statusCode == 503)) {
+                    console.log(printERR + "err: 500, 503, internal server err, or service unavalible.");
+                    err = true;
+                }
+                else if (statusCode == 429) {
+                    console.log(printERR + "err: 429, rate limit exceded");
+                    err = true;
+                }
+                else {
+                    console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
+                    err = true;
+                }
+            });
+
+        });
     }
-
-    var matchPath = "/api/lol/"+region+"/v2.2/matchhistory/"+summonerID+"?api_key=";
-
-    //send API request
-    https.get(host + matchPath + api_key, function(response){
-        var statusCode = response.statusCode;
-        var output = '';
-        response.on("data", function(chunk){
-            output += chunk;
-        });
-        response.on("end", function(){
-            if(statusCode == 200){
-                var obj = JSON.parse(output);
-                addMatchesToDB(obj, tier);
-            }
-            else if((statusCode==500)||(statusCode==503)) {
-                console.log(printERR + "err: 500, 503, internal server err, or service unavalible.");
-                err = true;
-            }
-            else if(statusCode == 429){
-                console.log(printERR + "err: 429, rate limit exceded");
-                err = true;
-            }
-            else{
-                console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
-                err = true;
-            }
-        });
-
-    });
-
+    catch(e){
+        console.log(printERR+"queryForRecentMatches, "+e);
+    }
     callback(err);
 };
 
