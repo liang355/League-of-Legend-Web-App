@@ -19,6 +19,7 @@
 
         <!-- OURS -->
         <script src="directives/dropdown/dropdown.js"></script>
+        <script src="services/api-services.js"></script>
 
         <!--stylesheet-->
         <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -35,10 +36,11 @@
                 <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
                 <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
                 <role-dropdown ng-model="dropdown.role"></role-dropdown>
+                <button ng-click="getData(dropdown)">Submit</button>
             </div>
             <div>
-                This {{dropdown}}
-                <p>This is our Main Application.</p>
+                <p>Requested Data:</p>
+                <pre>{{data}}</pre>
             </div>
 
         </div>
