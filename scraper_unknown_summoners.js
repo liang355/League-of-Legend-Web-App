@@ -48,77 +48,91 @@ var divisionN = {
 
 
 var updateChampionStatistics = function(summonerID, tier){
-    ChampionStatistics.find({tier:summonerID}, function(err, champStats) {
-        if(champStats == null){
-            console.log("updateChampionStatistics, none to update.")
-            return;
-        }
-        else{
-            console.log("updateChampionStatistics, "+champStats.length+" to update.")
-        }
-        for(var c=0; c<champStats.length; c++){
-            champStats[c].tier = tier;
-            champStats[c].save();
-        }
-    });
+    try {
 
-}
+
+        ChampionStatistics.find({tier: summonerID}, function (err, champStats) {
+            if (champStats == null) {
+                console.log("updateChampionStatistics, none to update.")
+                return;
+            }
+            else {
+                console.log("updateChampionStatistics, " + champStats.length + " to update.")
+            }
+            for (var c = 0; c < champStats.length; c++) {
+                champStats[c].tier = tier;
+                champStats[c].save();
+            }
+        });
+    }
+    catch(e){
+        console.log(printERR+"updateChampionStatistics, "+e);
+    }
+
+};
 
 var resolveUnknownPlayerTiers = function(){
     var err = false;
-    Summoner.findOne({tier:404}, function(err, summoners) {
-        //console.log(summoners.length);
-        if(summoners == null){
-            console.log(printLog+"summoners == null");
-            return;
-        }
-        var summonerID = summoners['sID'];
+    try {
 
-        var api_key = config.api_key;
-        //var api_key = config.api_key3;
-        var region = "na";
-        var host = "https://na.api.pvp.net";
-        var matchPath = "/api/lol/"+region+"/v2.5/league/by-summoner/"+summonerID+"?api_key=";
 
-        //send API request
-        https.get(host + matchPath + api_key, function(response){
-            var statusCode = response.statusCode;
-            var output = '';
-            response.on("data", function(chunk){
-                output += chunk;
+        Summoner.findOne({tier: 404}, function (err, summoners) {
+            //console.log(summoners.length);
+            if (summoners == null) {
+                console.log(printLog + "summoners == null");
+                return;
+            }
+            var summonerID = summoners['sID'];
 
-                //console.log(output);
+            var api_key = config.api_key;
+            //var api_key = config.api_key3;
+            var region = "na";
+            var host = "https://na.api.pvp.net";
+            var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key=";
+
+            //send API request
+            https.get(host + matchPath + api_key, function (response) {
+                var statusCode = response.statusCode;
+                var output = '';
+                response.on("data", function (chunk) {
+                    output += chunk;
+
+                    //console.log(output);
+                });
+                response.on("end", function () {
+                    if (statusCode == 200) {
+                        var obj = JSON.parse(output);
+                        var tier = obj[summonerID][0]['tier'];
+                        var division = obj[summonerID][0]['entries'][0]['division'];
+                        var numeric = tierN[tier] + divisionN[division];
+
+                        console.log(printLog + summonerID + " " + tier + "_" + division);
+                        //update db
+                        summoners['tier'] = numeric;
+                        summoners.save();
+
+                        updateChampionStatistics(summonerID, numeric);
+                    }
+                    else if ((statusCode == 500) || (statusCode == 503)) {
+                        console.log(printERR + "err: 500, 503, internal server err, or service unavalible.");
+                    }
+                    else if (statusCode == 429) {
+                        console.log(printERR + "err: 429, rate limit exceded");
+                    }
+                    else {
+                        console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
+                        summoners['tier'] = 42;
+                        summoners.save();
+                    }
+
+                });
+
             });
-            response.on("end", function(){
-                if(statusCode == 200){
-                    var obj = JSON.parse(output);
-                    var tier = obj[summonerID][0]['tier'];
-                    var division = obj[summonerID][0]['entries'][0]['division'];
-                    var numeric = tierN[tier] + divisionN[division];
-
-                    console.log(printLog+summonerID+" "+tier+"_"+division);
-                    //update db
-                    summoners['tier'] = numeric;
-                    summoners.save();
-
-                    updateChampionStatistics(summonerID, numeric);
-                }
-                else if((statusCode==500)||(statusCode==503)) {
-                    console.log(printERR + "err: 500, 503, internal server err, or service unavalible.");
-                }
-                else if(statusCode == 429){
-                    console.log(printERR + "err: 429, rate limit exceded");
-                }
-                else{
-                    console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
-                    summoners['tier'] = 42;
-                    summoners.save();
-                }
-
-            });
-
         });
-    });
+    }
+    catch(e){
+        console.log(printERR+"resolveUnknownPlayerTiers, "+e);
+    }
 };
 
 
@@ -129,7 +143,7 @@ var resolveUnknownPlayerTiers = function(){
 var mainLoop = function(){
     var mainLoopInterval = setInterval(function(){
         resolveUnknownPlayerTiers();
-    },6001);
+    },2500);
 
 };
 

@@ -215,45 +215,45 @@ var resolveUnknownPlayerTiers = function(numplayers404){
  *============================== */
 
 /*---DO NOT RUN THIS, IT POPULATES THE SUMMONER DATABASE WITH SEEDS, I DON'T WANT DUPLICATES ---*/
-var addLoLKingSeeds = function(summonerData){
-    //construct API request
-    var api_key = config.api_key;
-    var region = "na";
-    var host = "https://na.api.pvp.net";
-    var matchPath;
-    var count = 0;
-    var max = summonerData.length;
-
-    //loop through summoners, look up ID's wait 2seconds and add to DB
-    var lolkingseedInterval = setInterval(function(){
-        var summonerName = summonerData[count]['name'];
-        var summonerLookup = summonerData[count]['lookup'];
-        var summonerTier = summonerData[count]['tier'];
-        matchPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+summonerName+"?api_key=";
-
-        console.log("started request for summonerID of "+summonerName);
-
-        //send API request to retreive summonerID
-        https.get(host + matchPath + api_key, function(response){
-            console.log("received Match History response");
-            var output = '';
-            response.on("data", function(chunk){
-                output += chunk;
-            });
-            response.on("end", function(){
-                var obj = JSON.parse(output);
-                console.log("obj="+obj[summonerLookup]['id']+", name="+obj[summonerLookup]['name']);
-                addSummoner(obj[summonerLookup]['id'], summonerName, summonerTier); //DONT ADD THEM AGAIN
-            });
-        });
-        count++;
-        if(count >= max){
-            clearInterval(lolkingseedInterval);
-        }
-    },2000);
-};
-
-addLoLKingSeeds(lolKingSeeds);
+//var addLoLKingSeeds = function(summonerData){
+//    //construct API request
+//    var api_key = config.api_key;
+//    var region = "na";
+//    var host = "https://na.api.pvp.net";
+//    var matchPath;
+//    var count = 0;
+//    var max = summonerData.length;
+//
+//    //loop through summoners, look up ID's wait 2seconds and add to DB
+//    var lolkingseedInterval = setInterval(function(){
+//        var summonerName = summonerData[count]['name'];
+//        var summonerLookup = summonerData[count]['lookup'];
+//        var summonerTier = summonerData[count]['tier'];
+//        matchPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+summonerName+"?api_key=";
+//
+//        console.log("started request for summonerID of "+summonerName);
+//
+//        //send API request to retreive summonerID
+//        https.get(host + matchPath + api_key, function(response){
+//            console.log("received Match History response");
+//            var output = '';
+//            response.on("data", function(chunk){
+//                output += chunk;
+//            });
+//            response.on("end", function(){
+//                var obj = JSON.parse(output);
+//                console.log("obj="+obj[summonerLookup]['id']+", name="+obj[summonerLookup]['name']);
+//                addSummoner(obj[summonerLookup]['id'], summonerName, summonerTier); //DONT ADD THEM AGAIN
+//            });
+//        });
+//        count++;
+//        if(count >= max){
+//            clearInterval(lolkingseedInterval);
+//        }
+//    },2000);
+//};
+//
+//addLoLKingSeeds(lolKingSeeds);
 
 /*===================================
  *  find recent matches by summonerID
