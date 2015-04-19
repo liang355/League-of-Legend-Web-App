@@ -12,16 +12,35 @@
         <title>LoLMinuteStatistics</title>
         <!-- Scripts go below -->
         <script src="lib/angular/angular.min.js"></script>
+        <script src="lib/angular-ui-select/dist/select.min.js"></script>
         <script src="app.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-sanitize.js"></script>
+
+
+        <!-- OURS -->
+        <script src="directives/dropdown/dropdown.js"></script>
+
+        <!--stylesheet-->
         <link rel="stylesheet" type="text/css" href="styles/style.css">
+        <link rel="stylesheet" href="lib/angular-ui-select/dist/select.css">
+
+        <!-- used for dropdowns -->
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
     </head>
 
     <body ng-app="LolApp">
         <div ng-controller="MainCtrl">
-            <h1>{{header}}</h1>
             <div>
+                <h1>{{header}}</h1>
+                <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
+                <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
+                <role-dropdown ng-model="dropdown.role"></role-dropdown>
+            </div>
+            <div>
+                This {{dropdown}}
                 <p>This is our Main Application.</p>
             </div>
+
         </div>
     </body>
 </html>
