@@ -224,6 +224,30 @@ var storeStats = function(stats) {
         var timelineLane, timelineRole, frames, frame, events, event, statistics;
         var p, e, f, i;
 
+        /*
+
+         //stored per player
+         blue:[],
+         red:[],
+         visionWardsPlaced:[],
+         sightWardsPlaced:[],
+         yellowTrinketPlaced: [],
+         jungleMinionsKilled:[],
+         minionsKilled:[],
+         level:[],
+         totalGold:[],
+         currentGold:[],
+
+         //stored per team
+         turretBase:Number,
+         turretInner:Number,
+         turretOuter:Number,
+         turretNexus:Number,
+         inhibitor:Number,
+         dragon:[],
+         baron:[]
+         */
+
         var sightWardsPlacedPerPlayerPerTimestamp = [];
         var sightwards = {
             1: 0,
@@ -305,6 +329,18 @@ var storeStats = function(stats) {
                         //yellowtrinket[event['creatorId']] = yellowtrinket[event['creatorId']] + 1;
                         sightWardsPlacedPerPlayerPerTimestamp[f]['yellowtrinket'][event['creatorId']] = sightWardsPlacedPerPlayerPerTimestamp[f]['yellowtrinket'][event['creatorId']] + 1;
                     }
+                }
+                if (event['eventType'] == "BUILDING_KILL"){
+                    if(event['towerType'] == "INNER_TURRET"){}
+                    if(event['towerType'] == "NEXUS_TURRET"){}
+                    if(event['towerType'] == "OUTER_TURRET"){}
+                    if(event['buildingType'] == "INHIBITOR_BUILDING"){}
+                }
+                if (event['eventType'] == "ELITE_MONSTER_KILL"){
+                    if(event['monsterType'] == "BARON_NASHOR"){}
+                    if(event['monsterType'] == "DRAGON"){}
+                    if(event['monsterType'] == "BLUE_GOLEM"){}
+                    if(event['monsterType'] == "RED_LIZARD"){}
                 }
             }
             //sightWardsPlacedPerPlayerPerTimestamp[f] = {'sightwards':sightwards, 'visionwards':visionwards, 'yellowtrinket':yellowtrinket};
