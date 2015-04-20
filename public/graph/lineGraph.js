@@ -6,9 +6,11 @@ var x;
 var i;
 var chart;
 var theInterval;
+var timeLineLength;
 
 var makeLineGraph = function(timeline){
 
+    //put "object: array" into "array[array]"
     var timelinedatas = [];
     timelinedatas.push(timeline['currentGold']);
     timelinedatas.push(timeline['jungleMinionsKilled']);
@@ -21,6 +23,7 @@ var makeLineGraph = function(timeline){
 
     //generate chart
     chart = c3.generate({
+        bindto: '#chart',
         data: {
             columns: timelinedatas
         }
@@ -30,8 +33,10 @@ var makeLineGraph = function(timeline){
     chart.xgrids([
         {value: 0}
     ]);
-};
 
+    //get the length of timeline
+    timeLineLength = timelinedatas[0].length - 1;
+};
 
 //function that updates the position of xgrid
 function updateGrid(i){
@@ -40,17 +45,13 @@ function updateGrid(i){
     ]);
 }
 
-//function that iterate the update of xgrid
-function gridAnimate(callback){
+//function that iterates the update of xgrid
+function gridAnimate(){
     i = 0;
-    chart.xgrids([
-        {value: i}
-    ]);
-    i++;
     clearInterval(theInterval);
 
     theInterval = setInterval(function(){
-        if(i < x.length){
+        if(i < timeLineLength){
             updateGrid(i);
             i++;
         }

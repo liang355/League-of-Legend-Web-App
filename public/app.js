@@ -17,6 +17,7 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
 
     var init = function(){
         initFormFields();
+        $scope.showStart = false;
     };
 
     //TODO:rewrite callback to display data however you please
@@ -24,16 +25,13 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
         $scope.data = JSON.stringify(data, null, 4);
 
         //call function from lindGraph.js
-
         makeLineGraph(data["timeline"]);
+        $scope.showStart = true;
     };
 
     $scope.getData = function(dropdown){
         championStatistics.getStatistics(dropdown.champion, dropdown.tier, dropdown.role, doStuffWithData);
     };
-
-
-
 
     init();
 }]);
