@@ -23,7 +23,11 @@ router.get('/champion', function(req, res, next){
             return next(err);
         }
         res.json(champions);
-    });
+    }).sort({name: 1});
+});
+
+router.get('/championList', function(req, res, next){
+
 });
 
 router.get('/summoner', function(req, res, next){

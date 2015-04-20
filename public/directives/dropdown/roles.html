@@ -1,6 +1,6 @@
 <ui-select ng-model="$parent.selected" theme="select2" style="min-width: 100px;">
     <ui-select-match placeholder="Role">{{$select.selected.name}}</ui-select-match>
-    <ui-select-choices repeat="role in roles">
+    <ui-select-choices repeat="role in roles | filter: {name: $select.search}">
         <div>{{role.name}}</div>
     </ui-select-choices>
 </ui-select>
