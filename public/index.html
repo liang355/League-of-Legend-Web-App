@@ -27,6 +27,16 @@
 
         <!-- used for dropdowns -->
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+
+        <!-- Load c3.css -->
+        <link href="graph/c3-0.4.10/c3.css" rel="stylesheet" type="text/css">
+
+        <!-- Load d3.js and c3.js -->
+        <script src="graph/d3/d3.min.js" charset="utf-8"></script>
+        <script src="graph/c3-0.4.10/c3.min.js"></script>
+
+
+        <script src="graph/lineGraph.js"></script>
     </head>
 
     <body ng-app="LolApp">
@@ -38,11 +48,11 @@
                 <role-dropdown ng-model="dropdown.role"></role-dropdown>
                 <button ng-click="getData(dropdown)">Submit</button>
             </div>
-            <div>
-                <p>Requested Data:</p>
-                <pre>{{data}}</pre>
-            </div>
 
         </div>
+
+        <!--line chart-->
+        <div id="chart"></div>
+        <button id="start" onclick="gridAnimate()">start</button>
     </body>
 </html>

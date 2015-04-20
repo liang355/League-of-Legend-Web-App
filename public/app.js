@@ -22,11 +22,16 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
     //TODO:rewrite callback to display data however you please
     var doStuffWithData = function(data){
         $scope.data = JSON.stringify(data, null, 4);
+
+        //call function from lindGraph.js
+
+        makeLineGraph(data["timeline"]);
     };
 
     $scope.getData = function(dropdown){
         championStatistics.getStatistics(dropdown.champion, dropdown.tier, dropdown.role, doStuffWithData);
     };
+
 
 
 
