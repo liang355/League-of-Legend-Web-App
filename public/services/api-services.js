@@ -16,3 +16,24 @@ app.factory('championStatistics', ['$http', function($http){
         getStatistics: getStatistics
     };
 }]);
+
+
+
+app.factory('champions', ['$http', function($http) {
+
+    var getChampionList = function(callback) {
+        $http.get('/api/champion')
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+                console.log("error ", data);
+            }
+        );
+    };
+
+    return {
+        get: getChampionList
+    };
+
+}]);

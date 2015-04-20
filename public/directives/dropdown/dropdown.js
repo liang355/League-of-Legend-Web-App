@@ -1,6 +1,6 @@
 
 
-app.directive('championDropdown', function(){
+app.directive('championDropdown', ['champions', function(champions){
     return {
         restrict: 'E',
         scope:{
@@ -8,10 +8,12 @@ app.directive('championDropdown', function(){
         },
         templateUrl:'directives/dropdown/champions.html',
         controller:function($scope){
-            $scope.champions = [{name: "Janna"}, {name:"Jinx"}];
+            champions.get(function(data){
+                $scope.champions = data;
+            });
         }
     };
-});
+}]);
 
 app.directive('tierDropdown', function(){
     return {
