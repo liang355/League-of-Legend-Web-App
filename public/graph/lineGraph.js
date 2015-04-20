@@ -13,19 +13,20 @@ var makeLineGraph = function(timeline){
     //put "object: array" into "array[array]"
     var timelinedatas = [];
     timelinedatas.push(timeline['currentGold']);
+    timelinedatas.push(timeline['totalGold']);
     timelinedatas.push(timeline['jungleMinionsKilled']);
-    timelinedatas.push(timeline['level']);
     timelinedatas.push(timeline['minionsKilled']);
     timelinedatas.push(timeline['sightWardsPlaced']);
-    timelinedatas.push(timeline['totalGold']);
     timelinedatas.push(timeline['visionWardsPlaced']);
     timelinedatas.push(timeline['yellowTrinketPlaced']);
+    timelinedatas.push(timeline['level']);
 
     //generate chart
     chart = c3.generate({
         bindto: '#chart',
         data: {
-            columns: timelinedatas
+            columns: timelinedatas,
+            hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'visionWardsPlaced', 'yellowTrinketPlaced', 'level']
         }
     });
 
