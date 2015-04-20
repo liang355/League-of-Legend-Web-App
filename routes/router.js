@@ -188,11 +188,13 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
         if(err){
             return next(err);
         }
-
-        var averagedStats = calculateAverages(stats);
-        console.log(averagedStats);
-
-        res.json(averagedStats);
+        if (stats.length > 1){
+            var averagedStats = calculateAverages(stats);
+            res.json(averagedStats);
+        }
+        else {
+            res.json({});
+        }
     });
 });
 
