@@ -116,9 +116,38 @@ var addChampionStatistics = function(championIdentification, championStatistics,
     var  wardsKilled = championStatistics['wardsKilled'];
     var  wardsPlaced = championStatistics['wardsPlaced'];
     var  minionsKilledTotal = championStatistics['minionsKilledTotal'];
-    var  enemyJungleMinionsKilled = championStatistics['enemyJungleMinionsKilled'];
+    var  neutralMinionsKilledEnemyJungle = championStatistics['neutralMinionsKilledEnemyJungle'];
+    var  neutralMinionsKilledTeamJungle = championStatistics['neutralMinionsKilledTeamJungle'];
 
-    var  timeline =  thetimeline;
+    var  blueGolem = championStatistics['blueGolem'];
+    var  redLizard = championStatistics['redLizard'];
+    var  baseTurrets = championStatistics['baseTurrets'];
+    var  innerTurrets = championStatistics['innerTurrets'];
+    var  outerTurrets = championStatistics['outerTurrets'];
+    var  nexusTurrets = championStatistics['nexusTurrets'];
+    var  inhibitors = championStatistics['inhibitors'];
+    var  dragon = championStatistics['dragon'];
+    var  baronNashor = championStatistics['baronNashor'];
+
+    var visionWardsPlaced=[];
+    var sightWardsPlaced=[];
+    var yellowTrinketPlaced=[];
+    var jungleMinionsKilled=[];
+    var minionsKilled=[];
+    var level=[];
+    var totalGold=[];
+    var currentGold=[];
+
+    for(var t=0; t<thetimeline.length; t++){
+            visionWardsPlaced.push(thetimeline[t]['visionWardsPlaced']);
+            sightWardsPlaced.push(thetimeline[t]['sightWardsPlaced']);
+            yellowTrinketPlaced.push(thetimeline[t]['yellowTrinketPlaced']);
+            jungleMinionsKilled.push(thetimeline[t]['jungleMinionsKilled']);
+            minionsKilled.push(thetimeline[t]['minionsKilled']);
+            level.push(thetimeline[t]['level']);
+            totalGold.push(thetimeline[t]['totalGold']);
+            currentGold.push(thetimeline[t]['currentGold']);
+    }
 
 
 
@@ -161,10 +190,28 @@ var addChampionStatistics = function(championIdentification, championStatistics,
             champStatistics.heals= heals;
             champStatistics.wardsKilled= wardsKilled;
             champStatistics.wardsPlaced= wardsPlaced;
-            champStatistics.minionsKilled= minionsKilledTotal;
-            champStatistics.enemyJungleMinionsKilled= enemyJungleMinionsKilled;
+            champStatistics.totalMinionsKilled= minionsKilledTotal;
+            champStatistics.neutralMinionsKilledEnemyJungle= neutralMinionsKilledEnemyJungle;
+            champStatistics.neutralMinionsKilledTeamJungle= neutralMinionsKilledTeamJungle;
 
-            champStatistics.timeline=timeline;
+            champStatistics.blueGolem =blueGolem;
+            champStatistics.redLizard =redLizard ;
+            champStatistics.baseTurrets =baseTurrets ;
+            champStatistics.innerTurrets = innerTurrets;
+            champStatistics.outerTurrets = outerTurrets;
+            champStatistics.nexusTurrets = nexusTurrets;
+            champStatistics.inhibitors =inhibitors;
+            champStatistics.dragon = dragon;
+            champStatistics.baronNashor = baronNashor;
+
+            champStatistics.visionWardsPlaced=visionWardsPlaced;
+            champStatistics.sightWardsPlaced=sightWardsPlaced;
+            champStatistics.yellowTrinketPlaced=yellowTrinketPlaced;
+            champStatistics.jungleMinionsKilled=jungleMinionsKilled;
+            champStatistics.minionsKilled=minionsKilled;
+            champStatistics.level=level;
+            champStatistics.totalGold=totalGold;
+            champStatistics.currentGold=currentGold;
 
             champStatistics.save();
 
@@ -181,7 +228,7 @@ var addChampionStatistics = function(championIdentification, championStatistics,
 //(3) add stats to DB
 var storeStats = function(stats) {
 
-    try {
+    //try {
 
 
         var championIdentification = {
@@ -203,8 +250,29 @@ var storeStats = function(stats) {
             'heals': 0,
             'wardsKilled': 0,
             'wardsPlaced': 0,
-            'minionsKilledTotal': 0,
-            'enemyJungleMinionsKilled': 0
+
+            totalMinionsKilled:0,
+            neutralMinionsKilledEnemyJungle:0,
+            neutralMinionsKilledTeamJungle:0,
+
+            blueGolem:[],
+            redLizard:[],
+            visionWardsPlaced:[],
+            sightWardsPlaced:[],
+            yellowTrinketPlaced: [],
+            jungleMinionsKilled:[],
+            minionsKilled:[],
+            level:[],
+            totalGold:[],
+            currentGold:[],
+
+            baseTurrets:[],
+            innerTurrets:[],
+            outerTurrets:[],
+            nexusTurrets:[],
+            inhibitors:[],
+            dragon:[],
+            baron:[]
         };
 
         var timeline = [];
@@ -237,102 +305,152 @@ var storeStats = function(stats) {
          baron:[]
          */
 
-        var sightWardsPlacedPerPlayerPerTimestamp = [];
-        var sightwards = {
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0
-        };
-        var visionwards = {
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0
-        };
-        var yellowtrinket = {
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0
-        };
+        var eventsPerPlayerPerTimestamp = [];
 
-
+        var eventsPerTeam = {
+            one: {
+                baronNashor:[],
+                dragon:[],
+                innerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
+                nexusTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
+                outerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
+                inhibitors:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0}
+            },
+            two: {
+                baronNashor:[],
+                dragon:[],
+                innerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
+                nexusTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
+                outerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
+                inhibitors:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0}
+            }
+        };
+        var eventsPerPlayer={
+            1: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            2: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            3: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            4: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            5: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            6: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            7: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            8: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            9: {
+                blueGolem:[],
+                redLizard:[]
+            },
+            10: {
+                blueGolem:[],
+                redLizard:[]
+            }
+        };
         /* for each event in match count up wards placed per player
          *   NOTE: no event for first minute */
         frames = stats['timeline']['frames'];
         for (f = 1; f < frames.length; f++) {
-            //for( i=1; i<11; i++){
-            //    sightwards[i] = 0;
-            //    visionwards[i] = 0;
-            //    yellowtrinket[i] = 0;
-            //}
-            sightWardsPlacedPerPlayerPerTimestamp[f] = {
-                sightwards: {
-                    1: 0,
-                    2: 0,
-                    3: 0,
-                    4: 0,
-                    5: 0,
-                    6: 0,
-                    7: 0,
-                    8: 0,
-                    9: 0,
-                    10: 0
-                },
-                visionwards: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0},
-                yellowtrinket: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0}
+
+            eventsPerPlayerPerTimestamp[f] = {
+                sightwards: [0,0,0,0,0,0,0,0,0,0],
+                visionwards: [0,0,0,0,0,0,0,0,0,0],
+                yellowtrinket: [0,0,0,0,0,0,0,0,0,0]
             };
             events = frames[f]['events'];
             for (e = 0; e < events.length; e++) {
                 event = events[e];
                 if (event['eventType'] == "WARD_PLACED") {
                     if (event['wardType'] == "SIGHT_WARD") {
-                        //sightwards[event['creatorId']] = sightwards[event['creatorId']] + 1;
-                        sightWardsPlacedPerPlayerPerTimestamp[f]['sightwards'][event['creatorId']] = sightWardsPlacedPerPlayerPerTimestamp[f]['sightwards'][event['creatorId']] + 1;
+                        eventsPerPlayerPerTimestamp[f]['sightwards'][event['creatorId']] = eventsPerPlayerPerTimestamp[f]['sightwards'][event['creatorId']] + 1;
                     }
                     if (event['wardType'] == "VISION_WARD") {
-                        //visionwards[event['creatorId']] = visionwards[event['creatorId']] + 1;
-
-                        sightWardsPlacedPerPlayerPerTimestamp[f]['visionwards'][event['creatorId']] = sightWardsPlacedPerPlayerPerTimestamp[f]['visionwards'][event['creatorId']] + 1;
+                        eventsPerPlayerPerTimestamp[f]['visionwards'][event['creatorId']] = eventsPerPlayerPerTimestamp[f]['visionwards'][event['creatorId']] + 1;
                     }
                     if ((event['wardType'] == "YELLOW_TRINKET") || (event['wardType'] == "YELLOW_TRINKET_UPGRADE")) {
-                        //yellowtrinket[event['creatorId']] = yellowtrinket[event['creatorId']] + 1;
-                        sightWardsPlacedPerPlayerPerTimestamp[f]['yellowtrinket'][event['creatorId']] = sightWardsPlacedPerPlayerPerTimestamp[f]['yellowtrinket'][event['creatorId']] + 1;
+                        eventsPerPlayerPerTimestamp[f]['yellowtrinket'][event['creatorId']] = eventsPerPlayerPerTimestamp[f]['yellowtrinket'][event['creatorId']] + 1;
                     }
                 }
                 if (event['eventType'] == "BUILDING_KILL"){
-                    if(event['towerType'] == "INNER_TURRET"){}
-                    if(event['towerType'] == "NEXUS_TURRET"){}
-                    if(event['towerType'] == "OUTER_TURRET"){}
-                    if(event['buildingType'] == "INHIBITOR_BUILDING"){}
+                    if(event['towerType'] == "INNER_TURRET"){
+                        if(event['teamId'] == 100){
+                            eventsPerTeam['one']['innerTurrets'][event['laneType']] = f;
+                        }
+                        else{
+                            eventsPerTeam['two']['innerTurrets'][event['laneType']] = f;
+                        }
+                    }
+                    if(event['towerType'] == "NEXUS_TURRET"){
+                        if(event['teamId'] == 100){
+                            eventsPerTeam['one']['nexusTurrets'][event['laneType']] = f;
+                        }
+                        else{
+                            eventsPerTeam['two']['nexusTurrets'][event['laneType']] = f;
+                        }
+                    }
+                    if(event['towerType'] == "OUTER_TURRET"){
+                        if(event['teamId'] == 100){
+                            eventsPerTeam['one']['outerTurrets'][event['laneType']] = f;
+                        }
+                        else{
+                            eventsPerTeam['two']['outerTurrets'][event['laneType']] = f;
+                        }
+                    }
+                    if(event['buildingType'] == "INHIBITOR_BUILDING"){
+                        if(event['teamId'] == 100){
+                            eventsPerTeam['one']['inhibitors'][event['laneType']] = f;
+                        }
+                        else{
+                            eventsPerTeam['two']['inhibitors'][event['laneType']] = f;
+                        }
+                    }
                 }
                 if (event['eventType'] == "ELITE_MONSTER_KILL"){
-                    if(event['monsterType'] == "BARON_NASHOR"){}
-                    if(event['monsterType'] == "DRAGON"){}
-                    if(event['monsterType'] == "BLUE_GOLEM"){}
-                    if(event['monsterType'] == "RED_LIZARD"){}
+                    if(event['monsterType'] == "BARON_NASHOR"){
+                        if(event['killerId'] <= 5){
+                            eventsPerTeam['one']['baronNashor'].push(f);
+                        }
+                        else{
+                            eventsPerTeam['two']['baronNashor'].push(f);
+                        }
+                    }
+                    if(event['monsterType'] == "DRAGON"){
+                        if(event['killerId'] <= 5){
+                            eventsPerTeam['one']['dragon'].push(f);
+                        }
+                        else{
+                            eventsPerTeam['two']['dragon'].push(f);
+                        }
+                    }
+                    if(event['monsterType'] == "BLUE_GOLEM"){
+                        eventsPerPlayer[event['killerId']]['blueGolem'].push(f);
+                    }
+                    if(event['monsterType'] == "RED_LIZARD"){
+                        eventsPerPlayer[event['killerId']]['redLizard'].push(f);
+                    }
                 }
             }
-            //sightWardsPlacedPerPlayerPerTimestamp[f] = {'sightwards':sightwards, 'visionwards':visionwards, 'yellowtrinket':yellowtrinket};
+            //eventsPerPlayerPerTimestamp[f] = {'sightwards':sightwards, 'visionwards':visionwards, 'yellowtrinket':yellowtrinket};
         }
 
         /* for each player in match (10 total) */
@@ -380,7 +498,34 @@ var storeStats = function(stats) {
             championStatistics['wardsKilled'] = statistics['wardsKilled'];
             championStatistics['wardsPlaced'] = statistics['wardsPlaced'];
             championStatistics['minionsKilledTotal'] = statistics['minionsKilled'];
-            championStatistics['enemyJungleMinionsKilled'] = statistics['neutralMinionsKilledEnemyJungle'];
+            championStatistics['neutralMinionsKilledEnemyJungle'] = statistics['neutralMinionsKilledEnemyJungle'];
+            championStatistics['neutralMinionsKilledTeamJungle'] = statistics['neutralMinionsKilledTeamJungle'];
+
+            championStatistics['blueGolem'] =  eventsPerPlayer[p]['blueGolem'];
+            championStatistics['redLizard'] =  eventsPerPlayer[p]['redLizard'];
+
+            if(p<=5){
+                championStatistics['baronNashor'] = eventsPerTeam['one']['baronNashor'];
+                championStatistics['dragon'] = eventsPerTeam['one']['dragon'];
+
+                championStatistics['baseTurrets'] = eventsPerTeam['one']['baseTurrets'];
+                championStatistics['innerTurrets'] = eventsPerTeam['one']['innerTurrets'];
+                championStatistics['outerTurrets'] = eventsPerTeam['one']['outerTurrets'];
+                championStatistics['nexusTurrets'] = eventsPerTeam['one']['nexusTurrets'];
+                championStatistics['inhibitors'] = eventsPerTeam['one']['inhibitors'];
+
+            }
+            else{
+                championStatistics['baronNashor'] = eventsPerTeam['two']['baronNashor'];
+                championStatistics['dragon'] = eventsPerTeam['two']['dragon'];
+
+                championStatistics['baseTurrets'] = eventsPerTeam['two']['baseTurrets'];
+                championStatistics['innerTurrets'] = eventsPerTeam['two']['innerTurrets'];
+                championStatistics['outerTurrets'] = eventsPerTeam['two']['outerTurrets'];
+                championStatistics['nexusTurrets'] = eventsPerTeam['two']['nexusTurrets'];
+                championStatistics['inhibitors'] = eventsPerTeam['two']['inhibitors'];
+
+            }
 
 
             /* for each timestep */
@@ -414,12 +559,12 @@ var storeStats = function(stats) {
                 if (f > 0) {
                     //console.log("yellowtrinket = {")
                     //for(var k=1 ; k<11; k++){
-                    //    console.log(k+":"+sightWardsPlacedPerPlayerPerTimestamp[f]['yellowtrinket'][k]);
+                    //    console.log(k+":"+eventsPerPlayerPerTimestamp[f]['yellowtrinket'][k]);
                     //}
                     //console.log("};");
-                    oneTimeStamp['visionWardsPlaced'] = sightWardsPlacedPerPlayerPerTimestamp[f]['visionwards'][p];
-                    oneTimeStamp['sightWardsPlaced'] = sightWardsPlacedPerPlayerPerTimestamp[f]['sightwards'][p];
-                    oneTimeStamp['yellowTrinketPlaced'] = sightWardsPlacedPerPlayerPerTimestamp[f]['yellowtrinket'][p];
+                    oneTimeStamp['visionWardsPlaced'] = eventsPerPlayerPerTimestamp[f]['visionwards'][p];
+                    oneTimeStamp['sightWardsPlaced'] = eventsPerPlayerPerTimestamp[f]['sightwards'][p];
+                    oneTimeStamp['yellowTrinketPlaced'] = eventsPerPlayerPerTimestamp[f]['yellowtrinket'][p];
                 }
                 else {
                     oneTimeStamp['visionWardsPlaced'] = 0;
@@ -442,12 +587,13 @@ var storeStats = function(stats) {
 
             addChampionStatistics(championIdentification, championStatistics, timeline, summonerID, summonerName);
 
+
         }
 
-    }
-    catch (e){
-        console.log(printERR+"storeStats, "+e);
-    }
+    //}
+    //catch (e){
+    //    console.log(printERR+"storeStats, "+e);
+    //}
 
 };
 

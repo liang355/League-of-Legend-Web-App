@@ -45,8 +45,8 @@ var ChampionStatisticsSchema = new mongoose.Schema({
     neutralMinionsKilledEnemyJungle:Number,
     neutralMinionsKilledTeamJungle:Number,
 
-    blue:[],
-    red:[],
+    blueGolem:[],
+    redLizard:[],
     visionWardsPlaced:[],
     sightWardsPlaced:[],
     yellowTrinketPlaced: [],
@@ -56,13 +56,13 @@ var ChampionStatisticsSchema = new mongoose.Schema({
     totalGold:[],
     currentGold:[],
 
-    turretBase:Number,
-    turretInner:Number,
-    turretOuter:Number,
-    turretNexus:Number,
-    inhibitor:Number,
+    baseTurrets:[],
+    innerTurrets:[],
+    outerTurrets:[],
+    nexusTurrets:[],
+    inhibitors:[],
     dragon:[],
-    baron:[]
+    baronNashor:[]
 
 
 });
