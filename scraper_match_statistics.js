@@ -209,17 +209,6 @@ var storeStats = function(stats) {
 
         var timeline = [];
 
-        var oneTimeStamp = {
-            'minute': 0,
-            'visionWardsPlaced': 0,
-            'sightWardsPlaced': 0,
-            'yellowTrinketPlaced': 0,
-            'jungleMinionsKilled': 0,
-            'minionsKilled': 0,
-            'level': 0,
-            'totalGold': 0,
-            'currentGold': 0
-        };
 
         var timelineLane, timelineRole, frames, frame, events, event, statistics;
         var p, e, f, i;
@@ -397,6 +386,20 @@ var storeStats = function(stats) {
             /* for each timestep */
             frames = stats['timeline']['frames'];
             for (f = 0; f < frames.length; f++) {
+
+                var oneTimeStamp = {
+                    'minute': 0,
+                    'visionWardsPlaced': 0,
+                    'sightWardsPlaced': 0,
+                    'yellowTrinketPlaced': 0,
+                    'jungleMinionsKilled': 0,
+                    'minionsKilled': 0,
+                    'level': 0,
+                    'totalGold': 0,
+                    'currentGold': 0
+                };
+
+
                 frame = frames[f]['participantFrames'][p];
                 oneTimeStamp['minute'] = f;
                 oneTimeStamp['jungleMinionsKilled'] = frame['jungleMinionsKilled'];
@@ -434,7 +437,6 @@ var storeStats = function(stats) {
                 timeline[f]['visionWardsPlaced'] = oneTimeStamp['visionWardsPlaced'];
                 timeline[f]['sightWardsPlaced'] = oneTimeStamp['sightWardsPlaced'];
                 timeline[f]['yellowTrinketPlaced'] = oneTimeStamp['yellowTrinketPlaced'];
-                //console.log(" oneTimeStamp['visionWardsPlaced']= "+ oneTimeStamp['visionWardsPlaced']);
             }
 
 
