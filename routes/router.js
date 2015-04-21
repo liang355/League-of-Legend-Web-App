@@ -69,6 +69,7 @@ var calculateAverages = function(stats){
         minionsKilled:0,
         enemyJungleMinionsKilled:0,
         timeline : {
+            instancesPerMinute: ['instancesPerMinute'],
             visionWardsPlaced : ['visionWardsPlaced'],
             sightWardsPlaced : ['sightWardsPlaced'],
             yellowTrinketPlaced : ['yellowTrinketPlaced'],
@@ -160,10 +161,12 @@ var calculateAverages = function(stats){
         oneTimeStamp['yellowTrinketPlaced'] = oneTimeStamp['yellowTrinketPlaced'] / instancesPerMinute;
         oneTimeStamp['jungleMinionsKilled'] = oneTimeStamp['jungleMinionsKilled'] / instancesPerMinute;
         oneTimeStamp['minionsKilled'] = oneTimeStamp['minionsKilled'] / instancesPerMinute;
+
         oneTimeStamp['level'] = oneTimeStamp['level'] / instancesPerMinute;
         oneTimeStamp['totalGold'] = oneTimeStamp['totalGold'] / instancesPerMinute;
         oneTimeStamp['currentGold'] = oneTimeStamp['currentGold'] / instancesPerMinute;
 
+        averagedStats['timeline']['instancesPerMinute'][m+1] = instancesPerMinute;
         averagedStats['timeline']['visionWardsPlaced'][m+1] = oneTimeStamp['visionWardsPlaced'];
         averagedStats['timeline']['sightWardsPlaced'][m+1] = oneTimeStamp['sightWardsPlaced'];
         averagedStats['timeline']['yellowTrinketPlaced'][m+1] = oneTimeStamp['yellowTrinketPlaced'];
@@ -186,7 +189,7 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
         }
 
         var averagedStats = calculateAverages(stats);
-        console.log(averagedStats);
+       // console.log(averagedStats);
 
         res.json(averagedStats);
     });
