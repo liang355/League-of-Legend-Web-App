@@ -49,6 +49,8 @@ var tiers = { 1:"CHALLENGER_I",
             18:"SILVER_I", 19:"SILVER_II", 20:"SILVER_III",21:"SILVER_IV", 22:"SILVER_V",
             23:"BRONZE_I", 24:"BRONZE_II",25:"BRONZE_III", 26:"BRONZE_IV", 27:"BRONZE_V"};
 
+
+
 var tierN = {
                 CHALLENGER:0,
                 MASTER:1,
