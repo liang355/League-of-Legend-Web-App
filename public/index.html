@@ -41,12 +41,14 @@
 
     <body ng-app="LolApp">
         <div ng-controller="MainCtrl">
-            <div>
-                <h1>{{header}}</h1>
-                <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
-                <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
-                <role-dropdown ng-model="dropdown.role"></role-dropdown>
-                <button class="submitButton"ng-click="getData(dropdown)">Submit</button>
+            <div class="header">
+                <h1 style="float:left; padding-left:10px;">{{header}}</h1>
+                <span class="staticForm">
+                    <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
+                    <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
+                    <role-dropdown ng-model="dropdown.role"></role-dropdown>
+                    <button class="submitButton"ng-click="getData(dropdown)">Submit</button>
+                </span>
             </div>
             <br/><br/><br/>
 

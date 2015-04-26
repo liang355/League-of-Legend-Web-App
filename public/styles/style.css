@@ -8,4 +8,13 @@ body {
   height: 35px;
   font-size: 16px; }
 
+.header {
+  background-color: deepskyblue;
+  height: 70px; }
+
+.staticForm {
+  margin-top: 20px;
+  padding-right: 10px;
+  float: right; }
+
 /*# sourceMappingURL=style.css.map */
