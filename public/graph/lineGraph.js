@@ -39,7 +39,7 @@ var makeLineGraph = function(timeline){
 
     //get the length of timeline
     timeLineLength = timelinedatas[0].length - 1;
-    console.log(timeline['currentGold']);
+    console.log(['currentGold']);
     console.log(timelinedatas);
     console.log(timeLineLength);
 };
