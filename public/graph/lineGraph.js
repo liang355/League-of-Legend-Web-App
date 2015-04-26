@@ -12,14 +12,16 @@ var makeLineGraph = function(timeline){
 
     //put "object: array" into "array[array]"
     var timelinedatas = [];
-    timelinedatas.push(timeline['currentGold']);
-    timelinedatas.push(timeline['totalGold']);
-    timelinedatas.push(timeline['jungleMinionsKilled']);
-    timelinedatas.push(timeline['minionsKilled']);
-    timelinedatas.push(timeline['sightWardsPlaced']);
-    timelinedatas.push(timeline['visionWardsPlaced']);
-    timelinedatas.push(timeline['yellowTrinketPlaced']);
-    timelinedatas.push(timeline['level']);
+    timelinedatas.push(
+        timeline['currentGold'],
+        timeline['totalGold'],
+        timeline['jungleMinionsKilled'],
+        timeline['minionsKilled'],
+        timeline['sightWardsPlaced'],
+        timeline['visionWardsPlaced'],
+        timeline['yellowTrinketPlaced'],
+        timeline['level']
+    );
 
     //generate chart
     chart = c3.generate({
@@ -37,6 +39,9 @@ var makeLineGraph = function(timeline){
 
     //get the length of timeline
     timeLineLength = timelinedatas[0].length - 1;
+    console.log(['currentGold']);
+    console.log(timelinedatas);
+    console.log(timeLineLength);
 };
 
 //function that updates the position of xgrid

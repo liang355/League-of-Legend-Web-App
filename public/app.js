@@ -24,8 +24,13 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
     var doStuffWithData = function(data){
         $scope.data = JSON.stringify(data, null, 4);
 
+        if(!data){ //WHY NO U WARK????? RAWR!!!!! ANGURY!!!!
+            print("NO STATS FUR DAT!");
+            return;
+        }
         //call function from lindGraph.js
-        makeLineGraph(data["timeline"]);
+        //"data" is the returned object championStatistics
+        makeLineGraph(data);
         $scope.showStart = true;
     };
 
