@@ -1,6 +1,6 @@
 
 
-app.directive('championDropdown', ['champions','expressApi', function(champions, expressApi){
+app.directive('championDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
@@ -15,7 +15,6 @@ app.directive('championDropdown', ['champions','expressApi', function(champions,
                     champions.push(data[key]);
                 }
                 $scope.champions = champions;
-                console.log(champions, data);
             });
         }
     };
@@ -45,7 +44,6 @@ app.directive('roleDropdown', ['expressApi', function(expressApi){
         },
         templateUrl:'directives/dropdown/roles.html',
         controller:function($scope){
-
             expressApi.getRoles(function(roles){
                 $scope.roles = roles;
             });
