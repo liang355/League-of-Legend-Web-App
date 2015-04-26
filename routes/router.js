@@ -50,6 +50,22 @@ router.get('/summoner/:tier', function(req, res, next){
     })
 });
 
+var isThisEqual = function (m, aVar){
+    if(m==aVar){
+        return 1;
+    }
+    return 0;
+};
+
+var doesContainMinute = function(m, anArray){
+    for(var a=0; a<anArray.length; a++){
+        if(m == anArray[a]){
+            return 1;
+        }
+    }
+    return 0;
+};
+
 var calculateAverages = function(stats){
 
     var averagedStats = {
@@ -58,6 +74,7 @@ var calculateAverages = function(stats){
         role:stats[0]['role'],
         tier:stats[0]['tier'],
         numberOfGames:stats.length,
+        gameLength:0,
         assists:0,
         kills:0,
         deaths:0,
@@ -70,19 +87,30 @@ var calculateAverages = function(stats){
         heals:0,
         wardsKilled:0,
         wardsPlaced:0,
-        minionsKilled:0,
-        enemyJungleMinionsKilled:0,
-        timeline : {
-            instancesPerMinute: ['instancesPerMinute'],
-            visionWardsPlaced : ['visionWardsPlaced'],
-            sightWardsPlaced : ['sightWardsPlaced'],
-            yellowTrinketPlaced : ['yellowTrinketPlaced'],
-            jungleMinionsKilled : ['jungleMinionsKilled'],
-            minionsKilled : ['minionsKilled'],
-            level : ['level'],
-            totalGold : ['totalGold'],
-            currentGold : ['currentGold']
-        }
+        totalMinionsKilled:0,
+        neutralMinionsKilledEnemyJungle:0,
+        neutralMinionsKilledTeamJungle:0,
+
+        blueGolem:['Blue Golem'],
+        redLizard:['Red Lizard'],
+
+        baseTurrets:{ TOP_LANE:['Top Base Turret'], MID_LANE:['Middle Base Turret'], BOT_LANE:['Bottom Base Turret']},
+        innerTurrets:{ TOP_LANE:['Top Inner Turret'], MID_LANE:['Middle Inner Turret'], BOT_LANE:['Bottom Inner Turret']},
+        outerTurrets:{ TOP_LANE:['Top Outer Turret'], MID_LANE:['Middle Outer Turret'], BOT_LANE:['Bottom Outer Turret']},
+        nexusTurrets:{ TOP_LANE:['Top Nexus Turret'], MID_LANE:['Middle Nexus Turret'], BOT_LANE:['Bottom Nexus Turret']},
+        inhibitors:{ TOP_LANE:['Top Inhibitor'], MID_LANE:['Middle Inhibitor'], BOT_LANE:['Bottom Inhibitor']},
+        dragon:['Dragon'],
+        baronNashor:['Baron Nashor'],
+
+        instancesPerMinute: ['instancesPerMinute'],
+        visionWardsPlaced : ['visionWardsPlaced'],
+        sightWardsPlaced : ['sightWardsPlaced'],
+        yellowTrinketPlaced : ['yellowTrinketPlaced'],
+        jungleMinionsKilled : ['jungleMinionsKilled'],
+        minionsKilled : ['minionsKilled'],
+        level : ['level'],
+        totalGold : ['totalGold'],
+        currentGold : ['currentGold']
     };
 
     var longestGame = 0;
@@ -101,10 +129,12 @@ var calculateAverages = function(stats){
         averagedStats['heals'] += stats[i]['heals'];
         averagedStats['wardsKilled'] += stats[i]['wardsKilled'];
         averagedStats['wardsPlaced'] += stats[i]['wardsPlaced'];
-        averagedStats['minionsKilled'] += stats[i]['minionsKilled'];
+        averagedStats['totalMinionsKilled'] += stats[i]['totalMinionsKilled'];
         averagedStats['enemyJungleMinionsKilled'] += stats[i]['enemyJungleMinionsKilled'];
-        if(longestGame < stats[i]['timeline'].length){
-            longestGame = stats[i]['timeline'].length;
+        averagedStats['neutralMinionsKilledEnemyJungle'] += stats[i]['neutralMinionsKilledEnemyJungle'];
+        averagedStats['neutralMinionsKilledTeamJungle'] += stats[i]['neutralMinionsKilledTeamJungle'];
+        if(longestGame < stats[i]['minionsKilled'].length){
+            longestGame = stats[i]['minionsKilled'].length;
         }
     }
 
@@ -121,13 +151,105 @@ var calculateAverages = function(stats){
     averagedStats['heals'] = averagedStats["heals"] / stats.length;
     averagedStats['wardsKilled'] = averagedStats["wardsKilled"] / stats.length;
     averagedStats['wardsPlaced'] = averagedStats["wardsPlaced"] / stats.length;
-    averagedStats['minionsKilled'] = averagedStats["minionsKilled"] / stats.length;
+    averagedStats['totalMinionsKilled'] = averagedStats["totalMinionsKilled"] / stats.length;
     averagedStats['enemyJungleMinionsKilled'] = averagedStats["enemyJungleMinionsKilled"] / stats.length;
+    averagedStats['neutralMinionsKilledEnemyJungle'] = averagedStats["neutralMinionsKilledEnemyJungle"] / stats.length;
+    averagedStats['neutralMinionsKilledTeamJungle'] = averagedStats["neutralMinionsKilledTeamJungle"] / stats.length;
 
 
 
 
     //find timeline averages.
+
+
+    for(var m=0; m<longestGame; m++) {
+        var instancesPerMinute_eliteMonsters = {
+            redLizard:0,
+            blueGolem:0,
+            dragon:0,
+            baronNashor:0
+        };
+        var instancesPerMinute_baseTurrets = {
+            TOP_LANE:0,
+            BOT_LANE:0,
+            MID_LANE:0
+        };
+        var instancesPerMinute_innerTurrets = {
+            TOP_LANE:0,
+            BOT_LANE:0,
+            MID_LANE:0
+        };
+        var instancesPerMinute_outerTurrets = {
+            TOP_LANE:0,
+            BOT_LANE:0,
+            MID_LANE:0
+        };
+        var instancesPerMinute_nexusTurrets = {
+            TOP_LANE:0,
+            BOT_LANE:0,
+            MID_LANE:0
+        };
+        var instancesPerMinute_inhibitors = {
+            TOP_LANE:0,
+            BOT_LANE:0,
+            MID_LANE:0
+        };
+        for(var i=0; i<stats.length; i++){
+            instancesPerMinute_eliteMonsters['redLizard'] += doesContainMinute(m, stats[i]['redLizard']);
+            instancesPerMinute_eliteMonsters['blueGolem'] += doesContainMinute(m, stats[i]['blueGolem']);
+            instancesPerMinute_eliteMonsters['dragon'] += doesContainMinute(m, stats[i]['dragon']);
+            instancesPerMinute_eliteMonsters['baronNashor'] += doesContainMinute(m, stats[i]['baronNashor']);
+
+            instancesPerMinute_baseTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['baseTurrets'][0]['TOP_LANE']);
+            instancesPerMinute_baseTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['baseTurrets'][0]['BOT_LANE']);
+            instancesPerMinute_baseTurrets['MID_LANE'] += isThisEqual(m, stats[i]['baseTurrets'][0]['MID_LANE']);
+
+            instancesPerMinute_innerTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['innerTurrets'][0]['TOP_LANE']);
+            instancesPerMinute_innerTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['innerTurrets'][0]['BOT_LANE']);
+            instancesPerMinute_innerTurrets['MID_LANE'] += isThisEqual(m, stats[i]['innerTurrets'][0]['MID_LANE']);
+
+            instancesPerMinute_outerTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['outerTurrets'][0]['TOP_LANE']);
+            instancesPerMinute_outerTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['outerTurrets'][0]['BOT_LANE']);
+            instancesPerMinute_outerTurrets['MID_LANE'] += isThisEqual(m, stats[i]['outerTurrets'][0]['MID_LANE']);
+
+            instancesPerMinute_nexusTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['nexusTurrets'][0]['TOP_LANE']);
+            instancesPerMinute_nexusTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['nexusTurrets'][0]['BOT_LANE']);
+            instancesPerMinute_nexusTurrets['MID_LANE'] += isThisEqual(m, stats[i]['nexusTurrets'][0]['MID_LANE']);
+
+            instancesPerMinute_inhibitors['TOP_LANE'] += isThisEqual(m, stats[i]['inhibitors'][0]['TOP_LANE']);
+            instancesPerMinute_inhibitors['BOT_LANE'] += isThisEqual(m, stats[i]['inhibitors'][0]['BOT_LANE']);
+            instancesPerMinute_inhibitors['MID_LANE'] += isThisEqual(m, stats[i]['inhibitors'][0]['MID_LANE']);
+
+        }
+
+
+        averagedStats['blueGolem'][m+1] =  instancesPerMinute_eliteMonsters['blueGolem'] / stats.length;
+        averagedStats['redLizard'][m+1] = instancesPerMinute_eliteMonsters['redLizard'] / stats.length;
+        averagedStats['dragon'][m+1] = instancesPerMinute_eliteMonsters['dragon'] / stats.length;
+        averagedStats['baronNashor'][m+1] = instancesPerMinute_eliteMonsters['baronNashor'] / stats.length;
+
+        averagedStats['baseTurrets']['TOP_LANE'][m+1] = instancesPerMinute_baseTurrets['TOP_LANE'] / stats.length;
+        averagedStats['baseTurrets']['BOT_LANE'][m+1] = instancesPerMinute_baseTurrets['BOT_LANE'] / stats.length;
+        averagedStats['baseTurrets']['MID_LANE'][m+1] = instancesPerMinute_baseTurrets['MID_LANE'] / stats.length;
+
+        averagedStats['innerTurrets']['TOP_LANE'][m+1] = instancesPerMinute_innerTurrets['TOP_LANE'] / stats.length;
+        averagedStats['innerTurrets']['BOT_LANE'][m+1] = instancesPerMinute_innerTurrets['BOT_LANE'] / stats.length;
+        averagedStats['innerTurrets']['MID_LANE'][m+1] = instancesPerMinute_innerTurrets['MID_LANE'] / stats.length;
+
+        averagedStats['outerTurrets']['TOP_LANE'][m+1] = instancesPerMinute_outerTurrets['TOP_LANE'] / stats.length;
+        averagedStats['outerTurrets']['BOT_LANE'][m+1] = instancesPerMinute_outerTurrets['BOT_LANE'] / stats.length;
+        averagedStats['outerTurrets']['MID_LANE'][m+1] = instancesPerMinute_outerTurrets['MID_LANE'] / stats.length;
+
+        averagedStats['nexusTurrets']['TOP_LANE'][m+1] = instancesPerMinute_nexusTurrets['TOP_LANE'] / stats.length;
+        averagedStats['nexusTurrets']['BOT_LANE'][m+1] = instancesPerMinute_nexusTurrets['BOT_LANE'] / stats.length;
+        averagedStats['nexusTurrets']['MID_LANE'][m+1] = instancesPerMinute_nexusTurrets['MID_LANE'] / stats.length;
+
+        averagedStats['inhibitors']['TOP_LANE'][m+1] = instancesPerMinute_inhibitors['TOP_LANE'] / stats.length;
+        averagedStats['inhibitors']['BOT_LANE'][m+1] = instancesPerMinute_inhibitors['BOT_LANE'] / stats.length;
+        averagedStats['inhibitors']['MID_LANE'][m+1] = instancesPerMinute_inhibitors['MID_LANE'] / stats.length;
+
+    }
+
 
 
     //for each minute
@@ -146,23 +268,32 @@ var calculateAverages = function(stats){
 
         //add the statistics to the list
         for(i=0; i<stats.length; i++){
-            if(m<stats[i]['timeline'].length){
+            if(m<stats[i]['minionsKilled'].length){
                 instancesPerMinute ++;
-                oneTimeStamp['visionWardsPlaced'] += stats[i]['timeline'][m]['visionWardsPlaced'];
-                oneTimeStamp['sightWardsPlaced'] += stats[i]['timeline'][m]['sightWardsPlaced'];
-                oneTimeStamp['yellowTrinketPlaced'] += stats[i]['timeline'][m]['yellowTrinketPlaced'];
-                oneTimeStamp['jungleMinionsKilled'] += stats[i]['timeline'][m]['jungleMinionsKilled'];
-                oneTimeStamp['minionsKilled'] += stats[i]['timeline'][m]['minionsKilled'];
-                oneTimeStamp['level'] += stats[i]['timeline'][m]['level'];
-                oneTimeStamp['totalGold'] += stats[i]['timeline'][m]['totalGold'];
-                oneTimeStamp['currentGold'] += stats[i]['timeline'][m]['currentGold'];
+                oneTimeStamp['visionWardsPlaced'] += stats[i]['visionWardsPlaced'][m];
+                oneTimeStamp['sightWardsPlaced'] += stats[i]['sightWardsPlaced'][m];
+                oneTimeStamp['yellowTrinketPlaced'] += stats[i]['yellowTrinketPlaced'][m];
+                oneTimeStamp['jungleMinionsKilled'] += stats[i]['jungleMinionsKilled'][m];
+                oneTimeStamp['minionsKilled'] += stats[i]['minionsKilled'][m];
+                oneTimeStamp['level'] += stats[i]['level'][m];
+                oneTimeStamp['totalGold'] += stats[i]['totalGold'][m];
+                oneTimeStamp['currentGold'] += stats[i]['currentGold'][m];
 
             }
         }
 
         oneTimeStamp['visionWardsPlaced'] = oneTimeStamp['visionWardsPlaced'] / instancesPerMinute;
+        if((oneTimeStamp['visionWardsPlaced'] == null) || (oneTimeStamp['visionWardsPlaced'] == NaN)){
+            oneTimeStamp['visionWardsPlaced'] = 0;
+        }
         oneTimeStamp['sightWardsPlaced'] = oneTimeStamp['sightWardsPlaced'] / instancesPerMinute;
+        if((oneTimeStamp['sightWardsPlaced'] == null) || (oneTimeStamp['sightWardsPlaced'] == NaN)){
+            oneTimeStamp['sightWardsPlaced'] = 0;
+        }
         oneTimeStamp['yellowTrinketPlaced'] = oneTimeStamp['yellowTrinketPlaced'] / instancesPerMinute;
+        if((oneTimeStamp['yellowTrinketPlaced'] == null) || (oneTimeStamp['yellowTrinketPlaced'] == NaN)){
+            oneTimeStamp['yellowTrinketPlaced'] = 0;
+        }
         oneTimeStamp['jungleMinionsKilled'] = oneTimeStamp['jungleMinionsKilled'] / instancesPerMinute;
         oneTimeStamp['minionsKilled'] = oneTimeStamp['minionsKilled'] / instancesPerMinute;
 
@@ -170,16 +301,25 @@ var calculateAverages = function(stats){
         oneTimeStamp['totalGold'] = oneTimeStamp['totalGold'] / instancesPerMinute;
         oneTimeStamp['currentGold'] = oneTimeStamp['currentGold'] / instancesPerMinute;
 
-        averagedStats['timeline']['instancesPerMinute'][m+1] = instancesPerMinute;
-        averagedStats['timeline']['visionWardsPlaced'][m+1] = oneTimeStamp['visionWardsPlaced'];
-        averagedStats['timeline']['sightWardsPlaced'][m+1] = oneTimeStamp['sightWardsPlaced'];
-        averagedStats['timeline']['yellowTrinketPlaced'][m+1] = oneTimeStamp['yellowTrinketPlaced'];
-        averagedStats['timeline']['jungleMinionsKilled'][m+1] = oneTimeStamp['jungleMinionsKilled'];
-        averagedStats['timeline']['minionsKilled'][m+1] = oneTimeStamp['minionsKilled'];
-        averagedStats['timeline']['level'][m+1] = oneTimeStamp['level'];
-        averagedStats['timeline']['totalGold'][m+1] = oneTimeStamp['totalGold'];
-        averagedStats['timeline']['currentGold'][m+1] = oneTimeStamp['currentGold'];
+
+
+
+        averagedStats['instancesPerMinute'][m+1] = instancesPerMinute;
+        averagedStats['visionWardsPlaced'][m+1] = oneTimeStamp['visionWardsPlaced'];
+        averagedStats['sightWardsPlaced'][m+1] = oneTimeStamp['sightWardsPlaced'];
+        averagedStats['yellowTrinketPlaced'][m+1] = oneTimeStamp['yellowTrinketPlaced'];
+        averagedStats['jungleMinionsKilled'][m+1] = oneTimeStamp['jungleMinionsKilled'];
+        averagedStats['minionsKilled'][m+1] = oneTimeStamp['minionsKilled'];
+        averagedStats['level'][m+1] = oneTimeStamp['level'];
+        averagedStats['totalGold'][m+1] = oneTimeStamp['totalGold'];
+        averagedStats['currentGold'][m+1] = oneTimeStamp['currentGold'];
     }
+
+
+    for(var i=0; i<stats.length; i++){
+        averagedStats['gameLength'] += stats[i]['minionsKilled'].length;
+    }
+    averagedStats['gameLength'] = averagedStats['gameLength'] / stats.length;
 
     return averagedStats;
 

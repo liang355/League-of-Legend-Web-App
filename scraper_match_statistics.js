@@ -228,7 +228,7 @@ var addChampionStatistics = function(championIdentification, championStatistics,
 //(3) add stats to DB
 var storeStats = function(stats) {
 
-    //try {
+    try {
 
 
         var championIdentification = {
@@ -311,6 +311,7 @@ var storeStats = function(stats) {
             one: {
                 baronNashor:[],
                 dragon:[],
+                baseTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
                 innerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
                 nexusTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
                 outerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
@@ -319,6 +320,7 @@ var storeStats = function(stats) {
             two: {
                 baronNashor:[],
                 dragon:[],
+                baseTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
                 innerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
                 nexusTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
                 outerTurrets:{TOP_LANE:0, MID_LANE:0, BOT_LANE:0},
@@ -392,6 +394,14 @@ var storeStats = function(stats) {
                     }
                 }
                 if (event['eventType'] == "BUILDING_KILL"){
+                    if(event['towerType'] == "BASE_TURRET"){
+                        if(event['teamId'] == 100){
+                            eventsPerTeam['one']['baseTurrets'][event['laneType']] = f;
+                        }
+                        else{
+                            eventsPerTeam['two']['baseTurrets'][event['laneType']] = f;
+                        }
+                    }
                     if(event['towerType'] == "INNER_TURRET"){
                         if(event['teamId'] == 100){
                             eventsPerTeam['one']['innerTurrets'][event['laneType']] = f;
@@ -590,10 +600,10 @@ var storeStats = function(stats) {
 
         }
 
-    //}
-    //catch (e){
-    //    console.log(printERR+"storeStats, "+e);
-    //}
+    }
+    catch (e){
+        console.log(printERR+"storeStats, "+e);
+    }
 
 };
 
