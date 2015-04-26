@@ -1079,3 +1079,16 @@ var mainLoop = function(){
 //mainLoop();
 
 
+//ChampionStatistics.find({ }, function(err, champStats){
+//    if(err){
+//        console.log(err);
+//       // return;
+//    }
+//
+//    for(var i=0; i<200; i++){
+//        ChampionStatistics.remove({_id:champStats[i]["_id"]}, function(err, numbRem){
+//            console.log("numbRem = "+numbRem);
+//        });
+//    }
+//    console.log("done");
+//});
