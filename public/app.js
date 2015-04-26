@@ -4,7 +4,7 @@ var app = angular.module("LolApp", ['ngSanitize','ui.select']);
 
 
 app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, championStatistics){
-    $scope.header = "Lollipop";
+    $scope.header = "LoLlipop";
 
     //required values
     $scope.dropdown = {};
