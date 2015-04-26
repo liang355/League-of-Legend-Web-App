@@ -302,8 +302,6 @@ var calculateAverages = function(stats){
         oneTimeStamp['currentGold'] = oneTimeStamp['currentGold'] / instancesPerMinute;
 
 
-
-
         averagedStats['instancesPerMinute'][m+1] = instancesPerMinute;
         averagedStats['visionWardsPlaced'][m+1] = oneTimeStamp['visionWardsPlaced'];
         averagedStats['sightWardsPlaced'][m+1] = oneTimeStamp['sightWardsPlaced'];

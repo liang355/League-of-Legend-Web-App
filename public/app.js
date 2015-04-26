@@ -25,7 +25,8 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
         $scope.data = JSON.stringify(data, null, 4);
 
         //call function from lindGraph.js
-        makeLineGraph(data["timeline"]);
+        //"data" is the returned object championStatistics
+        makeLineGraph(data);
         $scope.showStart = true;
     };
 
