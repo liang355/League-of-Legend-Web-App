@@ -1,6 +1,6 @@
 
 
-app.directive('championDropdown', ['champions', function(champions){
+app.directive('championDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
@@ -8,14 +8,19 @@ app.directive('championDropdown', ['champions', function(champions){
         },
         templateUrl:'directives/dropdown/champions.html',
         controller:function($scope){
-            champions.get(function(data){
-                $scope.champions = data;
+            expressApi.getChampions(function(data){
+                //convert object to list
+                var champions = [];
+                for (var key in data){
+                    champions.push(data[key]);
+                }
+                $scope.champions = champions;
             });
         }
     };
 }]);
 
-app.directive('tierDropdown', function(){
+app.directive('tierDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
@@ -23,15 +28,15 @@ app.directive('tierDropdown', function(){
         },
         templateUrl:'directives/dropdown/tiers.html',
         controller:function($scope){
-
-            //TODO: populate
-            $scope.tiers = [{name: "Bronze V", id:27}, {name:"Challenger", id:1}];
+            expressApi.getTiers(function(tiers){
+                $scope.tiers = tiers;
+            });
         }
     };
-});
+}]);
 
 
-app.directive('roleDropdown', function(){
+app.directive('roleDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
@@ -39,9 +44,9 @@ app.directive('roleDropdown', function(){
         },
         templateUrl:'directives/dropdown/roles.html',
         controller:function($scope){
-
-            //TODO: populate
-            $scope.roles = [{name: "Support", id:"SUPPORT"}, {name:"ADC", id:"ADC"}];
+            expressApi.getRoles(function(roles){
+                $scope.roles = roles;
+            });
         }
     };
-});
+}]);

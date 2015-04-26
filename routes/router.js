@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var https = require('https');
+var config = require("../config/config");
 
 var Champion = require('../models/champion.js');
 var Summoner = require('../models/summoner.js');
@@ -329,12 +331,50 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
         if(err){
             return next(err);
         }
-
-        var averagedStats = calculateAverages(stats);
-       // console.log(averagedStats);
-
-        res.json(averagedStats);
+        if (stats.length > 1){
+            var averagedStats = calculateAverages(stats);
+            res.json(averagedStats);
+        }
+        else {
+            res.json({});
+        }
     });
+});
+
+
+
+router.get('/static/champion', function(req, res, next){
+    var api_key = config.api_key;
+    var region = "na";
+    var host = "https://na.api.pvp.net";
+
+    //paths
+    var championPath = "/api/lol/static-data/" + region + "/v1.2/champion?api_key=";
+
+    https.get(host + championPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                res.json(obj.data);
+            }
+        });
+    });
+});
+
+router.get('/static/role/list', function(req, res, next){
+    var roles = module.require('../static/role.js');
+    res.json(roles)
+});
+
+router.get('/static/tier/list', function(req, res, next){
+    var tiers = module.require('../static/tier.js');
+    res.json(tiers)
 });
 
 
