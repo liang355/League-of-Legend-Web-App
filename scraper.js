@@ -225,32 +225,39 @@ var resolveUnknownPlayerTiers = function(numplayers404){
 //    var max = summonerData.length;
 //
 //    //loop through summoners, look up ID's wait 2seconds and add to DB
-//    var lolkingseedInterval = setInterval(function(){
-//        var summonerName = summonerData[count]['name'];
-//        var summonerLookup = summonerData[count]['lookup'];
-//        var summonerTier = summonerData[count]['tier'];
-//        matchPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+summonerName+"?api_key=";
 //
-//        console.log("started request for summonerID of "+summonerName);
+//    var lolkingseedInterval = setInterval(function () {
+//            var summonerName = summonerData[count]['name'];
+//            var summonerLookup = summonerData[count]['lookup'];
+//            var summonerTier = summonerData[count]['tier'];
+//            matchPath = "/api/lol/" + region + "/v1.4/summoner/by-name/" + summonerName + "?api_key=";
+//            console.log("started request for summonerID of " + summonerName);
 //
-//        //send API request to retreive summonerID
-//        https.get(host + matchPath + api_key, function(response){
-//            console.log("received Match History response");
-//            var output = '';
-//            response.on("data", function(chunk){
-//                output += chunk;
+//            //send API request to retreive summonerID
+//            https.get(host + matchPath + api_key, function (response) {
+//                console.log("received Match History response");
+//                var status = response.statusCode;
+//                var output = '';
+//                response.on("data", function (chunk) {
+//                    output += chunk;
+//                });
+//                response.on("end", function () {
+//
+//                    if(status == 200){
+//                        var obj = JSON.parse(output);
+//                        console.log("obj=" + obj[summonerLookup]['id'] + ", name=" + obj[summonerLookup]['name']);
+//                        addSummoner(obj[summonerLookup]['id'], summonerName, summonerTier); //DONT ADD THEM AGAIN
+//                    }
+//                    else{
+//                        console.log(printERR+" queryForRecentMatches, statusCode = "+statusCode);
+//                    }
+//                });
 //            });
-//            response.on("end", function(){
-//                var obj = JSON.parse(output);
-//                console.log("obj="+obj[summonerLookup]['id']+", name="+obj[summonerLookup]['name']);
-//                addSummoner(obj[summonerLookup]['id'], summonerName, summonerTier); //DONT ADD THEM AGAIN
-//            });
-//        });
-//        count++;
-//        if(count >= max){
-//            clearInterval(lolkingseedInterval);
-//        }
-//    },2000);
+//            count++;
+//            if (count >= max) {
+//                clearInterval(lolkingseedInterval);
+//            }
+//    }, 2000);
 //};
 //
 //addLoLKingSeeds(lolKingSeeds);
@@ -460,7 +467,6 @@ var populateLocalChampionIdToNameVar = function(){
         }
     });
 };
-
 
 
 /* ===================================
@@ -1089,4 +1095,10 @@ var mainLoop = function(){
 //        });
 //    }
 //    console.log("done");
+//});
+
+//Summoner.find({},function(err, summoners){
+//    for(var s= 0; s<summoners.length; s++){
+//        console.log(summoners[s]);
+//    }
 //});

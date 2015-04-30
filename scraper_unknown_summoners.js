@@ -53,11 +53,22 @@ var updateChampionStatistics = function(summonerID, tier){
 
         ChampionStatistics.find({tier: summonerID}, function (err, champStats) {
             if (champStats == null) {
-                console.log("updateChampionStatistics, none to update.")
+                console.log("updateChampionStatistics, none to update.");
                 return;
             }
             else {
-                console.log("updateChampionStatistics, " + champStats.length + " to update.")
+                console.log("updateChampionStatistics, " + champStats.length + " to update.");
+                if(champStats.length==0){
+                    Summoner.remove({sID:summonerID}, function(err){
+
+                        if(err){
+                            console.log(printERR+"updateChampionStatistics, err="+err);
+                        }
+                        else{
+                            console.log("summoner removed.");
+                        }
+                    });
+                }
             }
             for (var c = 0; c < champStats.length; c++) {
                 champStats[c].tier = tier;
@@ -88,7 +99,7 @@ var resolveUnknownPlayerTiers = function(){
             //var api_key = config.api_key3;
             var region = "na";
             var host = "https://na.api.pvp.net";
-            var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key=";
+            var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key3=";
 
             //send API request
             https.get(host + matchPath + api_key, function (response) {
@@ -109,7 +120,11 @@ var resolveUnknownPlayerTiers = function(){
                         console.log(printLog + summonerID + " " + tier + "_" + division);
                         //update db
                         summoners['tier'] = numeric;
-                        summoners.save();
+                        summoners.save(function(err){
+                            if(err){
+                                console.log(printERR+"resolveUnknownPlayerTiers, err="+err);
+                            }
+                        });
 
                         updateChampionStatistics(summonerID, numeric);
                     }
