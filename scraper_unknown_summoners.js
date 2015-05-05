@@ -58,7 +58,7 @@ var updateChampionStatistics = function(summonerID, tier){
             }
             else {
                 console.log("updateChampionStatistics, " + champStats.length + " to update.");
-                if(champStats.length==0){
+                /*if(champStats.length==0){
                     Summoner.remove({sID:summonerID}, function(err){
 
                         if(err){
@@ -67,8 +67,8 @@ var updateChampionStatistics = function(summonerID, tier){
                         else{
                             console.log("summoner removed.");
                         }
-                    });
-                }
+					});
+                }*/
             }
             for (var c = 0; c < champStats.length; c++) {
                 champStats[c].tier = tier;
@@ -82,7 +82,7 @@ var updateChampionStatistics = function(summonerID, tier){
 
 };
 
-var resolveUnknownPlayerTiers = function(){
+var resolveUnknownPlayerTiers = function(key){
     var err = false;
     try {
 
@@ -93,13 +93,21 @@ var resolveUnknownPlayerTiers = function(){
                 console.log(printLog + "summoners == null");
                 return;
             }
+			//var randSummoner = Math.floor(Math.random()*summoners.length);
+            //var summonerID = summoners[randSummoner]['sID'];
             var summonerID = summoners['sID'];
 
-            var api_key = config.api_key;
+            var api_key;
+			if(key){
+				api_key = config.api_key3;
+			}			
+			else{
+				api_key = config.api_key3a;
+			}
             //var api_key = config.api_key3;
             var region = "na";
             var host = "https://na.api.pvp.net";
-            var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key3=";
+            var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key=";
 
             //send API request
             https.get(host + matchPath + api_key, function (response) {
@@ -113,13 +121,23 @@ var resolveUnknownPlayerTiers = function(){
                 response.on("end", function () {
                     if (statusCode == 200) {
                         var obj = JSON.parse(output);
-                        var tier = obj[summonerID][0]['tier'];
-                        var division = obj[summonerID][0]['entries'][0]['division'];
-                        var numeric = tierN[tier] + divisionN[division];
+						var tier;
+						var division;
+						var numeric;
+						for(var q=0; q<obj[summonerID].length; q++){
+							if(obj[summonerID][q]['queue']=="RANKED_SOLO_5x5"){
+								tier = obj[summonerID][q]['tier'];
+								division = obj[summonerID][q]['entries'][q]['division'];
+								numeric = tierN[tier] + divisionN[division];
+							}
+						}
+                        
 
                         console.log(printLog + summonerID + " " + tier + "_" + division);
                         //update db
-                        summoners['tier'] = numeric;
+                        //summoners[randSummoner]['tier'] = numeric;
+                        //summoners[randSummoner].save(function(err){
+						summoners['tier'] = numeric;
                         summoners.save(function(err){
                             if(err){
                                 console.log(printERR+"resolveUnknownPlayerTiers, err="+err);
@@ -136,7 +154,9 @@ var resolveUnknownPlayerTiers = function(){
                     }
                     else {
                         console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
-                        summoners['tier'] = 42;
+                        //summoners[randSummoner]['tier'] = 42;
+                        //[randSummoner].save();
+						summoners['tier'] = 42;
                         summoners.save();
                     }
 
@@ -156,9 +176,17 @@ var resolveUnknownPlayerTiers = function(){
 
 
 var mainLoop = function(){
+	var key = true;
+		
     var mainLoopInterval = setInterval(function(){
-        resolveUnknownPlayerTiers();
-    },2500);
+		if(key){
+			key = false;
+		}
+		else{
+			key = true;
+		}
+        resolveUnknownPlayerTiers(key);
+    },1001);
 
 };
 

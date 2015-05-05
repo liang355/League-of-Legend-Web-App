@@ -37,12 +37,12 @@ var addChampions = function(championData){
 
 //make api requests, then move it to our db
 var addChampionsToDatabase = function() {
-    var api_key = config.api_key;
+    var api_key = config.api_key2;
     var region = "na";
     var host = "https://na.api.pvp.net";
 
     //paths
-    var championPath = "/api/lol/static-data/" + region + "/v1.2/champion?api_key2=";
+    var championPath = "/api/lol/static-data/" + region + "/v1.2/champion?api_key=";
 
 
     https.get(host + championPath + api_key, function (response) {
@@ -232,7 +232,7 @@ var addChampionStatistics = function(championIdentification, championStatistics,
 //(3) add stats to DB
 var storeStats = function(stats) {
 
-    //try {
+    try {
 
 
         var championIdentification = {
@@ -637,10 +637,10 @@ var storeStats = function(stats) {
 
         }
 
-    //}
-    //catch (e){
-    //    console.log(printERR+"storeStats, "+e);
-    //}
+    }
+    catch (e){
+        console.log(printERR+"storeStats, "+e);
+    }
 
 };
 
@@ -673,13 +673,13 @@ var queryMatchFromTier = function(currTier){
                 return;
             }
 
-            var api_key = config.api_key;
+            var api_key = config.api_key2;
             var region = "na";
             var host = "https://na.api.pvp.net";
 
             var matchID = match['id'];
 
-            var matchPath = "/api/lol/"+region+"/v2.2/match/"+matchID+"?includeTimeline=true&api_key2=";
+            var matchPath = "/api/lol/"+region+"/v2.2/match/"+matchID+"?includeTimeline=true&api_key=";
 
 
             //send API request
@@ -712,7 +712,7 @@ var queryMatchFromTier = function(currTier){
                         console.log(printERR + "err: 429, rate limit exceded");
                     }
                     else{
-                        console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
+                        console.log(printERR + "err: "+statusCode+", bad request, setting tier to 42");
                         match['hasBeenQueried'] = true;
                         match.save();
                     }
@@ -737,7 +737,7 @@ var mainLoop = function(){
         queryMatchFromTier(currTier);
 
         currTier ++;
-        if(currTier > 27){
+        if(currTier >27){
             currTier = 1;
         }
     },2001);
