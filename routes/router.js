@@ -218,7 +218,6 @@ var calculateAverages = function(stats){
                 instances++;
             }
         }
-        console.log("dragon, average: "+average+" instances:"+instances);
         if(instances != 0){ average = average/instances; }
 
         var variance = 0;
@@ -317,62 +316,83 @@ var calculateAverages = function(stats){
 
     //Calculate inhibitor averages
     for(var i=0; i<stats.length; i++) {
+        if(stats[i]['baseTurrets'][0]['TOP_LANE']>0){ avgbaseTurrets_T += stats[i]['baseTurrets'][0]['TOP_LANE']; baseTurrets_T ++; }
+        if(stats[i]['baseTurrets'][0]['BOT_LANE']> 0){ avgbaseTurrets_B += stats[i]['baseTurrets'][0]['BOT_LANE']; baseTurrets_B ++; }
+        if(stats[i]['baseTurrets'][0]['MID_LANE']> 0){ avgbaseTurrets_M += stats[i]['baseTurrets'][0]['MID_LANE']; baseTurrets_M ++; }
 
-        avgbaseTurrets_T += stats[i]['baseTurrets'][0]['TOP_LANE'];
-        if(stats[i]['baseTurrets'][0]['TOP_LANE']!= 0){ baseTurrets_T ++; }
-        avgbaseTurrets_B += stats[i]['baseTurrets'][0]['BOT_LANE'];
-        if(stats[i]['baseTurrets'][0]['BOT_LANE']!= 0){ baseTurrets_B ++; }
-        avgbaseTurrets_M += stats[i]['baseTurrets'][0]['MID_LANE'];
-        if(stats[i]['baseTurrets'][0]['MID_LANE']!= 0){ baseTurrets_M ++; }
+        if(stats[i]['innerTurrets'][0]['TOP_LANE']> 0){ avginnerTurrets_T += stats[i]['innerTurrets'][0]['TOP_LANE']; innerTurrets_T ++; }
+        if(stats[i]['innerTurrets'][0]['BOT_LANE']> 0){ avginnerTurrets_B += stats[i]['innerTurrets'][0]['BOT_LANE']; innerTurrets_B ++; }
+        if(stats[i]['innerTurrets'][0]['MIN_LANE']> 0){ avginnerTurrets_M += stats[i]['innerTurrets'][0]['MID_LANE']; innerTurrets_M ++; }
 
-        avginnerTurrets_T += stats[i]['innerTurrets'][0]['TOP_LANE'];
-        if(stats[i]['innerTurrets'][0]['TOP_LANE']!= 0){ innerTurrets_T ++; }
-        avginnerTurrets_B += stats[i]['innerTurrets'][0]['BOT_LANE'];
-        if(stats[i]['innerTurrets'][0]['BOT_LANE']!= 0){ innerTurrets_B ++; }
-        avginnerTurrets_M += stats[i]['innerTurrets'][0]['MID_LANE'];
-        if(stats[i]['innerTurrets'][0]['MIN_LANE']!= 0){ innerTurrets_M ++; }
+        if(stats[i]['outerTurrets'][0]['TOP_LANE']> 0){ avgouterTurrets_T +=stats[i]['outerTurrets'][0]['TOP_LANE']; outerTurrets_T ++; }
+        if(stats[i]['outerTurrets'][0]['BOT_LANE']> 0){ avgouterTurrets_B +=stats[i]['outerTurrets'][0]['BOT_LANE']; outerTurrets_B ++; }
+        if(stats[i]['outerTurrets'][0]['MID_LANE']> 0){ avgouterTurrets_M +=stats[i]['outerTurrets'][0]['MID_LANE']; outerTurrets_M ++; }
 
-        avgouterTurrets_T +=stats[i]['outerTurrets'][0]['TOP_LANE'];
-        if(stats[i]['outerTurrets'][0]['TOP_LANE']!= 0){ outerTurrets_T ++; }
-        avgouterTurrets_B +=stats[i]['outerTurrets'][0]['BOT_LANE'];
-        if(stats[i]['outerTurrets'][0]['BOT_LANE']!= 0){ outerTurrets_B ++; }
-        avgouterTurrets_M +=stats[i]['outerTurrets'][0]['MID_LANE'];
-        if(stats[i]['outerTurrets'][0]['MID_LANE']!= 0){ outerTurrets_M ++; }
+        if(stats[i]['nexusTurrets'][0]['TOP_LANE']> 0){ avgnexusTurrets_T +=stats[i]['nexusTurrets'][0]['TOP_LANE']; nexusTurrets_T ++; console.log("ham")};
+        //console.log("avgnexusTurrets_T, "+avgnexusTurrets_T);
+        //console.log("nexusTurrets_T, "+ nexusTurrets_T);
+        if(stats[i]['nexusTurrets'][0]['BOT_LANE']> 0){ avgnexusTurrets_B +=stats[i]['nexusTurrets'][0]['BOT_LANE']; nexusTurrets_B ++; }
+        if(stats[i]['nexusTurrets'][0]['MID_LANE']> 0){ avgnexusTurrets_M +=stats[i]['nexusTurrets'][0]['MID_LANE']; nexusTurrets_M ++; }
 
-        avgnexusTurrets_T +=stats[i]['nexusTurrets'][0]['TOP_LANE'];
-        if(stats[i]['nexusTurrets'][0]['TOP_LANE']!= 0){ nexusTurrets_T ++; }
-        avgnexusTurrets_B +=stats[i]['nexusTurrets'][0]['BOT_LANE'];
-        if(stats[i]['nexusTurrets'][0]['BOT_LANE']!= 0){ nexusTurrets_B ++; }
-        avgnexusTurrets_M +=stats[i]['nexusTurrets'][0]['MID_LANE'];
-        if(stats[i]['nexusTurrets'][0]['MID_LANE']!= 0){ nexusTurrets_M ++; }
-
-        avginhibitors_T += stats[i]['inhibitors'][0]['TOP_LANE'];
-        if(stats[i]['inhibitors'][0]['TOP_LANE']!= 0){ inhibitors_T ++; }
-        avginhibitors_B += stats[i]['inhibitors'][0]['BOT_LANE'];
-        if(stats[i]['inhibitors'][0]['BOT_LANE']!= 0){ inhibitors_B ++; }
-        avginhibitors_M += stats[i]['inhibitors'][0]['MID_LANE'];
-        if(stats[i]['inhibitors'][0]['MID_LANE']!= 0){ inhibitors_M ++; }
+        if(stats[i]['inhibitors'][0]['TOP_LANE']> 0){ avginhibitors_T += stats[i]['inhibitors'][0]['TOP_LANE']; inhibitors_T ++; }
+        if(stats[i]['inhibitors'][0]['BOT_LANE']> 0){ avginhibitors_B += stats[i]['inhibitors'][0]['BOT_LANE']; inhibitors_B ++; }
+        if(stats[i]['inhibitors'][0]['MID_LANE']> 0){ avginhibitors_M += stats[i]['inhibitors'][0]['MID_LANE']; inhibitors_M ++; }
 
     }
-    instancesPerMinute_baseTurrets['TOP_LANE'].push(avgbaseTurrets_T / baseTurrets_T);
-    instancesPerMinute_baseTurrets['BOT_LANE'].push(avgbaseTurrets_B / baseTurrets_B);
-    instancesPerMinute_baseTurrets['MID_LANE'].push(avgbaseTurrets_M / baseTurrets_M);
+    //var averageBT = avgbaseTurrets_T / baseTurrets_T;
+    //console.log(averageBT);
+    //instancesPerMinute_baseTurrets['TOP_LANE'].push(averageBT);
+    //var averageBB =avgbaseTurrets_B / baseTurrets_B;
+    //instancesPerMinute_baseTurrets['BOT_LANE'].push(averageBB);
+    //var averageBM = avgbaseTurrets_M / baseTurrets_M;
+    //instancesPerMinute_baseTurrets['MID_LANE'].push(averageBM);
+    //
+    //var averageIT = avginnerTurrets_T / innerTurrets_T;
+    //instancesPerMinute_innerTurrets['TOP_LANE'].push(averageIT);
+    //var averageIB = avginnerTurrets_B / innerTurrets_B;
+    //instancesPerMinute_innerTurrets['BOT_LANE'].push(averageIB);
+    //var averageIM = avginnerTurrets_M / innerTurrets_M;
+    //instancesPerMinute_innerTurrets['MID_LANE'].push(averageIM);
+    //
+    //var averageOT = avgouterTurrets_T / outerTurrets_T;
+    //instancesPerMinute_outerTurrets['TOP_LANE'].push(averageOT);
+    //var averageOB = avgouterTurrets_B / outerTurrets_B;
+    //instancesPerMinute_outerTurrets['BOT_LANE'].push(averageOB);
+    //var averageOM = avgouterTurrets_M / outerTurrets_M;
+    //instancesPerMinute_outerTurrets['MID_LANE'].push(averageOM);
+    //
+    //var averageNT =  avgnexusTurrets_T / nexusTurrets_T;
+    //instancesPerMinute_nexusTurrets ['TOP_LANE'].push(averageNT);
+    //var averageNB = avgnexusTurrets_B / nexusTurrets_B;
+    //instancesPerMinute_nexusTurrets['BOT_LANE'].push(averageNB);
+    //var averageNM = avgnexusTurrets_M / nexusTurrets_M;
+    //instancesPerMinute_nexusTurrets['MID_LANE'].push(averageNM);
+    //
+    //var averageINT = avginhibitors_T / inhibitors_T;
+    //instancesPerMinute_inhibitors['TOP_LANE'].push(averageINT);
+    //var averageINB = avginhibitors_B / inhibitors_B;
+    //instancesPerMinute_inhibitors['BOT_LANE'].push(averageINB);
+    //var averageINM = avginhibitors_M / inhibitors_M;
+    //instancesPerMinute_inhibitors['MID_LANE'].push(averageINM);
+    avgbaseTurrets_T = ( baseTurrets_T == 0 ? 0 : avgbaseTurrets_T / baseTurrets_T);
+    avgbaseTurrets_B =( baseTurrets_B == 0 ? 0 :avgbaseTurrets_B / baseTurrets_B);
+    avgbaseTurrets_M = ( baseTurrets_M == 0 ? 0 :avgbaseTurrets_M / baseTurrets_M);
 
-    instancesPerMinute_innerTurrets['TOP_LANE'].push(avginnerTurrets_T / innerTurrets_T);
-    instancesPerMinute_innerTurrets['BOT_LANE'].push(avginnerTurrets_B / innerTurrets_B);
-    instancesPerMinute_innerTurrets['MID_LANE'].push(avginnerTurrets_M / innerTurrets_M);
+    avginnerTurrets_T = ( innerTurrets_T == 0 ? 0 :avginnerTurrets_T / innerTurrets_T);
+    avginnerTurrets_B = ( innerTurrets_B == 0 ? 0 :avginnerTurrets_B / innerTurrets_B);
+    avginnerTurrets_M = ( innerTurrets_M == 0 ? 0 :avginnerTurrets_M / innerTurrets_M);
 
-    instancesPerMinute_outerTurrets['TOP_LANE'].push(avgouterTurrets_T / outerTurrets_T);
-    instancesPerMinute_outerTurrets['BOT_LANE'].push(avgouterTurrets_B / outerTurrets_B);
-    instancesPerMinute_outerTurrets['MID_LANE'].push(avgouterTurrets_M / outerTurrets_M);
+    avgouterTurrets_T = ( outerTurrets_T == 0 ? 0 :avgouterTurrets_T / outerTurrets_T);
+    avgouterTurrets_B = ( outerTurrets_B == 0 ? 0 :avgouterTurrets_B / outerTurrets_B);
+    avgouterTurrets_M = ( outerTurrets_M == 0 ? 0 :avgouterTurrets_M / outerTurrets_M);
 
-    instancesPerMinute_nexusTurrets ['TOP_LANE'].push(avgnexusTurrets_T / nexusTurrets_T);
-    instancesPerMinute_nexusTurrets['BOT_LANE'].push(avgnexusTurrets_B / nexusTurrets_B);
-    instancesPerMinute_nexusTurrets['MID_LANE'].push(avgnexusTurrets_M / nexusTurrets_M);
+    avgnexusTurrets_T = ( nexusTurrets_T == 0 ? 0 :avgnexusTurrets_T / nexusTurrets_T);
+    avgnexusTurrets_B = ( nexusTurrets_B == 0 ? 0 :avgnexusTurrets_B / nexusTurrets_B);
+    avgnexusTurrets_M = ( nexusTurrets_M == 0 ? 0 :avgnexusTurrets_M / nexusTurrets_M);
 
-    instancesPerMinute_inhibitors['TOP_LANE'].push(avginhibitors_T / inhibitors_T);
-    instancesPerMinute_inhibitors['BOT_LANE'].push(avginhibitors_B / inhibitors_B);
-    instancesPerMinute_inhibitors['MID_LANE'].push(avginhibitors_M / inhibitors_M);
+    avginhibitors_T = ( inhibitors_T == 0 ? 0 :avginhibitors_T / inhibitors_T);
+    avginhibitors_B = ( inhibitors_B == 0 ? 0 :avginhibitors_B / inhibitors_B);
+    avginhibitors_M = ( inhibitors_M == 0 ? 0 :avginhibitors_M / inhibitors_M);
 
 
     //calculate sd and variance
