@@ -2,22 +2,4 @@ body {
   font: 100% Helvetica, sans-serif;
   color: #333; }
 
-.wrapper {
-  background-image: url("../images/other/lollipop.jpg"); }
-
-.submitButton {
-  top: 2px;
-  position: relative;
-  height: 35px;
-  font-size: 16px; }
-
-.header {
-  height: 70px;
-  color: white; }
-
-.staticForm {
-  margin-top: 20px;
-  padding-right: 10px;
-  float: right; }
-
 /*# sourceMappingURL=style.css.map */

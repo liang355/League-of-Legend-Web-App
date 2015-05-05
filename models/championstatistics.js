@@ -25,6 +25,7 @@ var ChampionStatisticsSchema = new mongoose.Schema({
     name:String,
     role:String,
     tier:Number,
+    winner:Boolean,
 
     assists:Number,
     kills:Number,
