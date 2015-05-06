@@ -7,6 +7,8 @@ var i;
 var chart;
 var theInterval;
 var timeLineLength;
+var cs;
+var rawCS;
 
 var makeLineGraph = function(timeline){
 
@@ -22,6 +24,9 @@ var makeLineGraph = function(timeline){
         timeline['yellowTrinketPlaced'],
         timeline['level']
     );
+
+    //export CS to global variable "cs"
+    cs = timeline['minionsKilled'];
 
     //generate chart
     chart = c3.generate({
@@ -39,9 +44,7 @@ var makeLineGraph = function(timeline){
 
     //get the length of timeline
     timeLineLength = timelinedatas[0].length - 1;
-    console.log(timeline['currentGold']);
-    console.log(timelinedatas);
-    console.log(timeLineLength);
+    console.log(timeline);
 };
 
 //function that updates the position of xgrid
@@ -51,19 +54,21 @@ function updateGrid(i){
     ]);
 }
 
-//function that iterates the update of xgrid
+//"start" button "onclick" event: function that iterates the update of xgrid
 function gridAnimate(){
     i = 0;
     clearInterval(theInterval);
+    var creepScore = document.getElementById("cs");
 
     theInterval = setInterval(function(){
         if(i < timeLineLength){
             updateGrid(i);
+            creepScore.innerHTML= Math.round(cs[i+1]);
             i++;
         }
         else{
             clearInterval(theInterval);
         }
-    }, 500);
+    }, 1000);
 }
 

@@ -17,6 +17,7 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
 
     var init = function(){
         initFormFields();
+        $scope.showCounter = false;
         $scope.showStart = false;
     };
 
@@ -32,6 +33,8 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', function($scope, cha
         //"data" is the returned object championStatistics
         makeLineGraph(data);
         $scope.showStart = true;
+        $scope.showCounter = true;
+        document.getElementById("cs").innerHTML = "0";
     };
 
     $scope.getData = function(dropdown){

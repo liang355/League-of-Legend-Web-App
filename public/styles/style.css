@@ -2,4 +2,58 @@ body {
   font: 100% Helvetica, sans-serif;
   color: #333; }
 
+.wrapper {
+  background-image: url("../images/other/lollipop.jpg"); }
+
+.submitButton {
+  top: 2px;
+  position: relative;
+  height: 35px;
+  font-size: 16px; }
+
+.header {
+  height: 70px;
+  color: white; }
+
+.staticForm {
+  margin-top: 20px;
+  padding-right: 10px;
+  float: right; }
+
+#csCounter {
+  /* basics */
+  background-color: #444;
+  color: #C4BE92;
+  text-align: center;
+  /* rounded corners */
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  padding: 0.8em 0.8em 0.8em 0.8em;
+  width: 8em;
+  margin: auto auto 20px auto;
+  -webkit-box-shadow: 0px 0px 12px 0px #000;
+  box-shadow: 0px 0px 12px 0px #000; }
+
+#cs {
+  font-size: 3em;
+  background-color: transparent;
+  text-align: center;
+  border-width: 0;
+  width: 100%;
+  margin: 0 0 0 0;
+  color: #fff; }
+
+label {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-align: center;
+  display: block;
+  font-size: 1em; }
+
+#chart {
+  margin: auto auto 10px auto; }
+
 /*# sourceMappingURL=style.css.map */
