@@ -59,6 +59,19 @@ var isThisEqual = function (m, aVar){
     return 0;
 };
 
+var whatIsTheHighestNumber = function (a, b){
+    var whatis = typeof b;
+    if(whatis == 'string'){
+        return a;
+    }
+    if( b > a ){
+        return b;
+    }
+    else{
+        return a;
+    }
+};
+
 var doesContainMinute = function(m, anArray){
     for(var a=0; a<anArray.length; a++){
         if(m == anArray[a]){
@@ -66,6 +79,28 @@ var doesContainMinute = function(m, anArray){
         }
     }
     return 0;
+};
+
+var doesMinuteFallsWithinWard = function(level, minute, wardMinute, type){
+    var timer = 0;
+    if(type == 'vision'){
+        timer = 5; //TODO: need to figure out how long we want to say this is up, cannot tell when it is killed
+    }else if(type == 'sight'){
+        timer = 3;
+    }else if(type == 'yellow'){ //length changes based on level 1 pre 9, 2 post 9
+        if(level < 9){
+            timer = 1;
+        }
+        if(level >=9){
+            timer = 2;
+        }
+    }
+
+    var experation = wardMinute + timer;
+    if((minute >= wardMinute)&&(minute <=experation)){
+        return true;
+    }
+    return false;
 };
 
 var calculateAverages = function(stats){
@@ -132,7 +167,6 @@ var calculateAverages = function(stats){
         averagedStats['wardsKilled'] += stats[i]['wardsKilled'];
         averagedStats['wardsPlaced'] += stats[i]['wardsPlaced'];
         averagedStats['totalMinionsKilled'] += stats[i]['totalMinionsKilled'];
-        averagedStats['enemyJungleMinionsKilled'] += stats[i]['enemyJungleMinionsKilled'];
         averagedStats['neutralMinionsKilledEnemyJungle'] += stats[i]['neutralMinionsKilledEnemyJungle'];
         averagedStats['neutralMinionsKilledTeamJungle'] += stats[i]['neutralMinionsKilledTeamJungle'];
         if(longestGame < stats[i]['minionsKilled'].length){
@@ -154,7 +188,6 @@ var calculateAverages = function(stats){
     averagedStats['wardsKilled'] = averagedStats["wardsKilled"] / stats.length;
     averagedStats['wardsPlaced'] = averagedStats["wardsPlaced"] / stats.length;
     averagedStats['totalMinionsKilled'] = averagedStats["totalMinionsKilled"] / stats.length;
-    averagedStats['enemyJungleMinionsKilled'] = averagedStats["enemyJungleMinionsKilled"] / stats.length;
     averagedStats['neutralMinionsKilledEnemyJungle'] = averagedStats["neutralMinionsKilledEnemyJungle"] / stats.length;
     averagedStats['neutralMinionsKilledTeamJungle'] = averagedStats["neutralMinionsKilledTeamJungle"] / stats.length;
 
@@ -162,95 +195,287 @@ var calculateAverages = function(stats){
 
 
     //find timeline averages.
+    //
+    //redLizard:0,
+    //    blueGolem:0,
 
 
-    for(var m=0; m<longestGame; m++) {
-        var instancesPerMinute_eliteMonsters = {
-            redLizard:0,
-            blueGolem:0,
-            dragon:0,
-            baronNashor:0
-        };
-        var instancesPerMinute_baseTurrets = {
-            TOP_LANE:0,
-            BOT_LANE:0,
-            MID_LANE:0
-        };
-        var instancesPerMinute_innerTurrets = {
-            TOP_LANE:0,
-            BOT_LANE:0,
-            MID_LANE:0
-        };
-        var instancesPerMinute_outerTurrets = {
-            TOP_LANE:0,
-            BOT_LANE:0,
-            MID_LANE:0
-        };
-        var instancesPerMinute_nexusTurrets = {
-            TOP_LANE:0,
-            BOT_LANE:0,
-            MID_LANE:0
-        };
-        var instancesPerMinute_inhibitors = {
-            TOP_LANE:0,
-            BOT_LANE:0,
-            MID_LANE:0
-        };
-        for(var i=0; i<stats.length; i++){
-            instancesPerMinute_eliteMonsters['redLizard'] += doesContainMinute(m, stats[i]['redLizard']);
-            instancesPerMinute_eliteMonsters['blueGolem'] += doesContainMinute(m, stats[i]['blueGolem']);
-            instancesPerMinute_eliteMonsters['dragon'] += doesContainMinute(m, stats[i]['dragon']);
-            instancesPerMinute_eliteMonsters['baronNashor'] += doesContainMinute(m, stats[i]['baronNashor']);
 
-            instancesPerMinute_baseTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['baseTurrets'][0]['TOP_LANE']);
-            instancesPerMinute_baseTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['baseTurrets'][0]['BOT_LANE']);
-            instancesPerMinute_baseTurrets['MID_LANE'] += isThisEqual(m, stats[i]['baseTurrets'][0]['MID_LANE']);
-
-            instancesPerMinute_innerTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['innerTurrets'][0]['TOP_LANE']);
-            instancesPerMinute_innerTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['innerTurrets'][0]['BOT_LANE']);
-            instancesPerMinute_innerTurrets['MID_LANE'] += isThisEqual(m, stats[i]['innerTurrets'][0]['MID_LANE']);
-
-            instancesPerMinute_outerTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['outerTurrets'][0]['TOP_LANE']);
-            instancesPerMinute_outerTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['outerTurrets'][0]['BOT_LANE']);
-            instancesPerMinute_outerTurrets['MID_LANE'] += isThisEqual(m, stats[i]['outerTurrets'][0]['MID_LANE']);
-
-            instancesPerMinute_nexusTurrets['TOP_LANE'] += isThisEqual(m, stats[i]['nexusTurrets'][0]['TOP_LANE']);
-            instancesPerMinute_nexusTurrets['BOT_LANE'] += isThisEqual(m, stats[i]['nexusTurrets'][0]['BOT_LANE']);
-            instancesPerMinute_nexusTurrets['MID_LANE'] += isThisEqual(m, stats[i]['nexusTurrets'][0]['MID_LANE']);
-
-            instancesPerMinute_inhibitors['TOP_LANE'] += isThisEqual(m, stats[i]['inhibitors'][0]['TOP_LANE']);
-            instancesPerMinute_inhibitors['BOT_LANE'] += isThisEqual(m, stats[i]['inhibitors'][0]['BOT_LANE']);
-            instancesPerMinute_inhibitors['MID_LANE'] += isThisEqual(m, stats[i]['inhibitors'][0]['MID_LANE']);
-
+    //calculate averages of each dragon kill
+    var mostDragonKills = 0;
+    for(var i=0; i<stats.length; i++){
+        if(stats[i]['dragon'].length > mostDragonKills){
+            mostDragonKills = stats[i]['dragon'].length;
         }
+    }
+    for(var d=0; d<mostDragonKills; d++){
+        var average = 0;
+        var instances = 0;
+        //calc average
+        for(var i=0; i<stats.length; i++){
+            if(stats[i]['dragon'].length > d){
+                average += stats[i]['dragon'][d];
+                instances++;
+            }
+        }
+        if(instances != 0){ average = average/instances; }
+
+        var variance = 0;
+        //calc variance then sd
+        for(var i=0; i<stats.length; i++){
+            if(stats[i]['dragon'].length > d){
+                variance += Math.pow((stats[i]['dragon'][d] - average), 2);
+            }
+        }
+        if(instances != 0) {  variance = variance / instances; }
+        var standardDiviation = Math.sqrt(variance);
+
+        averagedStats['dragon'].push(average);
+        averagedStats['dragon'].push(standardDiviation);
+    }
 
 
-        averagedStats['blueGolem'][m+1] =  instancesPerMinute_eliteMonsters['blueGolem'] / stats.length;
-        averagedStats['redLizard'][m+1] = instancesPerMinute_eliteMonsters['redLizard'] / stats.length;
-        averagedStats['dragon'][m+1] = instancesPerMinute_eliteMonsters['dragon'] / stats.length;
-        averagedStats['baronNashor'][m+1] = instancesPerMinute_eliteMonsters['baronNashor'] / stats.length;
+    //calculate averages of each baron kill
+    var mostBaronKills = 0;
+    for(var i=0; i<stats.length; i++){
+        if(stats[i]['baronNashor'].length > mostBaronKills){
+            mostBaronKills = stats[i]['baronNashor'].length;
+        }
+    }
+    for(var d=0; d<mostBaronKills; d++){
+        var average = 0;
+        var instances = 0;
+        //calc average
+        for(var i=0; i<stats.length; i++){
+            if(stats[i]['baronNashor'].length > d){
+                average += stats[i]['baronNashor'][d];
+                instances++;
+            }
+        }
+        if(instances != 0) { average = average / instances; }
 
-        averagedStats['baseTurrets']['TOP_LANE'][m+1] = instancesPerMinute_baseTurrets['TOP_LANE'] / stats.length;
-        averagedStats['baseTurrets']['BOT_LANE'][m+1] = instancesPerMinute_baseTurrets['BOT_LANE'] / stats.length;
-        averagedStats['baseTurrets']['MID_LANE'][m+1] = instancesPerMinute_baseTurrets['MID_LANE'] / stats.length;
+        var variance = 0;
+        //calc variance then sd
+        for(var i=0; i<stats.length; i++){
+            if(stats[i]['baronNashor'].length > d){
+                variance += Math.pow((stats[i]['baronNashor'][d] - average), 2);
+            }
+        }
+        if(instances != 0) { variance = variance / instances;}
 
-        averagedStats['innerTurrets']['TOP_LANE'][m+1] = instancesPerMinute_innerTurrets['TOP_LANE'] / stats.length;
-        averagedStats['innerTurrets']['BOT_LANE'][m+1] = instancesPerMinute_innerTurrets['BOT_LANE'] / stats.length;
-        averagedStats['innerTurrets']['MID_LANE'][m+1] = instancesPerMinute_innerTurrets['MID_LANE'] / stats.length;
+        var standardDiviation = Math.sqrt(variance);
+        averagedStats['baronNashor'].push(average);
+        averagedStats['baronNashor'].push(standardDiviation);
+    }
 
-        averagedStats['outerTurrets']['TOP_LANE'][m+1] = instancesPerMinute_outerTurrets['TOP_LANE'] / stats.length;
-        averagedStats['outerTurrets']['BOT_LANE'][m+1] = instancesPerMinute_outerTurrets['BOT_LANE'] / stats.length;
-        averagedStats['outerTurrets']['MID_LANE'][m+1] = instancesPerMinute_outerTurrets['MID_LANE'] / stats.length;
 
-        averagedStats['nexusTurrets']['TOP_LANE'][m+1] = instancesPerMinute_nexusTurrets['TOP_LANE'] / stats.length;
-        averagedStats['nexusTurrets']['BOT_LANE'][m+1] = instancesPerMinute_nexusTurrets['BOT_LANE'] / stats.length;
-        averagedStats['nexusTurrets']['MID_LANE'][m+1] = instancesPerMinute_nexusTurrets['MID_LANE'] / stats.length;
+    var instancesPerMinute_baseTurrets = {
+        TOP_LANE:[],
+        BOT_LANE:[],
+        MID_LANE:[]
+    };
+    var instancesPerMinute_innerTurrets = {
+        TOP_LANE:[],
+        BOT_LANE:[],
+        MID_LANE:[]
+    };
+    var instancesPerMinute_outerTurrets = {
+        TOP_LANE:[],
+        BOT_LANE:[],
+        MID_LANE:[]
+    };
+    var instancesPerMinute_nexusTurrets = {
+        TOP_LANE:[],
+        BOT_LANE:[],
+        MID_LANE:[]
+    };
+    var instancesPerMinute_inhibitors = {
+        TOP_LANE:[],
+        BOT_LANE:[],
+        MID_LANE:[]
+    };
+    var avgbaseTurrets_T = 0, sdbaseTurrets_T = 0, baseTurrets_T = 0;
+    var avgbaseTurrets_M = 0, sdbaseTurrets_M = 0, baseTurrets_M = 0;
+    var avgbaseTurrets_B = 0, sdbaseTurrets_B = 0, baseTurrets_B = 0;
 
-        averagedStats['inhibitors']['TOP_LANE'][m+1] = instancesPerMinute_inhibitors['TOP_LANE'] / stats.length;
-        averagedStats['inhibitors']['BOT_LANE'][m+1] = instancesPerMinute_inhibitors['BOT_LANE'] / stats.length;
-        averagedStats['inhibitors']['MID_LANE'][m+1] = instancesPerMinute_inhibitors['MID_LANE'] / stats.length;
+    var avginnerTurrets_T = 0, sdinnerTurrets_T = 0, innerTurrets_T = 0;
+    var avginnerTurrets_M = 0, sdinnerTurrets_M = 0, innerTurrets_M = 0;
+    var avginnerTurrets_B = 0, sdinnerTurrets_B = 0, innerTurrets_B = 0;
+
+    var avgouterTurrets_T = 0, sdouterTurrets_T = 0, outerTurrets_T = 0;
+    var avgouterTurrets_M = 0, sdouterTurrets_M = 0, outerTurrets_M = 0;
+    var avgouterTurrets_B = 0, sdouterTurrets_B = 0, outerTurrets_B = 0;
+
+    var avgnexusTurrets_T = 0, sdnexusTurrets_T = 0, nexusTurrets_T = 0;
+    var avgnexusTurrets_M = 0, sdnexusTurrets_M = 0, nexusTurrets_M = 0;
+    var avgnexusTurrets_B = 0, sdnexusTurrets_B = 0, nexusTurrets_B = 0;
+
+    var avginhibitors_T = 0, sdinhibitors_T = 0, inhibitors_T = 0;
+    var avginhibitors_M = 0, sdinhibitors_M = 0, inhibitors_M = 0;
+    var avginhibitors_B = 0, sdinhibitors_B = 0, inhibitors_B = 0;
+
+    //Calculate inhibitor averages
+    for(var i=0; i<stats.length; i++) {
+        if(stats[i]['baseTurrets'][0]['TOP_LANE']>0){ avgbaseTurrets_T += stats[i]['baseTurrets'][0]['TOP_LANE']; baseTurrets_T ++; }
+        if(stats[i]['baseTurrets'][0]['BOT_LANE']> 0){ avgbaseTurrets_B += stats[i]['baseTurrets'][0]['BOT_LANE']; baseTurrets_B ++; }
+        if(stats[i]['baseTurrets'][0]['MID_LANE']> 0){ avgbaseTurrets_M += stats[i]['baseTurrets'][0]['MID_LANE']; baseTurrets_M ++; }
+
+        if(stats[i]['innerTurrets'][0]['TOP_LANE']> 0){ avginnerTurrets_T += stats[i]['innerTurrets'][0]['TOP_LANE']; innerTurrets_T ++; }
+        if(stats[i]['innerTurrets'][0]['BOT_LANE']> 0){ avginnerTurrets_B += stats[i]['innerTurrets'][0]['BOT_LANE']; innerTurrets_B ++; }
+        if(stats[i]['innerTurrets'][0]['MIN_LANE']> 0){ avginnerTurrets_M += stats[i]['innerTurrets'][0]['MID_LANE']; innerTurrets_M ++; }
+
+        if(stats[i]['outerTurrets'][0]['TOP_LANE']> 0){ avgouterTurrets_T +=stats[i]['outerTurrets'][0]['TOP_LANE']; outerTurrets_T ++; }
+        if(stats[i]['outerTurrets'][0]['BOT_LANE']> 0){ avgouterTurrets_B +=stats[i]['outerTurrets'][0]['BOT_LANE']; outerTurrets_B ++; }
+        if(stats[i]['outerTurrets'][0]['MID_LANE']> 0){ avgouterTurrets_M +=stats[i]['outerTurrets'][0]['MID_LANE']; outerTurrets_M ++; }
+
+        if(stats[i]['nexusTurrets'][0]['TOP_LANE']> 0){ avgnexusTurrets_T +=stats[i]['nexusTurrets'][0]['TOP_LANE']; nexusTurrets_T ++; console.log("ham")};
+        //console.log("avgnexusTurrets_T, "+avgnexusTurrets_T);
+        //console.log("nexusTurrets_T, "+ nexusTurrets_T);
+        if(stats[i]['nexusTurrets'][0]['BOT_LANE']> 0){ avgnexusTurrets_B +=stats[i]['nexusTurrets'][0]['BOT_LANE']; nexusTurrets_B ++; }
+        if(stats[i]['nexusTurrets'][0]['MID_LANE']> 0){ avgnexusTurrets_M +=stats[i]['nexusTurrets'][0]['MID_LANE']; nexusTurrets_M ++; }
+
+        if(stats[i]['inhibitors'][0]['TOP_LANE']> 0){ avginhibitors_T += stats[i]['inhibitors'][0]['TOP_LANE']; inhibitors_T ++; }
+        if(stats[i]['inhibitors'][0]['BOT_LANE']> 0){ avginhibitors_B += stats[i]['inhibitors'][0]['BOT_LANE']; inhibitors_B ++; }
+        if(stats[i]['inhibitors'][0]['MID_LANE']> 0){ avginhibitors_M += stats[i]['inhibitors'][0]['MID_LANE']; inhibitors_M ++; }
 
     }
+    //var averageBT = avgbaseTurrets_T / baseTurrets_T;
+    //console.log(averageBT);
+    //instancesPerMinute_baseTurrets['TOP_LANE'].push(averageBT);
+    //var averageBB =avgbaseTurrets_B / baseTurrets_B;
+    //instancesPerMinute_baseTurrets['BOT_LANE'].push(averageBB);
+    //var averageBM = avgbaseTurrets_M / baseTurrets_M;
+    //instancesPerMinute_baseTurrets['MID_LANE'].push(averageBM);
+    //
+    //var averageIT = avginnerTurrets_T / innerTurrets_T;
+    //instancesPerMinute_innerTurrets['TOP_LANE'].push(averageIT);
+    //var averageIB = avginnerTurrets_B / innerTurrets_B;
+    //instancesPerMinute_innerTurrets['BOT_LANE'].push(averageIB);
+    //var averageIM = avginnerTurrets_M / innerTurrets_M;
+    //instancesPerMinute_innerTurrets['MID_LANE'].push(averageIM);
+    //
+    //var averageOT = avgouterTurrets_T / outerTurrets_T;
+    //instancesPerMinute_outerTurrets['TOP_LANE'].push(averageOT);
+    //var averageOB = avgouterTurrets_B / outerTurrets_B;
+    //instancesPerMinute_outerTurrets['BOT_LANE'].push(averageOB);
+    //var averageOM = avgouterTurrets_M / outerTurrets_M;
+    //instancesPerMinute_outerTurrets['MID_LANE'].push(averageOM);
+    //
+    //var averageNT =  avgnexusTurrets_T / nexusTurrets_T;
+    //instancesPerMinute_nexusTurrets ['TOP_LANE'].push(averageNT);
+    //var averageNB = avgnexusTurrets_B / nexusTurrets_B;
+    //instancesPerMinute_nexusTurrets['BOT_LANE'].push(averageNB);
+    //var averageNM = avgnexusTurrets_M / nexusTurrets_M;
+    //instancesPerMinute_nexusTurrets['MID_LANE'].push(averageNM);
+    //
+    //var averageINT = avginhibitors_T / inhibitors_T;
+    //instancesPerMinute_inhibitors['TOP_LANE'].push(averageINT);
+    //var averageINB = avginhibitors_B / inhibitors_B;
+    //instancesPerMinute_inhibitors['BOT_LANE'].push(averageINB);
+    //var averageINM = avginhibitors_M / inhibitors_M;
+    //instancesPerMinute_inhibitors['MID_LANE'].push(averageINM);
+    avgbaseTurrets_T = ( baseTurrets_T == 0 ? 0 : avgbaseTurrets_T / baseTurrets_T);
+    avgbaseTurrets_B =( baseTurrets_B == 0 ? 0 :avgbaseTurrets_B / baseTurrets_B);
+    avgbaseTurrets_M = ( baseTurrets_M == 0 ? 0 :avgbaseTurrets_M / baseTurrets_M);
+
+    avginnerTurrets_T = ( innerTurrets_T == 0 ? 0 :avginnerTurrets_T / innerTurrets_T);
+    avginnerTurrets_B = ( innerTurrets_B == 0 ? 0 :avginnerTurrets_B / innerTurrets_B);
+    avginnerTurrets_M = ( innerTurrets_M == 0 ? 0 :avginnerTurrets_M / innerTurrets_M);
+
+    avgouterTurrets_T = ( outerTurrets_T == 0 ? 0 :avgouterTurrets_T / outerTurrets_T);
+    avgouterTurrets_B = ( outerTurrets_B == 0 ? 0 :avgouterTurrets_B / outerTurrets_B);
+    avgouterTurrets_M = ( outerTurrets_M == 0 ? 0 :avgouterTurrets_M / outerTurrets_M);
+
+    avgnexusTurrets_T = ( nexusTurrets_T == 0 ? 0 :avgnexusTurrets_T / nexusTurrets_T);
+    avgnexusTurrets_B = ( nexusTurrets_B == 0 ? 0 :avgnexusTurrets_B / nexusTurrets_B);
+    avgnexusTurrets_M = ( nexusTurrets_M == 0 ? 0 :avgnexusTurrets_M / nexusTurrets_M);
+
+    avginhibitors_T = ( inhibitors_T == 0 ? 0 :avginhibitors_T / inhibitors_T);
+    avginhibitors_B = ( inhibitors_B == 0 ? 0 :avginhibitors_B / inhibitors_B);
+    avginhibitors_M = ( inhibitors_M == 0 ? 0 :avginhibitors_M / inhibitors_M);
+
+
+    //calculate sd and variance
+
+    for(var i=0; i<stats.length; i++){
+
+        sdbaseTurrets_T += Math.pow(avgbaseTurrets_T - stats[i]['baseTurrets'][0]['TOP_LANE'], 2);
+        sdbaseTurrets_B += Math.pow(avgbaseTurrets_B - stats[i]['baseTurrets'][0]['BOT_LANE'], 2);
+        sdbaseTurrets_M += Math.pow(avgbaseTurrets_M -stats[i]['baseTurrets'][0]['MID_LANE'], 2);
+
+        sdinnerTurrets_T += Math.pow(avginnerTurrets_T - stats[i]['innerTurrets'][0]['TOP_LANE'], 2);
+        sdinnerTurrets_B +=  Math.pow(avginnerTurrets_B - stats[i]['innerTurrets'][0]['BOT_LANE'], 2);
+        sdinnerTurrets_M +=  Math.pow(avginnerTurrets_M - stats[i]['innerTurrets'][0]['MID_LANE'], 2);
+
+        sdouterTurrets_T +=  Math.pow(avgouterTurrets_T -stats[i]['outerTurrets'][0]['TOP_LANE'], 2);
+        sdouterTurrets_B += Math.pow(avgouterTurrets_B -stats[i]['outerTurrets'][0]['BOT_LANE'], 2);
+        sdouterTurrets_M += Math.pow(avgouterTurrets_M -stats[i]['outerTurrets'][0]['MID_LANE'], 2);
+
+        sdnexusTurrets_T += Math.pow(avgnexusTurrets_T -stats[i]['nexusTurrets'][0]['TOP_LANE'], 2);
+        sdnexusTurrets_B += Math.pow(avgnexusTurrets_B -stats[i]['nexusTurrets'][0]['BOT_LANE'], 2);
+        sdnexusTurrets_M += Math.pow(avgnexusTurrets_M -stats[i]['nexusTurrets'][0]['MID_LANE'], 2);
+
+        sdinhibitors_T += Math.pow(avginhibitors_T - stats[i]['inhibitors'][0]['TOP_LANE'], 2);
+        sdinhibitors_B += Math.pow(avginhibitors_B - stats[i]['inhibitors'][0]['BOT_LANE'], 2);
+        sdinhibitors_M += Math.pow(avginhibitors_M - stats[i]['inhibitors'][0]['MID_LANE'], 2);
+    }
+
+    sdbaseTurrets_T = ( baseTurrets_T == 0 ? 0 : Math.sqrt(sdbaseTurrets_T / baseTurrets_T));
+    sdbaseTurrets_B = ( baseTurrets_B == 0 ? 0 : Math.sqrt(sdbaseTurrets_B / baseTurrets_B));
+    sdbaseTurrets_M = ( baseTurrets_M == 0 ? 0 : Math.sqrt(sdbaseTurrets_M / baseTurrets_M));
+
+    sdinnerTurrets_T = ( innerTurrets_T == 0 ? 0 :  Math.sqrt(sdinnerTurrets_T / innerTurrets_T));
+    sdinnerTurrets_B = ( innerTurrets_B == 0 ? 0 :   Math.sqrt(sdinnerTurrets_B / innerTurrets_B));
+    sdinnerTurrets_M = ( innerTurrets_M == 0 ? 0 :   Math.sqrt(sdinnerTurrets_M / innerTurrets_M));
+
+    sdouterTurrets_T = ( outerTurrets_T == 0 ? 0 :   Math.sqrt(sdouterTurrets_T / outerTurrets_T));
+    sdouterTurrets_B = ( outerTurrets_B == 0 ? 0 :  Math.sqrt(sdouterTurrets_B / outerTurrets_B));
+    sdouterTurrets_M = ( outerTurrets_M == 0 ? 0 :  Math.sqrt(sdouterTurrets_M / outerTurrets_M));
+
+    sdnexusTurrets_T = ( nexusTurrets_T == 0 ? 0 :  Math.sqrt(sdnexusTurrets_T / nexusTurrets_T));
+    sdnexusTurrets_B = ( nexusTurrets_B == 0 ? 0 :  Math.sqrt(sdnexusTurrets_B / nexusTurrets_B));
+    sdnexusTurrets_M = ( nexusTurrets_M == 0 ? 0 :  Math.sqrt(sdnexusTurrets_M / nexusTurrets_M));
+
+    sdinhibitors_T = ( inhibitors_T == 0 ? 0 :  Math.sqrt(sdinhibitors_T / inhibitors_T));
+    sdinhibitors_B = ( inhibitors_B == 0 ? 0 :  Math.sqrt(sdinhibitors_B / inhibitors_B));
+    sdinhibitors_M = ( inhibitors_M == 0 ? 0 :  Math.sqrt(sdinhibitors_M / inhibitors_M));
+
+
+    //store the average first, sd second
+    averagedStats['baseTurrets']['TOP_LANE'].push(avgbaseTurrets_T);
+    averagedStats['baseTurrets']['TOP_LANE'].push(sdbaseTurrets_T);
+    averagedStats['baseTurrets']['MID_LANE'].push(avgbaseTurrets_B);
+    averagedStats['baseTurrets']['MID_LANE'].push(sdbaseTurrets_B);
+    averagedStats['baseTurrets']['BOT_LANE'].push(avgbaseTurrets_M);
+    averagedStats['baseTurrets']['BOT_LANE'].push(sdbaseTurrets_M);
+
+    averagedStats['innerTurrets']['TOP_LANE'].push(avginnerTurrets_T);
+    averagedStats['innerTurrets']['TOP_LANE'].push(sdinnerTurrets_T);
+    averagedStats['innerTurrets']['MID_LANE'].push(avginnerTurrets_B);
+    averagedStats['innerTurrets']['MID_LANE'].push(sdinnerTurrets_B);
+    averagedStats['innerTurrets']['BOT_LANE'].push(avginnerTurrets_M);
+    averagedStats['innerTurrets']['BOT_LANE'].push(sdinnerTurrets_M);
+
+    averagedStats['outerTurrets']['TOP_LANE'].push(avgouterTurrets_T);
+    averagedStats['outerTurrets']['TOP_LANE'].push(sdouterTurrets_T);
+    averagedStats['outerTurrets']['MID_LANE'].push(avgouterTurrets_B);
+    averagedStats['outerTurrets']['MID_LANE'].push(sdouterTurrets_B);
+    averagedStats['outerTurrets']['BOT_LANE'].push(avgouterTurrets_M);
+    averagedStats['outerTurrets']['BOT_LANE'].push(sdouterTurrets_M);
+
+    averagedStats['nexusTurrets']['TOP_LANE'].push(avgnexusTurrets_T);
+    averagedStats['nexusTurrets']['TOP_LANE'].push(sdnexusTurrets_T);
+    averagedStats['nexusTurrets']['MID_LANE'].push(avgnexusTurrets_B);
+    averagedStats['nexusTurrets']['MID_LANE'].push(sdnexusTurrets_B);
+    averagedStats['nexusTurrets']['BOT_LANE'].push(avgnexusTurrets_M);
+    averagedStats['nexusTurrets']['BOT_LANE'].push(sdnexusTurrets_M);
+
+    averagedStats['inhibitors']['TOP_LANE'].push(avginhibitors_T);
+    averagedStats['inhibitors']['TOP_LANE'].push(sdinhibitors_T);
+    averagedStats['inhibitors']['MID_LANE'].push(avginhibitors_B);
+    averagedStats['inhibitors']['MID_LANE'].push(sdinhibitors_B);
+    averagedStats['inhibitors']['BOT_LANE'].push(avginhibitors_M);
+    averagedStats['inhibitors']['BOT_LANE'].push(sdinhibitors_M);
 
 
 
@@ -272,30 +497,43 @@ var calculateAverages = function(stats){
         for(i=0; i<stats.length; i++){
             if(m<stats[i]['minionsKilled'].length){
                 instancesPerMinute ++;
-                oneTimeStamp['visionWardsPlaced'] += stats[i]['visionWardsPlaced'][m];
-                oneTimeStamp['sightWardsPlaced'] += stats[i]['sightWardsPlaced'][m];
-                oneTimeStamp['yellowTrinketPlaced'] += stats[i]['yellowTrinketPlaced'][m];
                 oneTimeStamp['jungleMinionsKilled'] += stats[i]['jungleMinionsKilled'][m];
                 oneTimeStamp['minionsKilled'] += stats[i]['minionsKilled'][m];
                 oneTimeStamp['level'] += stats[i]['level'][m];
                 oneTimeStamp['totalGold'] += stats[i]['totalGold'][m];
                 oneTimeStamp['currentGold'] += stats[i]['currentGold'][m];
 
+                // for each ward type see if it is active at this minute
+                for(var w=0; w<stats[i]['visionWardsPlaced'].length; w++){
+                    if(stats[i]['visionWardsPlaced'][w]>m){
+                        break;
+                    }
+                    if(doesMinuteFallsWithinWard(stats[i]['level'][m], m, stats[i]['visionWardsPlaced'][w], 'vision')){
+                            oneTimeStamp['visionWardsPlaced'] += 1;
+                    }
+                }
+
+                for(var w=0; w<stats[i]['sightWardsPlaced'].length; w++){
+                    if(stats[i]['sightWardsPlaced'][w]>m){
+                        break;
+                    }
+                    if(doesMinuteFallsWithinWard(stats[i]['level'][m], m, stats[i]['sightWardsPlaced'][w], 'sight')){
+                            oneTimeStamp['sightWardsPlaced'] += 1;
+                    }
+                }
+                for(var w=0; w<stats[i]['yellowTrinketPlaced'].length; w++){
+                    if(stats[i]['yellowTrinketPlaced'][w]>m){
+                        break;
+                    }
+                    if(doesMinuteFallsWithinWard(stats[i]['level'][m], m, stats[i]['yellowTrinketPlaced'][w], 'yellow')){
+                        oneTimeStamp['yellowTrinketPlaced'] += 1;
+                    }
+                }
             }
+
         }
 
-        oneTimeStamp['visionWardsPlaced'] = oneTimeStamp['visionWardsPlaced'] / instancesPerMinute;
-        if((oneTimeStamp['visionWardsPlaced'] == null) || (oneTimeStamp['visionWardsPlaced'] == NaN)){
-            oneTimeStamp['visionWardsPlaced'] = 0;
-        }
-        oneTimeStamp['sightWardsPlaced'] = oneTimeStamp['sightWardsPlaced'] / instancesPerMinute;
-        if((oneTimeStamp['sightWardsPlaced'] == null) || (oneTimeStamp['sightWardsPlaced'] == NaN)){
-            oneTimeStamp['sightWardsPlaced'] = 0;
-        }
-        oneTimeStamp['yellowTrinketPlaced'] = oneTimeStamp['yellowTrinketPlaced'] / instancesPerMinute;
-        if((oneTimeStamp['yellowTrinketPlaced'] == null) || (oneTimeStamp['yellowTrinketPlaced'] == NaN)){
-            oneTimeStamp['yellowTrinketPlaced'] = 0;
-        }
+        //average out stats that need averaging
         oneTimeStamp['jungleMinionsKilled'] = oneTimeStamp['jungleMinionsKilled'] / instancesPerMinute;
         oneTimeStamp['minionsKilled'] = oneTimeStamp['minionsKilled'] / instancesPerMinute;
 
@@ -303,16 +541,42 @@ var calculateAverages = function(stats){
         oneTimeStamp['totalGold'] = oneTimeStamp['totalGold'] / instancesPerMinute;
         oneTimeStamp['currentGold'] = oneTimeStamp['currentGold'] / instancesPerMinute;
 
+        oneTimeStamp['sightWardsPlaced'] = Math.round(oneTimeStamp['sightWardsPlaced'] / instancesPerMinute);
+        oneTimeStamp['visionWardsPlaced'] = Math.round(oneTimeStamp['visionWardsPlaced'] / instancesPerMinute);
+        oneTimeStamp['yellowTrinketPlaced'] = Math.round(oneTimeStamp['yellowTrinketPlaced'] / instancesPerMinute);
+
 
         averagedStats['instancesPerMinute'][m+1] = instancesPerMinute;
-        averagedStats['visionWardsPlaced'][m+1] = oneTimeStamp['visionWardsPlaced'];
-        averagedStats['sightWardsPlaced'][m+1] = oneTimeStamp['sightWardsPlaced'];
-        averagedStats['yellowTrinketPlaced'][m+1] = oneTimeStamp['yellowTrinketPlaced'];
-        averagedStats['jungleMinionsKilled'][m+1] = oneTimeStamp['jungleMinionsKilled'];
-        averagedStats['minionsKilled'][m+1] = oneTimeStamp['minionsKilled'];
-        averagedStats['level'][m+1] = oneTimeStamp['level'];
-        averagedStats['totalGold'][m+1] = oneTimeStamp['totalGold'];
-        averagedStats['currentGold'][m+1] = oneTimeStamp['currentGold'];
+
+        averagedStats['jungleMinionsKilled'][m+1] = whatIsTheHighestNumber(oneTimeStamp['jungleMinionsKilled'],averagedStats['jungleMinionsKilled'][m]);
+        averagedStats['minionsKilled'][m+1] = whatIsTheHighestNumber(oneTimeStamp['minionsKilled'], averagedStats['minionsKilled'][m]);
+        averagedStats['level'][m+1] = whatIsTheHighestNumber(oneTimeStamp['level'],averagedStats['level'][m]);
+        averagedStats['totalGold'][m+1] = whatIsTheHighestNumber(oneTimeStamp['totalGold'], averagedStats['totalGold'][m]);
+        averagedStats['currentGold'][m+1] = whatIsTheHighestNumber(oneTimeStamp['currentGold'],averagedStats['currentGold'][m]);
+
+
+        if(oneTimeStamp['visionWardsPlaced'] > 1){
+            averagedStats['visionWardsPlaced'][m+1] = 1;
+        }
+        else{
+            averagedStats['visionWardsPlaced'][m+1] = oneTimeStamp['visionWardsPlaced'];
+        }
+
+
+        if(oneTimeStamp['sightWardsPlaced'] > 3){
+            averagedStats['sightWardsPlaced'][m+1] = 3;
+        }
+        else{
+            averagedStats['sightWardsPlaced'][m+1] = oneTimeStamp['sightWardsPlaced'];
+        }
+
+
+        if(oneTimeStamp['yellowTrinketPlaced'] > 1){
+            averagedStats['yellowTrinketPlaced'][m+1] = 1;
+        }
+        else{
+            averagedStats['yellowTrinketPlaced'][m+1] = oneTimeStamp['yellowTrinketPlaced'];
+        }
     }
 
 
@@ -340,7 +604,6 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
         }
     });
 });
-
 
 
 router.get('/static/champion', function(req, res, next){

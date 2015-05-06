@@ -136,6 +136,7 @@ var findRecentMatches = function(tier, nummatchhistorys){
                 console.log(printLog+"findRecentMatches, summoner==null.");
                 return;
             }
+			console.log(summoner);
 
             summonerID = summoner['sID'];
 
@@ -173,10 +174,10 @@ var mainLoop = function(){
         console.log(printLog+"tier="+currTier);
         findRecentMatches(currTier);
         currTier++;
-        if(currTier>27){
+        if(currTier>5){
             currTier = 1;
         }
-    },6001);
+    },2001);
 
 };
 

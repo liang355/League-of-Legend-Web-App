@@ -227,32 +227,39 @@ var resolveUnknownPlayerTiers = function(numplayers404){
 //    var max = summonerData.length;
 //
 //    //loop through summoners, look up ID's wait 2seconds and add to DB
-//    var lolkingseedInterval = setInterval(function(){
-//        var summonerName = summonerData[count]['name'];
-//        var summonerLookup = summonerData[count]['lookup'];
-//        var summonerTier = summonerData[count]['tier'];
-//        matchPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+summonerName+"?api_key=";
 //
-//        console.log("started request for summonerID of "+summonerName);
+//    var lolkingseedInterval = setInterval(function () {
+//            var summonerName = summonerData[count]['name'];
+//            var summonerLookup = summonerData[count]['lookup'];
+//            var summonerTier = summonerData[count]['tier'];
+//            matchPath = "/api/lol/" + region + "/v1.4/summoner/by-name/" + summonerName + "?api_key=";
+//            console.log("started request for summonerID of " + summonerName);
 //
-//        //send API request to retreive summonerID
-//        https.get(host + matchPath + api_key, function(response){
-//            console.log("received Match History response");
-//            var output = '';
-//            response.on("data", function(chunk){
-//                output += chunk;
+//            //send API request to retreive summonerID
+//            https.get(host + matchPath + api_key, function (response) {
+//                console.log("received Match History response");
+//                var status = response.statusCode;
+//                var output = '';
+//                response.on("data", function (chunk) {
+//                    output += chunk;
+//                });
+//                response.on("end", function () {
+//
+//                    if(status == 200){
+//                        var obj = JSON.parse(output);
+//                        console.log("obj=" + obj[summonerLookup]['id'] + ", name=" + obj[summonerLookup]['name']);
+//                        addSummoner(obj[summonerLookup]['id'], summonerName, summonerTier); //DONT ADD THEM AGAIN
+//                    }
+//                    else{
+//                        console.log(printERR+" queryForRecentMatches, statusCode = "+statusCode);
+//                    }
+//                });
 //            });
-//            response.on("end", function(){
-//                var obj = JSON.parse(output);
-//                console.log("obj="+obj[summonerLookup]['id']+", name="+obj[summonerLookup]['name']);
-//                addSummoner(obj[summonerLookup]['id'], summonerName, summonerTier); //DONT ADD THEM AGAIN
-//            });
-//        });
-//        count++;
-//        if(count >= max){
-//            clearInterval(lolkingseedInterval);
-//        }
-//    },2000);
+//            count++;
+//            if (count >= max) {
+//                clearInterval(lolkingseedInterval);
+//            }
+//    }, 2000);
 //};
 //
 //addLoLKingSeeds(lolKingSeeds);
@@ -462,7 +469,6 @@ var populateLocalChampionIdToNameVar = function(){
         }
     });
 };
-
 
 
 /* ===================================
@@ -1092,3 +1098,384 @@ var mainLoop = function(){
 //    }
 //    console.log("done");
 //});
+/*
+Summoner.find({tier:404}, function(err, summoners){
+	console.log("unknown summoners "+summoners.length);
+});
+*/
+
+var printSummoners = function(){
+
+	Summoner.find({tier:1},function(err,summoners){
+		console.log("1, "+summoners.length)
+	});
+
+	Summoner.find({tier:2},function(err,summoners){
+		console.log("2, "+summoners.length)
+	});
+
+	Summoner.find({tier:3},function(err,summoners){
+		console.log("3, "+summoners.length)
+	});
+
+	Summoner.find({tier:4},function(err,summoners){
+		console.log("4, "+summoners.length)
+	});
+
+	Summoner.find({tier:5},function(err,summoners){
+		console.log("5, "+summoners.length)
+	});
+
+	Summoner.find({tier:6},function(err,summoners){
+		console.log("6, "+summoners.length)
+	});
+
+	Summoner.find({tier:7},function(err,summoners){
+		console.log("7, "+summoners.length)
+	});
+
+	Summoner.find({tier:8},function(err,summoners){
+		console.log("8, "+summoners.length)
+	});
+
+	Summoner.find({tier:9},function(err,summoners){
+		console.log("9, "+summoners.length)
+	});
+
+	Summoner.find({tier:10},function(err,summoners){
+		console.log("10, "+summoners.length)
+	});
+
+	Summoner.find({tier:11},function(err,summoners){
+		console.log("11, "+summoners.length)
+	});
+
+	Summoner.find({tier:12},function(err,summoners){
+		console.log("12, "+summoners.length)
+	});
+	Summoner.find({tier:13},function(err,summoners){
+		console.log("13, "+summoners.length)
+	});
+	Summoner.find({tier:14},function(err,summoners){
+		console.log("14, "+summoners.length)
+	});
+	Summoner.find({tier:15},function(err,summoners){
+		console.log("15, "+summoners.length)
+	});
+	Summoner.find({tier:16},function(err,summoners){
+		console.log("16, "+summoners.length)
+	});
+	Summoner.find({tier:17},function(err,summoners){
+		console.log("17, "+summoners.length)
+	});
+	Summoner.find({tier:18},function(err,summoners){
+		console.log("18, "+summoners.length)
+	});
+	Summoner.find({tier:19},function(err,summoners){
+		console.log("19, "+summoners.length)
+	});
+	Summoner.find({tier:20},function(err,summoners){
+		console.log("20, "+summoners.length)
+	});
+	Summoner.find({tier:21},function(err,summoners){
+		console.log("21, "+summoners.length)
+	});
+	Summoner.find({tier:22},function(err,summoners){
+		console.log("22, "+summoners.length)
+	});
+	Summoner.find({tier:23},function(err,summoners){
+		console.log("23, "+summoners.length)
+	});
+	Summoner.find({tier:24},function(err,summoners){
+		console.log("24, "+summoners.length)
+	});
+	Summoner.find({tier:25},function(err,summoners){
+		console.log("25, "+summoners.length)
+	});
+	Summoner.find({tier:26},function(err,summoners){
+		console.log("26, "+summoners.length)
+	});
+	Summoner.find({tier:27},function(err,summoners){
+		console.log("27, "+summoners.length)
+	});
+}
+
+var printMatches = function(){
+	Match.find({tier:1, hasBeenQueried:false},function(err,summoners){
+		console.log("match 1, "+summoners.length)
+	});
+
+	Match.find({tier:2, hasBeenQueried:false},function(err,summoners){
+		console.log("match 2, "+summoners.length)
+	});
+
+	Match.find({tier:3, hasBeenQueried:false},function(err,summoners){
+		console.log("match 3, "+summoners.length)
+	});
+
+	Match.find({tier:4, hasBeenQueried:false},function(err,summoners){
+		console.log("match 4, "+summoners.length)
+	});
+
+	Match.find({tier:5, hasBeenQueried:false},function(err,summoners){
+		console.log("match 5, "+summoners.length)
+	});
+
+	Match.find({tier:6, hasBeenQueried:false},function(err,summoners){
+		console.log("match 6, "+summoners.length)
+	});
+
+	Match.find({tier:7, hasBeenQueried:false},function(err,summoners){
+		console.log("match 7, "+summoners.length)
+	});
+
+	Match.find({tier:8, hasBeenQueried:false},function(err,summoners){
+		console.log("match 8, "+summoners.length)
+	});
+
+	Match.find({tier:9, hasBeenQueried:false},function(err,summoners){
+		console.log("match 9, "+summoners.length)
+	});
+
+	Match.find({tier:10, hasBeenQueried:false},function(err,summoners){
+		console.log("match 10, "+summoners.length)
+	});
+
+	Match.find({tier:11, hasBeenQueried:false},function(err,summoners){
+		console.log("match 11, "+summoners.length)
+	});
+
+	Match.find({tier:12, hasBeenQueried:false},function(err,summoners){
+		console.log("match 12, "+summoners.length)
+	});
+	Match.find({tier:13, hasBeenQueried:false},function(err,summoners){
+		console.log("match 13, "+summoners.length)
+	});
+	Match.find({tier:14, hasBeenQueried:false},function(err,summoners){
+		console.log("match 14, "+summoners.length)
+	});
+	Match.find({tier:15, hasBeenQueried:false},function(err,summoners){
+		console.log("match 15, "+summoners.length)
+	});
+	Match.find({tier:16, hasBeenQueried:false},function(err,summoners){
+		console.log("match 16, "+summoners.length)
+	});
+	Match.find({tier:17, hasBeenQueried:false},function(err,summoners){
+		console.log("match 17, "+summoners.length)
+	});
+	Match.find({tier:18, hasBeenQueried:false},function(err,summoners){
+		console.log("match 18, "+summoners.length)
+	});
+	Match.find({tier:19, hasBeenQueried:false},function(err,summoners){
+		console.log("match 19, "+summoners.length)
+	});
+	Match.find({tier:20, hasBeenQueried:false},function(err,summoners){
+		console.log("match 20, "+summoners.length)
+	});
+	Match.find({tier:21, hasBeenQueried:false},function(err,summoners){
+		console.log("match 21, "+summoners.length)
+	});
+	Match.find({tier:22, hasBeenQueried:false},function(err,summoners){
+		console.log("match 22, "+summoners.length)
+	});
+	Match.find({tier:23, hasBeenQueried:false},function(err,summoners){
+		console.log("match 23, "+summoners.length)
+	});
+	Match.find({tier:24, hasBeenQueried:false},function(err,summoners){
+		console.log("match 24, "+summoners.length)
+	});
+	Match.find({tier:25, hasBeenQueried:false},function(err,summoners){
+		console.log("match 25, "+summoners.length)
+	});
+	Match.find({tier:26, hasBeenQueried:false},function(err,summoners){
+		console.log("match 26, "+summoners.length)
+	});
+	Match.find({tier:27, hasBeenQueried:false},function(err,summoners){
+		console.log("match 27, "+summoners.length)
+	});
+}
+
+var printChampionStatistics = function(){
+	ChampionStatistics.find({tier:1},function(err,summoners){
+		console.log("championstatistics 1, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:2},function(err,summoners){
+		console.log("championstatistics 2, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:3},function(err,summoners){
+		console.log("championstatistics 3, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:4},function(err,summoners){
+		console.log("championstatistics 4, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:5},function(err,summoners){
+		console.log("championstatistics 5, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:6},function(err,summoners){
+		console.log("championstatistics 6, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:7},function(err,summoners){
+		console.log("championstatistics 7, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:8},function(err,summoners){
+		console.log("championstatistics 8, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:9},function(err,summoners){
+		console.log("championstatistics 9, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:10},function(err,summoners){
+		console.log("championstatistics 10, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:11},function(err,summoners){
+		console.log("championstatistics 11, "+summoners.length)
+	});
+
+	ChampionStatistics.find({tier:12},function(err,summoners){
+		console.log("championstatistics 12, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:13},function(err,summoners){
+		console.log("championstatistics 13, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:14},function(err,summoners){
+		console.log("championstatistics 14, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:15},function(err,summoners){
+		console.log("championstatistics 15, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:16},function(err,summoners){
+		console.log("championstatistics 16, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:17},function(err,summoners){
+		console.log("championstatistics 17, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:18},function(err,summoners){
+		console.log("championstatistics 18, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:19},function(err,summoners){
+		console.log("championstatistics 19, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:20},function(err,summoners){
+		console.log("championstatistics 20, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:21},function(err,summoners){
+		console.log("championstatistics 21, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:22},function(err,summoners){
+		console.log("championstatistics 22, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:23},function(err,summoners){
+		console.log("championstatistics 23, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:24},function(err,summoners){
+		console.log("championstatistics 24, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:25},function(err,summoners){
+		console.log("championstatistics 25, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:26},function(err,summoners){
+		console.log("championstatistics 26, "+summoners.length)
+	});
+	ChampionStatistics.find({tier:27},function(err,summoners){
+		console.log("championstatistics 27, "+summoners.length)
+	});
+}
+
+/*
+var tryToAddSummoner = function(name, id){
+	Summoner.findOne({sID:id}, function(err, summoner){
+		if(summoner == null){
+			Summoner.create({'sID':id, 'name':name,  'tier':2}, function (err){
+				if(err){
+					console.log(err);
+				}
+			});
+			console.log('added '+name+', '+id);
+		}
+			//console.log('did not add '+name+', '+id);
+	});
+};
+
+
+Summoner.find({tier:2}, function(err, summoner){
+	var s=0;
+	
+	var mainLoopInterval = setInterval(function(){
+	
+		var summonerID = summoner[s]['sID'];
+		var api_key = config.api_key;
+		var region = "na";
+		var host = "https://na.api.pvp.net";
+		var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key=";
+		//send API request
+		https.get(host + matchPath + api_key, function (response) {
+			
+			var statusCode = response.statusCode;
+			var output = '';
+			response.on("data", function (chunk) {
+				output += chunk;
+
+				//console.log(output);
+			});
+			response.on("end", function () {
+				if (statusCode == 200) {
+					var obj = JSON.parse(output);
+					var n = 0;
+					
+					for(n=0; n<obj[summonerID].length; n++){
+						if(obj[summonerID][n]['queue'] == "RANKED_SOLO_5x5"){
+							for(var p=0; p<obj[summonerID][n]['entries'].length; p++){
+								var toAdd = obj[summonerID][n]['entries'][p];
+								tryToAddSummoner(toAdd['playerOrTeamName'],toAdd['playerOrTeamId']);
+							}
+						}
+					}
+					
+				}
+				else if ((statusCode == 500) || (statusCode == 503)) {
+					console.log(printERR + "err: 500, 503, internal server err, or service unavalible.");
+				}
+				else if (statusCode == 429) {
+					console.log(printERR + "err: 429, rate limit exceded");
+				}
+				else {
+					console.log(printERR + "err: 400, 401, 404, bad request, setting tier to 42");
+				}
+
+			});
+		
+
+		});
+	
+		s ++;
+		if(s > summoner.length){
+			console.log("break this");
+		}
+	},2001);
+});
+*/
+
+/*
+Summoner.find({tier:5}, function(err, summoners){
+	for(var s=0; s<summoners.length; s++){
+		summoners[s]['lastQueried'] = null;
+		summoners[s].save();
+	}
+	console.log("done");
+});
+*/
+
+Summoner.find({tier:404}, function(err, summoners){
+	console.log("unknown summoners: "+summoners.length);
+});
+
+
