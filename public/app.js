@@ -59,6 +59,23 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         LOADING_GAME:'gameloading'
     };
 
+    var getParticipant = function(data){
+        var id = data.requestedID;
+        for (var i = 0; i < data.participants.length; i++){
+            var participant = data.participants[i];
+            console.log(participant);
+            if (participant.summonerId === id){
+                return participant;
+            }
+        }
+    };
+
+    var setUpUIForUser = function(data){
+        console.log(data);
+        $scope.user = getParticipant(data);
+        $scope.gameStartTime = data.gameStartTime;
+    };
+
     //callback for current game
     var setupCurrentGameUI = function(data){
         if (data.error){
@@ -70,7 +87,8 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
             }
         }
         else {
-            $scope.status = data;
+            $scope.searchStatus = "";
+            setUpUIForUser(data);
         }
     };
 

@@ -42,7 +42,7 @@
     <body class="wrapper" ng-app="LolApp">
         <div ng-controller="MainCtrl">
         <span>
-            <a href="" ng-click="staticSite()">Static</a>|<a href="" ng-click="currentGameSite()">Current Game</a>
+            <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite()">Static</a>
         </span>
             <div ng-show="showStatic">
                 <div class="header">
@@ -67,9 +67,13 @@
                 </form>
                 <div ng-show="searchStatus">
                     <span ng-show="status=='wait'">Searching...</span>
-                    <span ng-show="status=='nosummoner'">No Summoner Found</span>
-                    <span ng-show="status=='nogame'">Summoner not in Game</span>
+                    <span ng-show="status=='nosummoner'">No summoner found by that name</span>
+                    <span ng-show="status=='nogame'">Summoner not in game</span>
                     <span ng-show="status=='gameloading'">Waiting for game to start</span>
+                </div>
+                <div>
+                    <pre>{{user}}</pre>
+                    <pre>{{gameStartTime}}</pre>
                 </div>
             </div>
         </div>
