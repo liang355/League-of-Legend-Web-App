@@ -377,6 +377,63 @@ router.get('/static/tier/list', function(req, res, next){
     res.json(tiers)
 });
 
+router.get('/currentGame/:summoner', function(req, res, next){
+    var api_key = config.api_key;
+    var region ="na";
+    var platformID = "NA1";
+    var host = "https://na.api.pvp.net";
+
+    var summonerPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+req.params.summoner+"?api_key=";
+
+    //get summonerID
+    https.get(host + summonerPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request for name");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                console.log(obj);
+
+
+                for (var summoner in obj){
+                    break;
+                }
+                var summonerID = obj[summoner].id;
+                console.log("go", summonerID);
+                //then get current game
+                var currentGamePath = "/observer-mode/rest/consumer/getSpectatorGameInfo/" + platformID + "/"+summonerID+"?api_key=";
+
+                https.get(host + currentGamePath + api_key, function (response) {
+                    var statusCode = response.statusCode;
+                    console.log("making request for game");
+                    var output = '';
+                    response.on("data", function (chunk) {
+                        output += chunk;
+                    });
+                    response.on('end', function () {
+                        if (statusCode == 200) {
+                            var obj = JSON.parse(output);
+                            obj.requestedID = summonerID;
+                            obj.requestedName = summoner;
+                            res.json(obj);
+                        }
+                        else {
+                            res.json({"error":"nogame"});
+                        }
+                    });
+                });
+            }
+            else {
+                res.json({"error":"nogame"});
+            }
+        });
+    });
+});
+
 
 
 module.exports = router;

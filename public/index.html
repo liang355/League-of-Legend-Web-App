@@ -39,22 +39,39 @@
         <script src="graph/lineGraph.js"></script>
     </head>
 
-    <body ng-app="LolApp">
+    <body class="wrapper" ng-app="LolApp">
         <div ng-controller="MainCtrl">
-            <div class="header">
-                <h1 style="float:left; padding-left:10px;">{{header}}</h1>
-                <span class="staticForm">
-                    <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
-                    <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
-                    <role-dropdown ng-model="dropdown.role"></role-dropdown>
-                    <button class="submitButton"ng-click="getData(dropdown)">Submit</button>
-                </span>
-            </div>
-            <br/><br/><br/>
+        <span>
+            <a href="" ng-click="staticSite()">Static</a>|<a href="" ng-click="currentGameSite()">Current Game</a>
+        </span>
+            <div ng-show="showStatic">
+                <div class="header">
+                    <h1 style="float:left; padding-left:10px;">{{header}}</h1>
+                    <span class="staticForm">
+                        <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
+                        <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
+                        <role-dropdown ng-model="dropdown.role"></role-dropdown>
+                        <button class="submitButton"ng-click="getData(dropdown)">Submit</button>
+                    </span>
+                </div>
 
-            <!--line chart-->
-            <div id="chart" style="background:white"></div>
-            <button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>
+                <br/><br/><br/>
+
+                <!--line chart-->
+                <div id="chart" style="background:white"></div>
+                <button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>
+            </div>
+            <div ng-show="showCurrentGame">
+                <form ng-submit="getCurrentGameForSummoner()">
+                    <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText"/>
+                </form>
+                <div ng-show="searchStatus">
+                    <span ng-show="status=='wait'">Searching...</span>
+                    <span ng-show="status=='nosummoner'">No Summoner Found</span>
+                    <span ng-show="status=='nogame'">Summoner not in Game</span>
+                    <span ng-show="status=='gameloading'">Waiting for game to start</span>
+                </div>
+            </div>
         </div>
     </body>
 </html>
