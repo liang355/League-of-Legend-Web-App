@@ -691,7 +691,7 @@ router.get('/currentGame/:summoner', function(req, res, next){
                 });
             }
             else {
-                res.json({"error":"nogame"});
+                res.json({"error":"noplayer"});
             }
         });
     });
