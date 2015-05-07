@@ -697,6 +697,246 @@ router.get('/currentGame/:summoner', function(req, res, next){
     });
 });
 
+var calcMatchStatistics = function(match, summoner){
+    var playerID = 0;
+    var teamID = 0;
+    var participantId = 0;
+    var gameLength =  match['timeline']['frames'].length;
+    for(var m = 0; m<match['participantIdentities'].length; m++){
+        if(match['participantIdentities'][m]['player']['summonerName'] == summoner){
+            participantId = m+1;
+            break;
+        }
+    }
+    if(participantId<6){
+        teamID = 100;
+    }
+    else{
+        teamID = 200;
+    }
+
+//name:match['participants'][participantId-1],
+
+    /**
+     * store static stats
+     *
+     */
+
+    var matchStats = {
+        id:match['participants'][participantId-1]['championId'],
+        role:"",
+        gameLength:gameLength,
+        assists:match['participants'][participantId-1]['stats']['assists'],
+        kills:match['participants'][participantId-1]['stats']['kills'],
+        deaths:match['participants'][participantId-1]['stats']['deaths'],
+        magicDamageTotal:match['participants'][participantId-1]['stats']['magicDamageDealt'],
+        magicDamageChamp:match['participants'][participantId-1]['stats']['magicDamageDealtToChampions'],
+        magicDamageTaken:match['participants'][participantId-1]['stats']['magicDamageTaken'],
+        physicalDamageTotal:match['participants'][participantId-1]['stats']['physicalDamageDealt'],
+        physicalDamageChamp:match['participants'][participantId-1]['stats']['physicalDamageDealtToChampions'],
+        physicalDamageTaken:match['participants'][participantId-1]['stats']['physicalDamageTaken'],
+        heals:match['participants'][participantId-1]['stats']['totalHeal'],
+        wardsKilled:match['participants'][participantId-1]['stats']['wardsKilled'],
+        wardsPlaced:match['participants'][participantId-1]['stats']['wardsPlaced'],
+        totalMinionsKilled:match['participants'][participantId-1]['stats']['minionsKilled'],
+        neutralMinionsKilledEnemyJungle:match['participants'][participantId-1]['stats']['neutralMinionsKilledEnemyJungle'],
+        neutralMinionsKilledTeamJungle:match['participants'][participantId-1]['stats']['neutralMinionsKilledTeamJungle'],
+
+        blueGolem:['Blue Golem'],
+        redLizard:['Red Lizard'],
+
+        baseTurrets:{ TOP_LANE:['Top Base Turret'], MID_LANE:['Middle Base Turret'], BOT_LANE:['Bottom Base Turret']},
+        innerTurrets:{ TOP_LANE:['Top Inner Turret'], MID_LANE:['Middle Inner Turret'], BOT_LANE:['Bottom Inner Turret']},
+        outerTurrets:{ TOP_LANE:['Top Outer Turret'], MID_LANE:['Middle Outer Turret'], BOT_LANE:['Bottom Outer Turret']},
+        nexusTurrets:{ TOP_LANE:['Top Nexus Turret'], MID_LANE:['Middle Nexus Turret'], BOT_LANE:['Bottom Nexus Turret']},
+        inhibitors:{ TOP_LANE:['Top Inhibitor'], MID_LANE:['Middle Inhibitor'], BOT_LANE:['Bottom Inhibitor']},
+        dragon:['Dragon'],
+        baronNashor:['Baron Nashor'],
+
+        visionWardsPlaced : ['visionWardsPlaced'],
+        sightWardsPlaced : ['sightWardsPlaced'],
+        yellowTrinketPlaced : ['yellowTrinketPlaced'],
+        jungleMinionsKilled : ['jungleMinionsKilled'],
+        minionsKilled : ['minionsKilled'],
+        level : ['level'],
+        totalGold : ['totalGold'],
+        currentGold : ['currentGold']
+    };
+
+    /**
+     * lane & role
+     */
+    timelineLane = match['participants'][participantId-1]['timeline']['lane'];
+    timelineRole = match['participants'][participantId-1]['timeline']['role'];
+    if (timelineLane == "BOTTOM") {
+        if (timelineRole == "DUO_CARRY") {
+            matchStats['role'] = "ADC";
+        }
+        else {
+            matchStats['role'] = "SUPPORT"
+        }
+    }
+    if (timelineLane == "MIDDLE") {
+        matchStats['role'] = "MIDDLE";
+    }
+    if (timelineLane == "JUNGLE") {
+        matchStats['role'] = "JUNGLE";
+    }
+    if (timelineLane == "TOP") {
+        matchStats['role'] = "TOP";
+    }
+
+    /**
+     * Store player Event Stats
+     */
+
+    var event, events, participantFrame, frames = match['timeline']['frames'];
+    for (f = 1; f < frames.length; f++) {
+
+        /* player data */
+        participantFrame = frames[f]['participantFrames'][participantId];
+        matchStats['level'].push(participantFrame['level']);
+        matchStats['minionsKilled'].push(participantFrame['minionsKilled']);
+        matchStats['totalGold'].push(participantFrame['totalGold']);
+        matchStats['currentGold'].push(participantFrame['currentGold']);
+        matchStats['jungleMinionsKilled'].push(participantFrame['jungleMinionsKilled']);
+
+        /* event data */
+        events = frames[f]['events'];
+        for (e = 0; e < events.length; e++) {
+            event = events[e];
+
+            /* wards */
+            if(event['creatorId'] == participantId) {
+                if (event['eventType'] == "WARD_PLACED") {
+                    if (event['wardType'] == "SIGHT_WARD") {
+                        matchStats['sightWardsPlaced'].push(f);
+                    }
+                    if (event['wardType'] == "VISION_WARD") {
+                        matchStats['visionWardsPlaced'].push(f);
+                    }
+                    if ((event['wardType'] == "YELLOW_TRINKET") || (event['wardType'] == "YELLOW_TRINKET_UPGRADE")) {
+                        matchStats['yellowTrinketPlaced'].push(f);
+                    }
+                }
+            }
+            /* buildings */
+            if(event['teamId'] == teamID) {
+                if (event['eventType'] == "BUILDING_KILL") {
+                    if (event['towerType'] == "BASE_TURRET") {
+                        matchStats['baseTurrets'][event['laneType']] = f;
+                    }
+                    if (event['towerType'] == "INNER_TURRET") {
+                        matchStats['innerTurrets'][event['laneType']] = f;
+                    }
+                    if (event['towerType'] == "NEXUS_TURRET") {
+                        matchStats['nexusTurrets'][event['laneType']] = f;
+                    }
+                    if (event['towerType'] == "OUTER_TURRET") {
+                        matchStats['outerTurrets'][event['laneType']] = f;
+                    }
+                    if (event['buildingType'] == "INHIBITOR_BUILDING") {
+                        matchStats['inhibitors'][event['laneType']] = f;
+                    }
+                }
+
+            }
+            if (event['eventType'] == "ELITE_MONSTER_KILL"){
+                if(((event['killerId'] < 6) && (teamID == 100)) || ((event['killerId'] > 5) && (teamID == 200))){
+                    if(event['monsterType'] == "BARON_NASHOR"){
+                        matchStats['baronNashor'].push(f);
+                    }
+                    if(event['monsterType'] == "DRAGON"){
+                        matchStats['dragon'].push(f);
+                    }
+                    if(event['killerId'] == playerID){
+                        if(event['monsterType'] == "BLUE_GOLEM"){
+                            matchStats['blueGolem'].push(f);
+                        }
+                        if(event['monsterType'] == "RED_LIZARD"){
+                            matchStats['redLizard'].push(f);
+                        }
+                    }
+                }
+            }
+            /* monsters */
+
+        }
+    }
+
+    var whenVWActive = [], whenSWActive = [], whenYTActive = [];
+    for(var m=0; m<gameLength; m++){
+        whenVWActive[m] = 0;
+        whenSWActive[m] = 0;
+        whenYTActive[m] = 0;
+
+        // for each ward type see if it is active at this minute
+        for(var w=0; w<matchStats['visionWardsPlaced'].length; w++){
+            if(matchStats['visionWardsPlaced'][w]>m){
+                break;
+            }
+            if(doesMinuteFallsWithinWard(matchStats['level'][m], m, matchStats['visionWardsPlaced'][w], 'vision')){
+                whenVWActive[m] += 1;
+            }
+        }
+        if(whenVWActive[m]>3){ whenVWActive[m] = 3; }
+
+        for(var w=0; w<matchStats['sightWardsPlaced'].length; w++){
+            if(matchStats['sightWardsPlaced'][w]>m){
+                break;
+            }
+            if(doesMinuteFallsWithinWard(matchStats['level'][m], m, matchStats['sightWardsPlaced'][w], 'sight')){
+                whenSWActive[m] += 1;
+            }
+        }
+        if(whenSWActive[m]>3){ whenSWActive[m] = 3; }
+
+        for(var w=0; w<matchStats['yellowTrinketPlaced'].length; w++){
+            if(matchStats['yellowTrinketPlaced'][w]>m){
+                break;
+            }
+            if(doesMinuteFallsWithinWard(matchStats['level'][m], m, matchStats['yellowTrinketPlaced'][w], 'yellow')){
+                whenYTActive[m] += 1;
+            }
+        }
+        if(whenYTActive[m]>3){ whenYTActive[m] = 3; }
+    }
+    matchStats['visionWardsPlaced'] = whenVWActive;
+    matchStats['sightWardsPlaced'] = whenSWActive;
+    matchStats['yellowTrinketPlaced'] = whenYTActive;
+
+    return matchStats;
+};
+
+router.get('/matchStatistics/:summoner/:matchID', function(req,res,next){
+
+    var api_key = config.api_key;
+    var region ="na";
+    var platformID = "NA1";
+    var host = "https://na.api.pvp.net";
+    var matchPath = "/api/lol/"+region+"/v2.2/match/"+req.params.matchID+"?includeTimeline=true&api_key=";
+
+    //get summonerID
+    https.get(host + matchPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request for name");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                //console.log(obj);
+                var matchStatistics = calcMatchStatistics(obj,req.params.summoner);
+                res.json({matchStatistics:matchStatistics});
+            }
+            else {
+                res.json({"error":"nogame"});
+            }
+        });
+    });
+});
 
 
 module.exports = router;
