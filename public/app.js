@@ -61,7 +61,7 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
 
 }]);
 
-app.controller('CurrentCtrl', ['$scope', 'championStatistics', 'expressApi', function($scope, championStatistics, expressApi) {
+app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStatistics', 'expressApi', function($scope, $interval, $timeout, championStatistics, expressApi) {
     var status = {
         SEARCHING:'wait',
         NO_SUMMONER:'noplayer',
@@ -73,17 +73,40 @@ app.controller('CurrentCtrl', ['$scope', 'championStatistics', 'expressApi', fun
         var id = data.requestedID;
         for (var i = 0; i < data.participants.length; i++){
             var participant = data.participants[i];
-            console.log(participant);
             if (participant.summonerId === id){
                 return participant;
             }
         }
     };
 
+    $scope.searchMade = false;
+
+    var interval;
+    var gameStartTime;
+    var searchText;
+    var user;
+    var updateGameTime = function() {
+        var date = new Date();
+        var gameTime = date.getTime() - gameStartTime;
+        $scope.gameTime = new Date(gameTime);
+    };
+
+    var waitForGameToStart = function(data) {
+        if (data.gameStartTime) {
+            gameStartTime = data.gameStartTime;
+            interval = $interval(updateGameTime, 1000);
+        }
+        else {
+            $timeout(function(){expressApi.getCurrentGame(searchText, waitForGameToStart)}, 10000);
+        }
+    };
+
     var setUpUIForUser = function(data){
-        console.log(data);
-        $scope.user = getParticipant(data);
-        $scope.gameStartTime = data.gameStartTime;
+        searchText = $scope.summonerSearchText;
+        user = getParticipant(data);
+
+        $scope.summonerName = user.summonerName;
+        waitForGameToStart(data);
     };
 
     //callback for current game
@@ -98,6 +121,7 @@ app.controller('CurrentCtrl', ['$scope', 'championStatistics', 'expressApi', fun
         }
         else {
             $scope.searchStatus = "";
+            $scope.searchMade = true;
             setUpUIForUser(data);
         }
     };
@@ -107,5 +131,11 @@ app.controller('CurrentCtrl', ['$scope', 'championStatistics', 'expressApi', fun
         $scope.status = status.SEARCHING;
         expressApi.getCurrentGame($scope.summonerSearchText,setupCurrentGameUI);
     };
+
+
+
+    $scope.$on('$destroy', function() {
+        interval.cancel(stopTime);
+    });
 
 }]);

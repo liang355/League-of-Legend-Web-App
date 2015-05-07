@@ -41,9 +41,9 @@
 
     <body class="wrapper" ng-app="LolApp">
         <div ng-controller="MainCtrl">
-        <span>
+        <div class="siteHeader">
             <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite()">Static</a>
-        </span>
+        </div>
             <div ng-controller="StaticCtrl" ng-show="showStatic">
                 <div class="header">
                     <h1 style="float:left; padding-left:10px;">{{header}}</h1>
@@ -73,9 +73,18 @@
                         <span ng-show="status=='gameloading'">Waiting for game to start</span>
                     </div>
                 </div>
-                <div>
-                    <pre>{{user}}</pre>
-                    <pre>{{gameStartTime}}</pre>
+                <div ng-show="searchMade">
+                    <table class="currentGame">
+                        <td>
+                            <tr>
+                                <div class="summonerName">{{summonerName}}</div>
+                                <div class="currentGameTime">
+                                    <span ng-show="gameTime">{{gameTime | date: 'mm:ss'}}</span>
+                                    <span ng-show="searchMade && !gameTime">Waiting for game to start</span>
+                                </div>
+                            </tr>
+                        </td>
+                    </table>
                 </div>
             </div>
         </div>
