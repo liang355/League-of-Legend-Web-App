@@ -51,11 +51,24 @@ app.factory('expressApi', ['$http', function($http) {
                 console.log("error ", data);
             }
         );
-    }
+    };
+
+    var getCurrentGame = function(summonerName, callback){
+        $http.get('/api/currentGame/'+summonerName)
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+                console.log("error ", data);
+            }
+        );
+    };
+
 
     return {
         getRoles:getRoles,
         getTiers:getTiers,
-        getChampions:getChampions
+        getChampions:getChampions,
+        getCurrentGame:getCurrentGame
     };
 }]);
