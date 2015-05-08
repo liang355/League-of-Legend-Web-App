@@ -44,7 +44,7 @@
         <span>
             <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite()">Static</a>
         </span>
-            <div ng-show="showStatic">
+            <div ng-controller="StaticCtrl" ng-show="showStatic">
                 <div class="header">
                     <h1 style="float:left; padding-left:10px;">{{header}}</h1>
                     <span class="staticForm">
@@ -67,15 +67,17 @@
                 <div id="chart" style="background:white"></div>
                 <button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>
             </div>
-            <div ng-show="showCurrentGame">
-                <form ng-submit="getCurrentGameForSummoner()">
-                    <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText"/>
-                </form>
-                <div ng-show="searchStatus">
-                    <span ng-show="status=='wait'">Searching...</span>
-                    <span ng-show="status=='nosummoner'">No summoner found by that name</span>
-                    <span ng-show="status=='nogame'">Summoner not in game</span>
-                    <span ng-show="status=='gameloading'">Waiting for game to start</span>
+            <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
+                <div class="header">
+                    <form ng-submit="getCurrentGameForSummoner()">
+                        <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText"/>
+                    </form>
+                    <div ng-show="searchStatus">
+                        <span ng-show="status=='wait'">Searching...</span>
+                        <span ng-show="status=='noplayer'">No summoner found by that name</span>
+                        <span ng-show="status=='nogame'">Summoner not in game</span>
+                        <span ng-show="status=='gameloading'">Waiting for game to start</span>
+                    </div>
                 </div>
                 <div>
                     <pre>{{user}}</pre>

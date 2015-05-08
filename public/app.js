@@ -24,6 +24,24 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         $scope.showStatic = false;
     };
 
+
+    $scope.staticSite = function(){
+        $scope.showCurrentGame = false;
+        $scope.showStatic = true;
+    };
+
+    $scope.currentGameSite = function(){
+        $scope.showCurrentGame = true;
+        $scope.showStatic = false;
+    };
+
+
+
+    init();
+}]);
+
+
+app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', function($scope, championStatistics, expressApi) {
     //TODO:rewrite callback to display data however you please
     var doStuffWithData = function(data){
         $scope.data = JSON.stringify(data, null, 4);
@@ -44,20 +62,12 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         championStatistics.getStatistics(dropdown.champion, dropdown.tier, dropdown.role, doStuffWithData);
     };
 
+}]);
 
-    $scope.staticSite = function(){
-        $scope.showCurrentGame = false;
-        $scope.showStatic = true;
-    };
-
-    $scope.currentGameSite = function(){
-        $scope.showCurrentGame = true;
-        $scope.showStatic = false;
-    };
-
+app.controller('CurrentCtrl', ['$scope', 'championStatistics', 'expressApi', function($scope, championStatistics, expressApi) {
     var status = {
         SEARCHING:'wait',
-        NO_SUMMONER:'nosummoner',
+        NO_SUMMONER:'noplayer',
         NO_GAME:'nogame',
         LOADING_GAME:'gameloading'
     };
@@ -101,7 +111,4 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         expressApi.getCurrentGame($scope.summonerSearchText,setupCurrentGameUI);
     };
 
-
-    init();
 }]);
-
