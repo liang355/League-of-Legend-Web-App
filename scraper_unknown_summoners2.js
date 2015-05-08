@@ -111,7 +111,6 @@ var resolveUnknownPlayerTiers = function(currTier){
             var summonerID = summoners['sID'];
 
             var api_key = config.api_key1;
-            console.log(api_key);
             var region = "na";
             var host = "https://na.api.pvp.net";
             var matchPath = "/api/lol/" + region + "/v2.5/league/by-summoner/" + summonerID + "?api_key=";
@@ -133,8 +132,15 @@ var resolveUnknownPlayerTiers = function(currTier){
 						var numeric;
 						for(var q=0; q<obj[summonerID].length; q++){
 							if(obj[summonerID][q]['queue']=="RANKED_SOLO_5x5"){
+                                var p=0;
+                                for(var p=0; p<obj[summonerID][q]['entries'].length; p++){
+                                    if(obj[summonerID][q]['entries'][p]['playerOrTeamId'] == summonerID){
+                                        console.log("summoner found");
+                                        break;
+                                    }
+                                }
 								tier = obj[summonerID][q]['tier'];
-								division = obj[summonerID][q]['entries'][q]['division'];
+								division = obj[summonerID][q]['entries'][p]['division'];
 								numeric = tierN[tier] + divisionN[division];
 							}
 						}
