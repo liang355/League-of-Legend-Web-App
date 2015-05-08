@@ -15,7 +15,7 @@ mongoose.connect(config.db_uri);
 /** MONGOOSE EXAMPLE **/
 var Champion = require('./models/champion.js');
 var SummonerNew = require('./models/summonerNew.js');
-var Match = require('./models/match.js');
+var MatchNew = require('./models/match.js');
 var ChampionStatisticsNew = require('./models/championstatisticsNew.js');
 
 
@@ -668,7 +668,7 @@ var queryMatchFromTier = function(currTier){
 
     try{
         var err = false;
-        Match.findOne({tier:currTier, hasBeenQueried:false}, function(err, match){
+        MatchNew.findOne({tier:currTier, hasBeenQueried:false}, function(err, match){
             if(match == null){
                 console.log(printERR+"queryMatchFromTier, match == null.");
                 return;
