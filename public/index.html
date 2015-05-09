@@ -56,8 +56,8 @@
                 </div>
 
                 <br/><br/><br/>
-                <form ng-submit="getSummonerData()">
-                    <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText_static" required/>
+                <form ng-submit="getLastMatch()">
+                    <input class="input" placeholder="Enter Summoner Name" ng-model="summonerNameSearch" required/>
                 </form>
 
                 <!--CS counter-->
@@ -70,6 +70,7 @@
                 <div id="chart" style="background:white"></div>
                 <button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>
             </div>
+
             <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
                 <div class="currentHeader">
                     <div class="logo">

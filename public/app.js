@@ -56,23 +56,21 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
         //call function from lindGraph.js
         //"data" is the returned object championStatistics
         makeLineGraph(data);
+
         $scope.showStart = true;
         $scope.showCounter = true;
         document.getElementById("cs").innerHTML = "0";
-        console.log(data)
+        console.log(data);
     };
 
     var doStuffWithMatch = function(data){
-
+        championStatistics.getStatistics(data[], data[], data["role"], doStuffWithData);
     };
 
-    $scope.getSummonerData = function(){
-        expressApi.getMatchStatistics($scope.summonerSearchText_static, doStuffWithMatch);
+    $scope.getLastMatch = function(){
+        expressApi.getMatchStatistics($scope.summonerNameSearch, doStuffWithMatch);
     };
 
-    $scope.getData = function(dropdown){
-        championStatistics.getStatistics(dropdown.champion.name, dropdown.tier.id, dropdown.role.id, doStuffWithData);
-    };
 
 }]);
 

@@ -10,7 +10,7 @@ var timeLineLength;
 var cs;
 var rawCS;
 
-var makeLineGraph = function(timeline){
+var makeLineGraph = function(lastData, averageData){
 
     //put "object: array" into "array[array]"
     var timelinedatas = [];
@@ -18,8 +18,8 @@ var makeLineGraph = function(timeline){
         //timeline['currentGold'],
         //timeline['totalGold'],
 
-        timeline['minionsKilled'],
-        timeline['jungleMinionsKilled']
+        timeline['matchStatistics']['minionsKilled'],
+        timeline['matchStatistics']['jungleMinionsKilled']
 
         //timeline['sightWardsPlaced'],
         //timeline['visionWardsPlaced'],
@@ -35,7 +35,7 @@ var makeLineGraph = function(timeline){
         bindto: '#chart',
         data: {
             columns: timelinedatas,
-            hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'visionWardsPlaced', 'yellowTrinketPlaced', 'level'],
+            //hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'visionWardsPlaced', 'yellowTrinketPlaced', 'level'],
             types: {
                 minionsKilled: 'area-spline',
                 jungleMinionsKilled: 'area-spline'
@@ -77,4 +77,3 @@ var makeLineGraph = function(timeline){
 //        }
 //    }, 1000);
 //}
-
