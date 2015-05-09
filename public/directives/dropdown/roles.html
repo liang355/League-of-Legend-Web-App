@@ -1,4 +1,4 @@
-<ui-select ng-model="$parent.selected" theme="select2" reset-search-input="true" style="min-width: 100px;">
+<ui-select ng-model="$parent.selected" theme="select2" on-select="$parent.change($item)" reset-search-input="true" style="min-width: 100px;">
     <ui-select-match style="height:30px; padding-top:5px;" placeholder="Role">
         {{$select.selected.name}}
     </ui-select-match>

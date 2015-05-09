@@ -24,7 +24,8 @@ app.directive('tierDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
-            selected: "=ngModel"
+            selected: "=ngModel",
+            change: "=change"
         },
         templateUrl:'directives/dropdown/tiers.html',
         controller:function($scope){
@@ -40,7 +41,8 @@ app.directive('roleDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
-            selected: "=ngModel"
+            selected: "=ngModel",
+            change: "=change"
         },
         templateUrl:'directives/dropdown/roles.html',
         controller:function($scope){

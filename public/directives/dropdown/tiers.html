@@ -1,4 +1,4 @@
-<ui-select ng-model="$parent.selected" theme="select2" reset-search-input="true" style="min-width: 200px;">
+<ui-select ng-model="$parent.selected" theme="select2" on-select="$parent.change($item)" reset-search-input="true" style="min-width: 200px;">
     <ui-select-match placeholder="Tier" style="height:30px; padding-top:5px;">
         <img height="24" ng-src="/images/tier/{{$select.selected.image}}.png">
         <span style="position:relative; top:-5px">{{$select.selected.name}}</span>

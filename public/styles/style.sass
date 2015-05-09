@@ -6,9 +6,8 @@ $primary-color: #333
 body
   font: 100% $font-stack
   color: $primary-color
-
-.wrapper
-  background-image: url("../images/other/lollipop.jpg")
+  overflow: hidden
+  background-color: black
 
 
 .submitButton
@@ -17,18 +16,57 @@ body
   height: 35px
   font-size: 16px
 
-.header
+.staticHeader
   height: 70px
-  color: white
-  text-align: center
+  color: black
 
 .siteHeader
+  text-align: center
+
+.floatCenter
   text-align: center
 
 .staticForm
   margin-top: 20px
   padding-right: 10px
   float: right
+
+.currentHeader
+  padding-top: 20px
+  height: 70px
+  background-color: currentColor
+
+.searchStatus
+  color: white
+  left: 50%
+  position: absolute
+  top: 80px
+  margin-left: -150px
+  width: 300px
+  text-align: center
+
+.searchBar
+  left: 50%
+  margin-left: -125px
+  position: absolute
+
+.logo
+  float: left
+  color: white
+  padding-left: 15px
+
+.logoTitle
+  font-size: 2em
+
+.activityFeed
+  width: 60%
+  left: 50%
+  margin-left: -30%
+  background-color: dimgray
+
+.benchmarkForm
+  float: left
+  padding: 12px
 
 .input
   height: 24px
@@ -37,16 +75,60 @@ body
   font-size: 1em
   text-align: center
 
-.currentGame
-  background-color: black
-  color: white
+.overflow
+  overflow: hidden
 
 .summonerName
-  font-size: 2em
-  float: left
+  font-size: 2.5em
   position: relative
+  padding: 10px
+
+.profile-img
+  padding: 10px
+
+.profile
+  float: left
+  height: 220px
 
 .currentGameTime
-  font-size: 2em
+  font-size: 1.5em
   float: right
   position: relative
+
+.slide-up
+  -webkit-animation: slideup 1s
+  animation: slideup 1s
+  position: relative
+
+.slide-down
+  -webkit-animation: slidedown 1s
+  animation: slidedown 1s
+  position: relative
+
+.creepCount
+  float: left
+  font-size: 3.0em
+  text-align: center
+
+.wardCount
+  float: left
+  padding: 50px 50px 0px 50px
+  font-size: 3em
+  text-align: center
+
+.statBox
+  padding: 50px 50px 0px 50px
+
+@-webkit-keyframes slideup
+  from
+    top: 1000px
+  to
+    top: 0px
+
+@-webkit-keyframes slidedown
+  0%
+    top: 0px
+    overflow: hidden
+  100%
+    top: 1000px
+    overflow: hidden

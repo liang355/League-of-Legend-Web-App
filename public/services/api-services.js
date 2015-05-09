@@ -1,8 +1,8 @@
 
 
 app.factory('championStatistics', ['$http', function($http){
-    var getStatistics = function(champion, tier, role, callback){
-        $http.get('/api/championStatistics/'+tier.id+'/'+champion.name+'/'+role.id)
+    var getStatistics = function(championName, tierId, roleId, callback){
+        $http.get('/api/championStatistics/'+tierId+'/'+championName+'/'+roleId)
             .success(function(data){
                 callback(data);
             })
@@ -43,7 +43,7 @@ app.factory('expressApi', ['$http', function($http) {
     };
 
     var getChampions = function(callback){
-        $http.get('/api/static/champion')
+        $http.get('/api/static/champions/list')
             .success(function(data){
                 callback(data);
             })
@@ -64,11 +64,46 @@ app.factory('expressApi', ['$http', function($http) {
         );
     };
 
+    var getChampion = function(id, callback){
+        $http.get('/api/static/champion/'+id)
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+               console.log("error", data);
+            }
+        );
+    };
+
+    var getSummoner = function(id, callback){
+        $http.get('/api/summoner/'+id)
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+                console.log("error", data);
+            }
+        );
+    };
+
+    var getRoleCount = function(championName, callback){
+        $http.get('/api/mostRecordedRole/'+championName)
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+                console.log("error", data);
+            }
+        );
+    };
+
 
     return {
         getRoles:getRoles,
         getTiers:getTiers,
         getChampions:getChampions,
-        getCurrentGame:getCurrentGame
+        getChampion:getChampion,
+        getCurrentGame:getCurrentGame,
+        getRoleCount:getRoleCount
     };
 }]);

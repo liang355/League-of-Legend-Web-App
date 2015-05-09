@@ -606,12 +606,35 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
 });
 
 
-router.get('/static/champion', function(req, res, next){
+router.get('/static/champion/:id', function(req, res, next) {
     var api_key = config.api_key;
     var region = "na";
     var host = "https://na.api.pvp.net";
 
     //paths
+    var championPath = "/api/lol/static-data/" + region + "/v1.2/champion/" + req.params.id + "?api_key=";
+
+    https.get(host + championPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                res.json(obj);
+            }
+        });
+    });
+});
+
+router.get('/static/champions/list', function(req, res, next){
+    var api_key = config.api_key;
+    var region = "na";
+    var host = "https://na.api.pvp.net";
+
     var championPath = "/api/lol/static-data/" + region + "/v1.2/champion?api_key=";
 
     https.get(host + championPath + api_key, function (response) {
@@ -625,6 +648,9 @@ router.get('/static/champion', function(req, res, next){
             if (statusCode == 200) {
                 var obj = JSON.parse(output);
                 res.json(obj.data);
+            }
+            else {
+                res.json({error:'something went wrong'});
             }
         });
     });
@@ -648,54 +674,151 @@ router.get('/currentGame/:summoner', function(req, res, next){
 
     var summonerPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+req.params.summoner+"?api_key=";
 
-    //get summonerID
-    https.get(host + summonerPath + api_key, function (response) {
-        var statusCode = response.statusCode;
-        console.log("making request for name");
-        var output = '';
-        response.on("data", function (chunk) {
-            output += chunk;
-        });
-        response.on('end', function () {
-            if (statusCode == 200) {
-                var obj = JSON.parse(output);
-                console.log(obj);
+    var getRanks = function(currentGame){
+        var players = "";
+        for (var i = 0; i < currentGame.participants.length; i++){
+            players = players + currentGame.participants[i].summonerId;
+            if (i+1 < currentGame.participants.length){
+                players = players + ",";
+            }
+        }
+        console.log(players);
 
-
-                for (var summoner in obj){
-                    break;
+        var leaguePath = "/api/lol/"+region+"/v2.5/league/by-summoner/"+players+"?api_key=";
+        https.get(host + leaguePath + api_key, function (response) {
+            var statusCode = response.statusCode;
+            console.log("making request");
+            var output = '';
+            response.on("data", function (chunk) {
+                output += chunk;
+            });
+            response.on('end', function () {
+                if (statusCode == 200) {
+                    var league = JSON.parse(output);
+                    console.log(league);
+                    for (var i = 0; i < currentGame.participants.length; i++){
+                        var summonerId = currentGame.participants[i].summonerId;
+                        currentGame.participants[i].league = league[summonerId];
+                    }
+                    res.json(currentGame);
                 }
-                var summonerID = obj[summoner].id;
-                console.log("go", summonerID);
-                //then get current game
-                var currentGamePath = "/observer-mode/rest/consumer/getSpectatorGameInfo/" + platformID + "/"+summonerID+"?api_key=";
+                else {
+                    res.json(output);
+                }
+            });
+        });
+    };
 
-                https.get(host + currentGamePath + api_key, function (response) {
-                    var statusCode = response.statusCode;
-                    console.log("making request for game");
-                    var output = '';
-                    response.on("data", function (chunk) {
-                        output += chunk;
-                    });
-                    response.on('end', function () {
-                        if (statusCode == 200) {
-                            var obj = JSON.parse(output);
-                            obj.requestedID = summonerID;
-                            obj.requestedName = summoner;
-                            res.json(obj);
+    var getChampions = function(currentGame){
+        var championPath = "/api/lol/static-data/" + region + "/v1.2/champion/?api_key=";
+
+        https.get(host + championPath + api_key, function (response) {
+            var statusCode = response.statusCode;
+            console.log("making request");
+            var output = '';
+            response.on("data", function (chunk) {
+                output += chunk;
+            });
+            response.on('end', function () {
+                if (statusCode == 200) {
+                    var champions = JSON.parse(output).data;
+                    for (var i = 0; i < currentGame.participants.length; i++){
+                        var championId = currentGame.participants[i].championId;
+                        for (var champ in champions){
+                            if (champions[champ].id == championId){
+                                currentGame.participants[i].champion = champions[champ];
+                            }
                         }
-                        else {
-                            res.json({"error":"nogame"});
-                        }
-                    });
-                });
+                    }
+                    getRanks(currentGame);
+                }
+                else {
+                    res.json(output);
+                }
+            });
+        });
+    };
+
+    var getCurrentGame = function(summonerID){
+        console.log("go", summonerID);
+        //then get current game
+        var currentGamePath = "/observer-mode/rest/consumer/getSpectatorGameInfo/" + platformID + "/" + summonerID + "?api_key=";
+
+        https.get(host + currentGamePath + api_key, function (response) {
+            var statusCode = response.statusCode;
+            console.log("making request for game");
+            var output = '';
+            response.on("data", function (chunk) {
+                output += chunk;
+            });
+            response.on('end', function () {
+                if (statusCode == 200) {
+                    var obj = JSON.parse(output);
+                    obj.requestedID = summonerID;
+                    currentGame = obj;
+                    getChampions(currentGame);
+
+                }
+                else {
+                    res.json({"error": "nogame"});
+                }
+            });
+        });
+    };
+
+    var gatherData = function() {
+        //get summonerID
+        https.get(host + summonerPath + api_key, function (response) {
+            var statusCode = response.statusCode;
+            console.log("making request for name");
+            var output = '';
+            response.on("data", function (chunk) {
+                output += chunk;
+            });
+            response.on('end', function () {
+                if (statusCode == 200) {
+                    var obj = JSON.parse(output);
+                    console.log(obj);
+
+                    for (var summoner in obj) {
+                        break;
+                    }
+                    var summonerID = obj[summoner].id;
+                    getCurrentGame(summonerID);
+                }
+                else {
+                    res.json({"error": "noplayer"});
+                }
+            });
+        });
+    };
+
+    gatherData();
+});
+
+
+router.get('/mostRecordedRole/:name', function(req, res, next){
+    console.log("routing");
+    ChampionStatistics.aggregate()
+        .match({name:req.params.name})
+        .group({_id:'$role', count:{$sum: 1}})
+        .sort({count: -1})
+        .limit(1)
+        .exec(
+        function(err, roles) {
+            if (err) {
+                return next(err);
+            }
+            if (roles.length > 0) {
+                res.json(roles);
             }
             else {
-                res.json({"error":"noplayer"});
+                res.json({});
             }
-        });
-    });
+        }
+    );
 });
+
 
 
 

@@ -39,13 +39,13 @@
         <script src="graph/lineGraph.js"></script>
     </head>
 
-    <body class="wrapper" ng-app="LolApp">
+    <body ng-app="LolApp">
         <div ng-controller="MainCtrl">
         <div class="siteHeader">
             <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite()">Static</a>
         </div>
             <div ng-controller="StaticCtrl" ng-show="showStatic">
-                <div class="header">
+                <div class="staticHeader">
                     <h1 style="float:left; padding-left:10px;">{{header}}</h1>
                     <span class="staticForm">
                         <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
@@ -62,29 +62,53 @@
                 <button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>
             </div>
             <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
-                <div class="header">
-                    <form ng-submit="getCurrentGameForSummoner()">
-                        <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText"/>
-                    </form>
-                    <div ng-show="searchStatus">
-                        <span ng-show="status=='wait'">Searching...</span>
-                        <span ng-show="status=='noplayer'">No summoner found by that name</span>
-                        <span ng-show="status=='nogame'">Summoner not in game</span>
-                        <span ng-show="status=='gameloading'">Waiting for game to start</span>
+                <div class="currentHeader">
+                    <div class="logo">
+                        <div class="logoTitle">LB</div>
+                        <div class="tagline">Benchmark your game</div>
+                    </div>
+                    <div class="searchBar">
+                        <form ng-submit="getCurrentGameForSummoner()">
+                            <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText" required/>
+                        </form>
+                    </div>
+                    <div class="searchStatus">
+                        <span>{{status}}</span>
                     </div>
                 </div>
-                <div ng-show="searchMade">
-                    <table class="currentGame">
-                        <td>
-                            <tr>
-                                <div class="summonerName">{{summonerName}}</div>
-                                <div class="currentGameTime">
-                                    <span ng-show="gameTime">{{gameTime | date: 'mm:ss'}}</span>
-                                    <span ng-show="searchMade && !gameTime">Waiting for game to start</span>
-                                </div>
-                            </tr>
-                        </td>
-                    </table>
+                <div class="activityFeed" ng-show="searchMade" ng-class="animateClass">
+                    <div class="profile">
+                        <div class="summonerName">{{summonerName}}</div>
+                        <div class="profile-img"><img height="125px" ng-src="http://ddragon.leagueoflegends.com/cdn/5.7.1/img/champion/{{champion.key}}.png"></div>
+                    </div>
+                    <div class="benchmarkForm">
+                        <div>
+                            <h3>Benchmark League</h3>
+                            <tier-dropdown ng-model="benchmarkLeague" change="setTier"></tier-dropdown>
+                        </div>
+                        <div>
+                            <h3>Current Role</h3>
+                            <role-dropdown own ng-model="benchmarkRole" change="setRole"></role-dropdown>
+                        </div>
+                    </div>
+                    <div class="currentGameTime">
+                        <span ng-show="gameTime">Game Time: {{gameTime | date: 'mm:ss'}}</span>
+                        <span ng-show="searchMade && !gameTime">Waiting for game to start</span>
+                    </div>
+
+                    <div ng-show="showStats" ng-class="animateStatClass">
+                        <div class="creepCount">
+                            Creep Score: {{csCount}}
+                        </div>
+                        <div class="wardCount">
+                            YT img: {{yellowTrinketPlaced}}
+                            sw img: {{sightWardsPlaced}}
+                            vw img: {{visionWardsPlaced}}
+                        </div>
+                        <div>
+                            {{championStatModel}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
