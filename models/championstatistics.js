@@ -68,6 +68,8 @@ var ChampionStatisticsSchema = new mongoose.Schema({
 
 });
 
+//ChampionStatisticsSchema.index({name: 1, tier: 1, role: 1}, {role: 1});
+
 module.exports = mongoose.model('ChampionStatistics', ChampionStatisticsSchema);
 
 

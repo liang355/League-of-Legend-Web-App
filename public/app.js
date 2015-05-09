@@ -161,6 +161,7 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     }
 
     $scope.setTier = function(tier){
+        $scope.benchmarkLeague = tier;
         if ($scope.champion && $scope.benchmarkLeague && $scope.benchmarkRole) {
             championStatistics.getStatistics($scope.champion.name, tier.id, $scope.benchmarkRole.id, setStats);
         }
@@ -168,6 +169,7 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     };
 
     $scope.setRole= function(role){
+        $scope.benchmarkRole = role;
         if ($scope.champion && $scope.benchmarkLeague && $scope.benchmarkRole) {
             championStatistics.getStatistics($scope.champion.name, $scope.benchmarkLeague.id, role.id, setStats);
         }
