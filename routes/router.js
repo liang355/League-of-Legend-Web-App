@@ -8,6 +8,24 @@ var Summoner = require('../models/summoner.js');
 var Match = require('../models/match.js');
 var ChampionStatistics = require('../models/championstatistics.js');
 
+var tierN = {
+    CHALLENGER:0,
+    MASTER:1,
+    DIAMOND:2,
+    PLATINUM:7,
+    GOLD:12,
+    SILVER:17,
+    BRONZE:22
+};
+var divisionN = {
+    I:1,
+    II:2,
+    III:3,
+    IV:4,
+    V:5
+};
+
+
 router.get('/champion/:name', function(req, res, next){
     console.log("routing");
     Champion.findOne({'name':req.params.name}, function(err, champion){
@@ -605,6 +623,21 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
     });
 });
 
+router.get('/championstatistics2/:tierw/:id/:rolew', function(req, res, next){
+    console.log("routing");
+    ChampionStatistics.find({'tier':req.params.tierw, 'name':req.params.id, 'role':req.params.rolew}, function(err, stats){
+        if(err){
+            return next(err);
+        }
+        if (stats.length > 1){
+            var averagedStats = calculateAverages(stats);
+            res.json(averagedStats);
+        }
+        else {
+            res.json({});
+        }
+    });
+});
 
 router.get('/static/champion/:id', function(req, res, next) {
     var api_key = config.api_key;
@@ -838,16 +871,64 @@ var grabSummonerID = function (summonerName, callback){
         response.on('end', function () {
             if (statusCode == 200) {
                 var obj = JSON.parse(output);
-                lookUpMatchHistory(obj[summonerName.toLowerCase()]['id'], summonerName, callback);
+                lookUpSummonerTier(obj[summonerName.toLowerCase()]['id'], summonerName, callback);
             }
             else {
-                console.log("err no game");
+                callback({error:'summoner '+summonerName+' was not found.'});
             }
         });
     });
 };
 
-var lookUpMatchHistory = function(summonerID, summonerName, callback){
+var lookUpSummonerTier = function(summonerId, summonerName, callback){
+    var api_key = config.api_key;
+    var region ="na";
+    var platformID = "NA1";
+    var host = "https://na.api.pvp.net";
+    var matchPath = "/api/lol/"+region+"/v2.5/league/by-summoner/"+summonerId+"?api_key=";
+
+
+    https.get(host + matchPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request for name");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+
+
+                var tier;
+                var division;
+                var numeric;
+                for(var q=0; q<obj[summonerId].length; q++){
+                    if(obj[summonerId][q]['queue']=="RANKED_SOLO_5x5"){
+                        var p=0;
+                        for(p=0; p<obj[summonerId][q]['entries'].length; p++){
+                            if(obj[summonerId][q]['entries'][p]['playerOrTeamId'] == summonerId){
+                                console.log("summoner found");
+                                break;
+                            }
+                        }
+                        tier = obj[summonerId][q]['tier'];
+                        division = obj[summonerId][q]['entries'][p]['division'];
+                        numeric = tierN[tier] + divisionN[division];
+                    }
+                }
+
+                lookUpMatchHistory(summonerId, summonerName, numeric, callback);
+            }
+            else {
+                callback({error:'summoner '+summonerName+' was not found.'});
+            }
+        });
+    });
+};
+
+
+var lookUpMatchHistory = function(summonerID, summonerName, summonerTier, callback){
     var api_key = config.api_key;
     var region ="na";
     var platformID = "NA1";
@@ -868,12 +949,12 @@ var lookUpMatchHistory = function(summonerID, summonerName, callback){
                 var foundGame = false;
                 for(var m=0; m<obj['matches'].length; m++){
                     if(obj['matches'][m]['queueType'] == "RANKED_SOLO_5x5"){
-                        findMatch(obj['matches'][m]['matchId'], summonerName, summonerID, callback);
+                        findMatch(obj['matches'][m]['matchId'], summonerName, summonerID, summonerTier, callback);
                         foundGame = true;
                         break;
                     }
                 }
-                if(!foundGame){ callback({"error":"no ranked games in match history."});}
+                if(!foundGame){ callback({error:"no ranked games in match history."});}
             }
             else {
                 console.log("err no game");
@@ -882,7 +963,7 @@ var lookUpMatchHistory = function(summonerID, summonerName, callback){
     });
 };
 
-var findMatch = function(matchId, summonerName, summonerId,  callback){
+var findMatch = function(matchId, summonerName, summonerId, summonerTier,  callback){
     var api_key = config.api_key;
     var region ="na";
     var platformID = "NA1";
@@ -901,7 +982,7 @@ var findMatch = function(matchId, summonerName, summonerId,  callback){
             if (statusCode == 200) {
                 var obj = JSON.parse(output);
                 //console.log(obj);
-                calcMatchStatistics(obj,summonerName, summonerId, callback);
+                calcMatchStatistics(obj,summonerName, summonerId, summonerTier, callback);
             }
             else {
             }
@@ -909,7 +990,7 @@ var findMatch = function(matchId, summonerName, summonerId,  callback){
     });
 };
 
-var calcMatchStatistics = function(match, summonerName, summonerId, callback){
+var calcMatchStatistics = function(match, summonerName, summonerId, summonerTier, callback){
     var playerID = 0;
     var teamID = 0;
     var participantId = 0;
@@ -927,8 +1008,8 @@ var calcMatchStatistics = function(match, summonerName, summonerId, callback){
         teamID = 200;
     }
 
-    console.log(participantId);
-    console.log(JSON.stringify(match['participants'][0]));
+   // console.log(participantId);
+   // console.log(JSON.stringify(match['participants'][0]));
     //name:match['participants'][participantId-1],
 
     /**
@@ -939,6 +1020,7 @@ var calcMatchStatistics = function(match, summonerName, summonerId, callback){
     var matchStats = {
         id:match['participants'][participantId-1]['championId'],
         role:"",
+        tier: summonerTier,
         gameLength:gameLength,
         assists:match['participants'][participantId-1]['stats']['assists'],
         kills:match['participants'][participantId-1]['stats']['kills'],

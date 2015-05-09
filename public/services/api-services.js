@@ -17,6 +17,22 @@ app.factory('championStatistics', ['$http', function($http){
     };
 }]);
 
+app.factory('championStatistics2', ['$http', function($http){
+    var getStatistics = function(championId, tierId, roleId, callback){
+        $http.get('/api/championStatistics2/'+tierId+'/'+championId+'/'+roleId)
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+                console.log("error ", data);
+            }
+        );
+    };
+
+    return {
+        getStatistics: getStatistics
+    };
+}]);
 
 
 app.factory('expressApi', ['$http', function($http) {
