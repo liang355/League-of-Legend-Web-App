@@ -623,7 +623,7 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
     });
 });
 
-router.get('/championstatistics/:tierw/:id/:rolew', function(req, res, next){
+router.get('/championstatistics2/:tierw/:id/:rolew', function(req, res, next){
     console.log("routing");
     ChampionStatistics.find({'tier':req.params.tierw, 'name':req.params.id, 'role':req.params.rolew}, function(err, stats){
         if(err){
