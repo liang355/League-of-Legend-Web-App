@@ -819,13 +819,103 @@ router.get('/mostRecordedRole/:name', function(req, res, next){
     );
 });
 
-var calcMatchStatistics = function(match, summoner){
+var grabSummonerID = function (summonerName, callback){
+
+    var api_key = config.api_key;
+    var region ="na";
+    var platformID = "NA1";
+    var host = "https://na.api.pvp.net";
+    var matchPath = "/api/lol/"+region+"/v1.4/summoner/by-name/"+summonerName+"?api_key=";
+
+
+    https.get(host + matchPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request for name");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                lookUpMatchHistory(obj[summonerName.toLowerCase()]['id'], summonerName, callback);
+            }
+            else {
+                console.log("err no game");
+            }
+        });
+    });
+};
+
+var lookUpMatchHistory = function(summonerID, summonerName, callback){
+    var api_key = config.api_key;
+    var region ="na";
+    var platformID = "NA1";
+    var host = "https://na.api.pvp.net";
+    var matchPath = "/api/lol/"+region+"/v2.2/matchhistory/"+summonerID+"?api_key=";
+
+
+    https.get(host + matchPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request for name");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                var foundGame = false;
+                for(var m=0; m<obj['matches'].length; m++){
+                    if(obj['matches'][m]['queueType'] == "RANKED_SOLO_5x5"){
+                        findMatch(obj['matches'][m]['matchId'], summonerName, summonerID, callback);
+                        foundGame = true;
+                        break;
+                    }
+                }
+                if(!foundGame){ callback({"error":"no ranked games in match history."});}
+            }
+            else {
+                console.log("err no game");
+            }
+        });
+    });
+};
+
+var findMatch = function(matchId, summonerName, summonerId,  callback){
+    var api_key = config.api_key;
+    var region ="na";
+    var platformID = "NA1";
+    var host = "https://na.api.pvp.net";
+    var matchPath = "/api/lol/"+region+"/v2.2/match/"+matchId+"?includeTimeline=true&api_key=";
+
+    //get summonerID
+    https.get(host + matchPath + api_key, function (response) {
+        var statusCode = response.statusCode;
+        console.log("making request for name");
+        var output = '';
+        response.on("data", function (chunk) {
+            output += chunk;
+        });
+        response.on('end', function () {
+            if (statusCode == 200) {
+                var obj = JSON.parse(output);
+                //console.log(obj);
+                calcMatchStatistics(obj,summonerName, summonerId, callback);
+            }
+            else {
+            }
+        });
+    });
+};
+
+var calcMatchStatistics = function(match, summonerName, summonerId, callback){
     var playerID = 0;
     var teamID = 0;
     var participantId = 0;
     var gameLength =  match['timeline']['frames'].length;
     for(var m = 0; m<match['participantIdentities'].length; m++){
-        if(match['participantIdentities'][m]['player']['summonerName'] == summoner){
+        if(match['participantIdentities'][m]['player']['summonerId'] == summonerId){
             participantId = m+1;
             break;
         }
@@ -837,7 +927,9 @@ var calcMatchStatistics = function(match, summoner){
         teamID = 200;
     }
 
-//name:match['participants'][participantId-1],
+    console.log(participantId);
+    console.log(JSON.stringify(match['participants'][0]));
+    //name:match['participants'][participantId-1],
 
     /**
      * store static stats
@@ -1027,37 +1119,15 @@ var calcMatchStatistics = function(match, summoner){
     matchStats['sightWardsPlaced'] = whenSWActive;
     matchStats['yellowTrinketPlaced'] = whenYTActive;
 
-    return matchStats;
+    callback( matchStats);
 };
 
-router.get('/matchStatistics/:summoner/:matchID', function(req,res,next){
+router.get('/matchStatistics/:summonerName', function(req,res,next){
 
-    var api_key = config.api_key;
-    var region ="na";
-    var platformID = "NA1";
-    var host = "https://na.api.pvp.net";
-    var matchPath = "/api/lol/"+region+"/v2.2/match/"+req.params.matchID+"?includeTimeline=true&api_key=";
-
-    //get summonerID
-    https.get(host + matchPath + api_key, function (response) {
-        var statusCode = response.statusCode;
-        console.log("making request for name");
-        var output = '';
-        response.on("data", function (chunk) {
-            output += chunk;
-        });
-        response.on('end', function () {
-            if (statusCode == 200) {
-                var obj = JSON.parse(output);
-                //console.log(obj);
-                var matchStatistics = calcMatchStatistics(obj,req.params.summoner);
-                res.json({matchStatistics:matchStatistics});
-            }
-            else {
-                res.json({"error":"nogame"});
-            }
-        });
+    grabSummonerID(req.params.summonerName, function(matchStats){
+        res.json({matchStatistics:matchStats});
     });
+
 });
 
 
