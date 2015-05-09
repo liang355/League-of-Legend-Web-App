@@ -552,7 +552,7 @@ var calculateAverages = function(stats){
         averagedStats['minionsKilled'][m+1] = whatIsTheHighestNumber(oneTimeStamp['minionsKilled'], averagedStats['minionsKilled'][m]);
         averagedStats['level'][m+1] = whatIsTheHighestNumber(oneTimeStamp['level'],averagedStats['level'][m]);
         averagedStats['totalGold'][m+1] = whatIsTheHighestNumber(oneTimeStamp['totalGold'], averagedStats['totalGold'][m]);
-        averagedStats['currentGold'][m+1] = whatIsTheHighestNumber(oneTimeStamp['currentGold'],averagedStats['currentGold'][m]);
+        averagedStats['currentGold'][m+1] = oneTimeStamp['currentGold'];
 
 
         if(oneTimeStamp['visionWardsPlaced'] > 1){
