@@ -1,14 +1,8 @@
 body {
   font: 100% Helvetica, sans-serif;
-<<<<<<< HEAD
-  color: #333; }
-.wrapper {
-  background-image: url("../images/other/lollipop.jpg"); }
-=======
   color: #333;
   overflow: hidden;
   background-color: black; }
->>>>>>> d1cf5a272a5f655566e7a8f0b73e962de6373e34
 
 .submitButton {
   top: 2px;
@@ -31,44 +25,6 @@ body {
   padding-right: 10px;
   float: right; }
 
-<<<<<<< HEAD
-
-#csCounter {
-  /* basics */
-  background-color: #444;
-  color: #C4BE92;
-  text-align: center;
-  /* rounded corners */
-  -webkit-border-radius: 12px;
-  border-radius: 12px;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  padding: 0.8em 0.8em 0.8em 0.8em;
-  width: 8em;
-  margin: auto auto 20px auto;
-  -webkit-box-shadow: 0px 0px 12px 0px #000;
-  box-shadow: 0px 0px 12px 0px #000; }
-
-#cs {
-  font-size: 3em;
-  background-color: transparent;
-  text-align: center;
-  border-width: 0;
-  width: 100%;
-  margin: 0 0 0 0;
-  color: #fff; }
-
-label {
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  text-align: center;
-  display: block;
-  font-size: 1em; }
-
-#chart {
-  margin: auto auto 10px auto; }
-=======
 .currentHeader {
   padding-top: 20px;
   height: 70px;
@@ -162,6 +118,42 @@ label {
     top: 1000px; }
   to {
     top: 0px; } }
+#csCounter {
+  /* basics */
+  background-color: #444;
+  color: #C4BE92;
+  text-align: center;
+  /* rounded corners */
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  padding: 0.8em 0.8em 0.8em 0.8em;
+  width: 8em;
+  margin: auto auto 20px auto;
+  -webkit-box-shadow: 0px 0px 12px 0px #000;
+  box-shadow: 0px 0px 12px 0px #000; }
+
+#cs {
+  font-size: 3em;
+  background-color: transparent;
+  text-align: center;
+  border-width: 0;
+  width: 100%;
+  margin: 0 0 0 0;
+  color: #fff; }
+
+label {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-align: center;
+  display: block;
+  font-size: 1em; }
+
+#chart {
+  margin: auto auto 10px auto; }
+
 @-webkit-keyframes slidedown {
   0% {
     top: 0px;
@@ -169,6 +161,5 @@ label {
   100% {
     top: 1000px;
     overflow: hidden; } }
->>>>>>> d1cf5a272a5f655566e7a8f0b73e962de6373e34
 
 /*# sourceMappingURL=style.css.map */

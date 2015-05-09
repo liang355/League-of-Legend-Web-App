@@ -97,6 +97,16 @@ app.factory('expressApi', ['$http', function($http) {
         );
     };
 
+    var getMatchStatistics = function(summonerName, callback){
+        $http.get('/api/matchStatistics/'+summonerName)
+            .success(function(data){
+                callback(data);
+            })
+            .error(function(data){
+                console.log("error", data);
+            }
+        );
+    };
 
     return {
         getRoles:getRoles,
@@ -104,6 +114,7 @@ app.factory('expressApi', ['$http', function($http) {
         getChampions:getChampions,
         getChampion:getChampion,
         getCurrentGame:getCurrentGame,
-        getRoleCount:getRoleCount
+        getRoleCount:getRoleCount,
+        getMatchStatistics: getMatchStatistics
     };
 }]);

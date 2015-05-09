@@ -50,6 +50,9 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
             print("NO STATS FUR DAT!");
             return;
         }
+        if(data['error']){
+            print(data['error']);
+        }
         //call function from lindGraph.js
         //"data" is the returned object championStatistics
         makeLineGraph(data);
@@ -57,6 +60,14 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
         $scope.showCounter = true;
         document.getElementById("cs").innerHTML = "0";
         console.log(data)
+    };
+
+    var doStuffWithMatch = function(data){
+
+    };
+
+    $scope.getSummonerData = function(){
+        expressApi.getMatchStatistics($scope.summonerSearchText_static, doStuffWithMatch);
     };
 
     $scope.getData = function(dropdown){
