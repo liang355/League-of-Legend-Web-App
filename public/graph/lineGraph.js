@@ -33,7 +33,12 @@ var makeLineGraph = function(timeline){
         bindto: '#chart',
         data: {
             columns: timelinedatas,
-            hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'visionWardsPlaced', 'yellowTrinketPlaced', 'level']
+            hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'visionWardsPlaced', 'yellowTrinketPlaced', 'level'],
+            types: {
+                minionsKilled: 'area-spline',
+                jungleMinionsKilled: 'area-spline'
+            },
+            groups: [['minionsKilled', 'jungleMinionsKilled']]
         }
     });
 
@@ -44,7 +49,6 @@ var makeLineGraph = function(timeline){
 
     //get the length of timeline
     timeLineLength = timelinedatas[0].length - 1;
-    console.log(timeline);
 };
 
 //function that updates the position of xgrid

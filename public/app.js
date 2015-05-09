@@ -56,6 +56,7 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
         $scope.showStart = true;
         $scope.showCounter = true;
         document.getElementById("cs").innerHTML = "0";
+        console.log(data)
     };
 
     $scope.getData = function(dropdown){
