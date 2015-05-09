@@ -841,7 +841,7 @@ var grabSummonerID = function (summonerName, callback){
                 lookUpMatchHistory(obj[summonerName.toLowerCase()]['id'], summonerName, callback);
             }
             else {
-                console.log("err no game");
+                callback({error:'summoner '+summonerName+' was not found.'});
             }
         });
     });
@@ -873,7 +873,7 @@ var lookUpMatchHistory = function(summonerID, summonerName, callback){
                         break;
                     }
                 }
-                if(!foundGame){ callback({"error":"no ranked games in match history."});}
+                if(!foundGame){ callback({error:"no ranked games in match history."});}
             }
             else {
                 console.log("err no game");
@@ -927,8 +927,8 @@ var calcMatchStatistics = function(match, summonerName, summonerId, callback){
         teamID = 200;
     }
 
-    console.log(participantId);
-    console.log(JSON.stringify(match['participants'][0]));
+   // console.log(participantId);
+   // console.log(JSON.stringify(match['participants'][0]));
     //name:match['participants'][participantId-1],
 
     /**
