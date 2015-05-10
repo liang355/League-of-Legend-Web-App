@@ -35,7 +35,6 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
     };
 
     $scope.setChampion = function(){
-        console.log("broadcast");
         $scope.$broadcast("setChampionDropdown", {name: "Katarina"});
     };
 
@@ -127,19 +126,25 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     $scope.benchmarkLeague = {};
     $scope.benchmarkRole = {};
     var setSummonerInfo = function(data, summonerId){
-        var tier, division, numeric, image, name;
-        for(var q=0; q<data.length; q++){
-            if(data[q]['queue']=="RANKED_SOLO_5x5"){
-                tier = data[q]['tier'];
-                for (var i = 0; i < data[q]['entries'].length; i++){
-                    var id = data[q]['entries'][i].playerOrTeamId;
-                    if (id == summonerId){
-                        division = data[q]['entries'][i]['division'];
-                        break;
+        var numeric;
+        if (!data){
+            numeric = 1;
+        }
+        else {
+            var tier, division, image, name;
+            for (var q = 0; q < data.length; q++) {
+                if (data[q]['queue'] == "RANKED_SOLO_5x5") {
+                    tier = data[q]['tier'];
+                    for (var i = 0; i < data[q]['entries'].length; i++) {
+                        var id = data[q]['entries'][i].playerOrTeamId;
+                        if (id == summonerId) {
+                            division = data[q]['entries'][i]['division'];
+                            break;
+                        }
                     }
+                    numeric = tierN[tier] + divisionN[division];
+                    break;
                 }
-                numeric = tierN[tier] + divisionN[division];
-                break;
             }
         }
         for (var i = 0; i < $scope.tiers.length; i++){
@@ -150,10 +155,18 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     };
 
     var setStats = function(data){
-        $scope.championStatModel = data;
-        $scope.animateStatClass = "slide-up";
-        $scope.showStats = true;
-        $scope.status = "";
+        $timeout(function(){
+            console.log("here", data);
+            if (data.id) {
+                $scope.championStatModel = data;
+                $scope.animateStatClass = "slide-up";
+                $scope.showStats = true;
+                $scope.status = "";
+            }
+            else {
+                $scope.status = "No benchmarks for this role";
+            }
+        }, 1000);
     };
 
     var statsOut = function(){
@@ -211,9 +224,10 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
         for (var i = 1; i < $scope.championStatModel.dragon.length; i++){
             if ((i % 2) !== 0){
                 var dragonTime = $scope.championStatModel.dragon[i];
+                var actualTime = time.getMinutes() + percentageOfAMinute;
                 count++;
-                if (time.getMinutes() < dragonTime){
-                    $scope.dragonTime = formatMinutes(dragonTime - (time.getMinutes() + percentageOfAMinute));
+                if (actualTime < dragonTime){
+                    $scope.dragonTime = formatMinutes(dragonTime - actualTime);
                     break;
                 }
             }
@@ -227,8 +241,8 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
             if ((i % 2) !== 0){
                 var baronTime = $scope.championStatModel.baronNashor[i];
                 count++;
-                if (time.getMinutes() < baronTime){
-                    $scope.baronTime = formatMinutes(baronTime - (time.getMinutes() + percentageOfAMinute));
+                if (actualTime < baronTime){
+                    $scope.baronTime = formatMinutes(baronTime - actualTime);
                     break;
                 }
             }
