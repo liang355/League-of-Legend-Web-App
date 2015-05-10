@@ -4,7 +4,7 @@ app.directive('championDropdown', ['expressApi', function(expressApi){
     return {
         restrict: 'E',
         scope:{
-            selected: "=ngModel"
+            selected: "=ngModel",
         },
         templateUrl:'directives/dropdown/champions.html',
         controller:function($scope){
@@ -15,6 +15,19 @@ app.directive('championDropdown', ['expressApi', function(expressApi){
                     champions.push(data[key]);
                 }
                 $scope.champions = champions;
+            });
+
+            var setChampion = function(name){
+                for (var i = 0; i < $scope.champions.length; i++){
+                    if ($scope.champions[i].name === name){
+                        $scope.selected = $scope.champions[i];
+                    }
+                }
+            };
+
+            $scope.$on("setChampionDropdown", function(event, arg){
+                console.log("here2");
+                setChampion(arg.name);
             });
         }
     };
