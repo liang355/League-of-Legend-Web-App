@@ -625,7 +625,7 @@ router.get('/championstatistics/:tierw/:name/:rolew', function(req, res, next){
 
 router.get('/championstatistics2/:tierw/:id/:rolew', function(req, res, next){
     console.log("routing");
-    ChampionStatistics.find({'tier':req.params.tierw, 'name':req.params.id, 'role':req.params.rolew}, function(err, stats){
+    ChampionStatistics.find({'tier':req.params.tierw, 'id':req.params.id, 'role':req.params.rolew}, function(err, stats){
         if(err){
             return next(err);
         }
@@ -1046,17 +1046,17 @@ var calcMatchStatistics = function(match, summonerName, summonerId, summonerTier
         outerTurrets:{ TOP_LANE:['Top Outer Turret'], MID_LANE:['Middle Outer Turret'], BOT_LANE:['Bottom Outer Turret']},
         nexusTurrets:{ TOP_LANE:['Top Nexus Turret'], MID_LANE:['Middle Nexus Turret'], BOT_LANE:['Bottom Nexus Turret']},
         inhibitors:{ TOP_LANE:['Top Inhibitor'], MID_LANE:['Middle Inhibitor'], BOT_LANE:['Bottom Inhibitor']},
-        dragon:['Dragon'],
-        baronNashor:['Baron Nashor'],
+        dragon:['Dragon Last'],
+        baronNashor:['Baron Nashor Last'],
 
-        visionWardsPlaced : ['visionWardsPlaced'],
-        sightWardsPlaced : ['sightWardsPlaced'],
-        yellowTrinketPlaced : ['yellowTrinketPlaced'],
-        jungleMinionsKilled : ['jungleMinionsKilled'],
-        minionsKilled : ['minionsKilled'],
-        level : ['level'],
-        totalGold : ['totalGold'],
-        currentGold : ['currentGold']
+        visionWardsPlaced : ['visionWardsPlaced Last'],
+        sightWardsPlaced : ['sightWardsPlaced Last'],
+        yellowTrinketPlaced : ['yellowTrinketPlaced Last'],
+        jungleMinionsKilled : ['jungleMinionsKilled Last'],
+        minionsKilled : ['minionsKilled Last'],
+        level : ['level Last'],
+        totalGold : ['totalGold Last'],
+        currentGold : ['currentGold Last']
     };
 
     /**

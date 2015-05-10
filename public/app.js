@@ -43,33 +43,49 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
 
 app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', function($scope, championStatistics, expressApi) {
     //TODO:rewrite callback to display data however you please
-    var doStuffWithData = function(data){
-        $scope.data = JSON.stringify(data, null, 4);
+    var doStuffWithData = function(dataLast, dataAvg){
+        $scope.data = JSON.stringify(dataLast, null, 4);
 
-        if(!data){ //WHY NO U WARK????? RAWR!!!!! ANGURY!!!!
+        if(!dataLast){ //WHY NO U WARK????? RAWR!!!!! ANGURY!!!!
             print("NO STATS FUR DAT!");
             return;
         }
-        if(data['error']){
-            print(data['error']);
+        if(dataLast['error']){
+            print(dataLast['error']);
         }
         //call function from lindGraph.js
         //"data" is the returned object championStatistics
-        makeLineGraph(data);
+        $scope.dropdown.champion.name = dataAvg['name'];
+        $scope.dropdown.tier.id = dataAvg['tier'];
+        $scope.dropdown.role.id = dataAvg['role'];
+
+        console.log(dataAvg['name']);
+
+        makeLineGraph(dataLast, dataAvg);
 
         $scope.showStart = true;
         $scope.showCounter = true;
         document.getElementById("cs").innerHTML = "0";
-        console.log(data);
     };
 
-    var doStuffWithMatch = function(data){
-        championStatistics.getStatistics(data[], data[], data["role"], doStuffWithData);
+    var getAverageData = function(dataLast){
+        if(dataLast["matchStatistics"]['error']){
+            console.log(dataLast["matchStatistics"]['error']);
+        }
+        else{
+            expressApi.getAvgStatistics(dataLast["matchStatistics"]["id"], dataLast["matchStatistics"]["tier"], dataLast["matchStatistics"]["role"], dataLast, doStuffWithData);
+        }
+
     };
 
-    $scope.getLastMatch = function(){
-        expressApi.getMatchStatistics($scope.summonerNameSearch, doStuffWithMatch);
+    $scope.getLastData = function(){
+        console.log($scope.summonerNameSearch);
+        expressApi.getLastStatistics($scope.summonerNameSearch, getAverageData);
     };
+
+    $scope.getDropDownData = function(dropdown){
+        championStatistics.getStatistics(dropdown.champion.name, dropdown.tier.id, dropdown.role.id, doStuffWithData);
+    }
 
 
 }]);

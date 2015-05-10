@@ -51,14 +51,14 @@
                         <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
                         <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
                         <role-dropdown ng-model="dropdown.role"></role-dropdown>
-                        <button class="submitButton"ng-click="getData(dropdown)">Submit</button>
+                        <button class="submitButton"ng-click="getDropDownData(dropdown)">Submit</button>
                     </span>
                 </div>
 
-                <br/><br/><br/>
-                <form ng-submit="getLastMatch()">
+                <form ng-submit="getLastData()">
                     <input class="input" placeholder="Enter Summoner Name" ng-model="summonerNameSearch" required/>
                 </form>
+                <br/><br/><br/>
 
                 <!--CS counter-->
                 <div id="csCounter" ng-show="showCounter">

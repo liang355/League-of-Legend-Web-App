@@ -17,23 +17,6 @@ app.factory('championStatistics', ['$http', function($http){
     };
 }]);
 
-app.factory('championStatistics2', ['$http', function($http){
-    var getStatistics = function(championId, tierId, roleId, callback){
-        $http.get('/api/championStatistics2/'+tierId+'/'+championId+'/'+roleId)
-            .success(function(data){
-                callback(data);
-            })
-            .error(function(data){
-                console.log("error ", data);
-            }
-        );
-    };
-
-    return {
-        getStatistics: getStatistics
-    };
-}]);
-
 
 app.factory('expressApi', ['$http', function($http) {
     var getRoles = function(callback) {
@@ -113,13 +96,24 @@ app.factory('expressApi', ['$http', function($http) {
         );
     };
 
-    var getMatchStatistics = function(summonerName, callback){
+    var getLastStatistics = function(summonerName, callback){
         $http.get('/api/matchStatistics/'+summonerName)
             .success(function(data){
                 callback(data);
             })
             .error(function(data){
                 console.log("error", data);
+            }
+        );
+    };
+
+    var getAvgStatistics = function(championId, tierId, roleId, dataLast, callback){
+        $http.get('/api/championStatistics2/'+tierId+'/'+championId+'/'+roleId)
+            .success(function(data){
+                callback(dataLast, data);
+            })
+            .error(function(data){
+                console.log("error ", data);
             }
         );
     };
@@ -131,6 +125,7 @@ app.factory('expressApi', ['$http', function($http) {
         getChampion:getChampion,
         getCurrentGame:getCurrentGame,
         getRoleCount:getRoleCount,
-        getMatchStatistics: getMatchStatistics
+        getLastStatistics: getLastStatistics,
+        getAvgStatistics: getAvgStatistics
     };
 }]);
