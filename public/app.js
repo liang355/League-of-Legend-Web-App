@@ -34,6 +34,10 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         $scope.showStatic = false;
     };
 
+    $scope.setChampion = function(){
+        console.log("broadcast");
+        $scope.$broadcast("setChampionDropdown", {name: "Katarina"});
+    };
 
 
     init();
@@ -190,6 +194,55 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
         expressApi.getRoleCount($scope.champion.name, setRole)
     };
 
+    var formatMinutes = function(minutes){
+        var actualMinute = Math.floor(minutes);
+        var percentOfAMinute = minutes - actualMinute;
+        var seconds = Math.round(percentOfAMinute * 60);
+        if (seconds < 10){
+            seconds = "0"+seconds;
+        }
+        return actualMinute + ":" + seconds;
+    };
+
+    var updateDragonAndBaron = function(time){
+        var percentageOfAMinute = time.getSeconds() / 60;
+        //dragon
+        var count = 0;
+        for (var i = 1; i < $scope.championStatModel.dragon.length; i++){
+            if ((i % 2) !== 0){
+                var dragonTime = $scope.championStatModel.dragon[i];
+                count++;
+                if (time.getMinutes() < dragonTime){
+                    $scope.dragonTime = formatMinutes(dragonTime - (time.getMinutes() + percentageOfAMinute));
+                    break;
+                }
+            }
+        }
+        $scope.dragonCount = count;
+
+
+        //baron
+        var count = 0;
+        for (var i = 1; i < $scope.championStatModel.baronNashor.length; i++){
+            if ((i % 2) !== 0){
+                var baronTime = $scope.championStatModel.baronNashor[i];
+                count++;
+                if (time.getMinutes() < baronTime){
+                    $scope.baronTime = formatMinutes(baronTime - (time.getMinutes() + percentageOfAMinute));
+                    break;
+                }
+            }
+        }
+        $scope.baronCount = count;
+    };
+
+    var updateLevel = function(time){
+        var getUpperBound = $scope.championStatModel.level[time.getMinutes()+2];
+        var getLowerBound = $scope.championStatModel.level[time.getMinutes()+1];
+        var getPercentage = time.getSeconds() / 60;
+        $scope.level = Math.round(getLowerBound + (getPercentage * (getUpperBound - getLowerBound)));
+    }
+
     var updateWardCount = function(time){
         $scope.yellowTrinketPlaced = $scope.championStatModel.yellowTrinketPlaced[time.getMinutes()+1];
         $scope.sightWardsPlaced = $scope.championStatModel.sightWardsPlaced[time.getMinutes()+1];
@@ -197,10 +250,16 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     };
 
     var updateCSCount = function(time){
+        //lane
         var getUpperBound = $scope.championStatModel.minionsKilled[time.getMinutes()+2];
         var getLowerBound = $scope.championStatModel.minionsKilled[time.getMinutes()+1];
         var getPercentage = time.getSeconds() / 60;
-        $scope.csCount = Math.round(getLowerBound + (getPercentage * (getUpperBound - getLowerBound)));
+        $scope.laneCount = Math.round(getLowerBound + (getPercentage * (getUpperBound - getLowerBound)));
+
+        //jg
+        getUpperBound = $scope.championStatModel.jungleMinionsKilled[time.getMinutes()+2];
+        getLowerBound = $scope.championStatModel.jungleMinionsKilled[time.getMinutes()+1];
+        $scope.jgCount = Math.round(getLowerBound + (getPercentage * (getUpperBound - getLowerBound)));
     };
 
     var updateGameTime = function() {
@@ -210,6 +269,8 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
         if ($scope.championStatModel) {
             updateCSCount($scope.gameTime);
             updateWardCount($scope.gameTime);
+            updateDragonAndBaron($scope.gameTime);
+            updateLevel($scope.gameTime);
         }
     };
 

@@ -80,8 +80,7 @@ body {
 
 .profile {
   border: solid black;
-  padding: 10px;
-  width: 100%; }
+  padding: 10px; }
 
 .currentGameLine {
   top: -15px;
@@ -108,18 +107,13 @@ body {
   animation: slidedown 1s;
   position: relative; }
 
-.creepCount {
-  float: left;
-  font-size: 3em;
-  text-align: center; }
-
-.wardCount {
-  float: left;
-  font-size: 3em;
-  text-align: center; }
+.imageHeight {
+  height: 64px; }
 
 .statBox {
-  padding: 50px 50px 0px 50px; }
+  padding: 50px 50px 0px 50px;
+  border: solid black;
+  text-align: center; }
 
 @-webkit-keyframes slideup {
   from {

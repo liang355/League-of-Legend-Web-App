@@ -42,13 +42,13 @@
     <body ng-app="LolApp">
         <div ng-controller="MainCtrl" class="wrapper">
         <div class="siteHeader">
-            <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite()">Static</a>
+            <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite(); setChampion()">Static</a>
         </div>
             <div ng-controller="StaticCtrl" ng-show="showStatic">
                 <div class="staticHeader">
                     <h1 style="float:left; padding-left:10px;">{{header}}</h1>
                     <span class="staticForm">
-                        <champion-dropdown ng-model="dropdown.champion"></champion-dropdown>
+                        <champion-dropdown ng-model="dropdown.champion" set="set"></champion-dropdown>
                         <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
                         <role-dropdown ng-model="dropdown.role"></role-dropdown>
                         <button class="submitButton"ng-click="getData(dropdown)">Submit</button>
@@ -64,8 +64,8 @@
         <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
             <div class="currentHeader">
                 <div class="logo">
-                    <div class="logoTitle">LB</div>
-                    <div class="tagline">Benchmark your game</div>
+                    <div class="logoTitle">LeagueBenchmark</div>
+                    <div class="tagline">Play at the next level</div>
                 </div>
                 <div class="searchBar">
                     <form ng-submit="getCurrentGameForSummoner()">
@@ -98,13 +98,28 @@
                 </div>
 
                 <div ng-show="showStats" ng-class="animateStatClass">
-                    <div class="creepCount statBox">
-                        Creep Score: {{csCount}}
+                    <div class="statBox">
+                        CS: {{laneCount + jgCount}}
+                        <span>
+                            jungle: {{jgCount}}
+                        </span>
+                        <span>
+                            lane: {{laneCount}}
+                        </span>
                     </div>
-                    <div class="wardCount statBox">
-                        YT img: {{yellowTrinketPlaced}}
-                        sw img: {{sightWardsPlaced}}
-                        vw img: {{visionWardsPlaced}}
+                    <div class="statBox">
+                        <img src="../images/other/Warding_Totem_item.jpg">: {{yellowTrinketPlaced}}
+                        <img style="height:64px" src="../images/other/sightward.png">: {{sightWardsPlaced}}
+                        <img src="../images/other/Vision_Ward.png">: {{visionWardsPlaced}}
+                    </div>
+                    <div class="statBox">
+                        <img class="imageHeight" src="../images/other/DragonSquare.png">:{{dragonCount}}
+                        ({{dragonTime}})
+                        <img class="imageHeight" src="../images/other/Baron_NashorSquare.png">: {{baronCount}}
+                        ({{baronTime}})
+                    </div>
+                    <div class="statBox">
+                        Level: {{level}}
                     </div>
 
                 </div>
