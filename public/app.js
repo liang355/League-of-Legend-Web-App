@@ -35,9 +35,11 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         $scope.showStatic = false;
     };
 
-    $scope.setChampion = function(){
-        console.log("broadcast");
-        $scope.$broadcast("setChampionDropdown", {name: "Katarina"});
+    $scope.setChampion = function(name){
+        $scope.$broadcast("setChampionDropdown", {name: name});
+    };
+    $scope.setTier = function(id){
+        $scope.$broadcast("setTierDropdown", {id: id});
     };
 
 
@@ -59,17 +61,15 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
         }
         //call function from lindGraph.js
         //"data" is the returned object championStatistics
-        $scope.dropdown.champion.name = dataAvg['name'];
-        $scope.dropdown.tier.id = dataAvg['tier'];
-        $scope.dropdown.role.id = dataAvg['role'];
 
-        console.log(dataAvg['name']);
+        $scope.setChampion(dataAvg['name']);
+
 
         makeLineGraph(dataLast, dataAvg);
 
         $scope.showStart = true;
         $scope.showCounter = true;
-        document.getElementById("cs").innerHTML = "0";
+
     };
 
     var getAverageData = function(dataLast){
@@ -83,7 +83,6 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
     };
 
     $scope.getLastData = function(){
-        console.log($scope.summonerNameSearch);
         expressApi.getLastStatistics($scope.summonerNameSearch, getAverageData);
     };
 

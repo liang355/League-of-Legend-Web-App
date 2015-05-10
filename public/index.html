@@ -46,29 +46,35 @@
         </div>
             <div ng-controller="StaticCtrl" ng-show="showStatic">
                 <div class="staticHeader">
-                    <h1 style="float:left; padding-left:10px;">{{header}}</h1>
+                    <!--<h1 style="float:left; padding-left:10px;">{{header}}</h1>-->
+
                     <span class="staticForm">
                         <champion-dropdown ng-model="dropdown.champion" set="set"></champion-dropdown>
                         <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
                         <role-dropdown ng-model="dropdown.role"></role-dropdown>
-                        <button class="submitButton"ng-click="getDropDownData(dropdown)">Submit</button>
+                        <button class="submitButton" ng-click="getDropDownData(dropdown)">Submit</button>
                     </span>
                 </div>
-
                 <form ng-submit="getLastData()">
                     <input class="input" placeholder="Enter Summoner Name" ng-model="summonerNameSearch" required/>
+                    <!--<button class="submitButton" ng-click="getLastData()">Submit</button>-->
                 </form>
+
                 <br/><br/><br/>
 
-                <!--CS counter-->
-                <div id="csCounter" ng-show="showCounter">
-                    <label for="cs">Creep Score:</label>
-                    <p id="cs">0</p>
-                </div>
+                <!--&lt;!&ndash;CS counter&ndash;&gt;-->
+                <!--<div class="csCounter" ng-show="showCounter">-->
+                    <!--<label>Creep Score:</label>-->
+                    <!--<p class="cs">0</p>-->
+                <!--</div>-->
+                <!--<div class="csCounter" ng-show="showCounter">-->
+                    <!--<label>Creep Score:</label>-->
+                    <!--<p class="cs">0</p>-->
+                <!--</div>-->
 
                 <!--line chart-->
                 <div id="chart" style="background:white"></div>
-                <button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>
+                <!--<button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>-->
         </div>
         <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
             <div class="currentHeader">
@@ -85,22 +91,7 @@
                     <span>{{status}}</span>
                 </div>
             </div>
-<<<<<<< HEAD
 
-            <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
-                <div class="currentHeader">
-                    <div class="logo">
-                        <div class="logoTitle">LB</div>
-                        <div class="tagline">Benchmark your game</div>
-                    </div>
-                    <div class="searchBar">
-                        <form ng-submit="getCurrentGameForSummoner()">
-                            <input class="input" placeholder="Enter Summoner Name" ng-model="summonerSearchText" required/>
-                        </form>
-                    </div>
-                    <div class="searchStatus">
-                        <span>{{status}}</span>
-=======
             <div class="activityFeed" ng-show="searchMade" ng-class="animateClass">
                 <div class="profile">
                     <div class="summonerName">{{summonerName}}</div>
@@ -119,7 +110,6 @@
                                 <tier-dropdown ng-model="benchmarkLeague" change="setTier"></tier-dropdown>
                             </span>
                         </span>
->>>>>>> 77a94efbac438c930b040a935300181d824d382c
                     </div>
                 </div>
 

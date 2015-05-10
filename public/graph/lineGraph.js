@@ -15,23 +15,23 @@ var makeLineGraph = function(dataLast, dataAvg){
     //put "object: array" into "array[array]"
     var timelinedatas = [];
     timelinedatas.push(
-        //timeline['currentGold'],
-        //timeline['totalGold'],
-
         dataLast['matchStatistics']['minionsKilled'],
         dataAvg['minionsKilled']
 
+        //timeline['currentGold'],
+        //timeline['totalGold'],
         //timeline['sightWardsPlaced'],
         //timeline['visionWardsPlaced'],
         //timeline['yellowTrinketPlaced'],
         //timeline['level']
     );
 
+    var lengthLast = dataLast['matchStatistics']['minionsKilled'].length;
+    var lengthAvg = dataAvg['minionsKilled'].length
+
+    dataAvg['minionsKilled'].splice(lengthLast, lengthAvg - lengthLast);
     console.log(dataLast);
     console.log(dataAvg);
-
-    ////export CS to global variable "cs"
-    //cs = timeline['minionsKilled'];
 
     //generate chart
     chart = c3.generate({
@@ -43,7 +43,15 @@ var makeLineGraph = function(dataLast, dataAvg){
                 minionsKilled: 'area-spline',
                 'minionsKilled Last': 'area-spline'
             },
-            groups: [['minionsKilled', 'jungleMinionsKilled']]
+            names: {
+                minionsKilled: 'CS - Average Stat',
+                'minionsKilled Last': 'CS - Your Last Game'
+            },
+            colors: {
+                minionsKilled: '#fdae6b',
+                'minionsKilled Last': '#a63603'
+            },
+            groups: [['minionsKilled', 'minionsKilled Last']]
         }
     });
 
