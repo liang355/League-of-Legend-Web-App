@@ -35,7 +35,7 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         $scope.showStatic = false;
     };
 
-<<<<<<< HEAD
+
     $scope.setChampion = function(name){
         $scope.$broadcast("setChampionDropdown", {name: name});
     };
@@ -44,10 +44,6 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
     };
     $scope.setRole = function(id){
         $scope.$broadcast("setRoleDropdown", {id: id});
-=======
-    $scope.setChampion = function(){
-        $scope.$broadcast("setChampionDropdown", {name: "Katarina"});
->>>>>>> 0c8fc871938777686ee1b8aa45d63cbdc27b45d5
     };
 
 
@@ -98,7 +94,7 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
     };
 
     $scope.getDropDownData = function(dropdown){
-        championStatistics.getStatistics(dropdown.champion.name, dropdown.tier.id, dropdown.role.id, doStuffWithData);
+        championStatistics.getStatistics(dropdown.champion.name, dropdown.tier.id, dropdown.role.id, d2eoStuffWithData);
     }
 
 
