@@ -35,14 +35,17 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         $scope.showStatic = false;
     };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b1b41e4f0c938792f5102b46a83695e64c4eb3e
     $scope.setChampion = function(name){
         $scope.$broadcast("setChampionDropdown", {name: name});
     };
     $scope.setTier = function(id){
         $scope.$broadcast("setTierDropdown", {id: id});
     };
-    $scope.setRole = function(id){
+    $scope.setRole = function(id) {
         $scope.$broadcast("setRoleDropdown", {id: id});
     };
 
@@ -296,7 +299,7 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     var updateWardCount = function(time){
         $scope.yellowTrinketPlaced = $scope.championStatModel.yellowTrinketPlaced[time.getMinutes()+1];
         $scope.sightWardsPlaced = $scope.championStatModel.sightWardsPlaced[time.getMinutes()+1];
-        $scope.sightWardsPlaced = $scope.championStatModel.sightWardsPlaced[time.getMinutes()+1];
+        $scope.visionWardsPlaced = $scope.championStatModel.visionWardsPlaced[time.getMinutes()+1];
     };
 
     var updateCSCount = function(time){

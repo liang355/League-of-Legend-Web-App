@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 Error: Undefined variable: "$primary-color".
         on line 13 of style.sass
@@ -68,3 +69,246 @@ body:before {
   white-space: pre;
   font-family: monospace;
   content: "Error: Undefined variable: \"$primary-color\".\A         on line 13 of style.sass\A \A 8: \A 9: \A 10: //styling the body\A 11: body\A 12:   font: 100% $font-stack\A 13:   color: $primary-color\A 14:   //overflow: hidden\A 15:   background: rgb(31, 17, 17)\A 16: \A 17: .submitButton\A 18:   top: 2px"; }
+=======
+body {
+  font: 100% Helvetica, sans-serif;
+  background: black; }
+
+.submitButton {
+  top: 2px;
+  position: relative;
+  height: 35px;
+  font-size: 16px; }
+
+.staticHeader {
+  margin-top: 20px;
+  height: 70px;
+  color: black; }
+
+.siteHeader {
+  text-align: center; }
+
+.floatCenter {
+  text-align: center; }
+
+.summonerInputBox {
+  float: left; }
+
+.staticForm {
+  padding-right: 10px;
+  float: right; }
+
+.currentHeader {
+  padding-top: 20px;
+  height: 70px;
+  background-color: #1D1D1D;
+  border: #4a4a4a solid;
+  border-width: 1px; }
+
+.searchStatus {
+  color: white;
+  left: 50%;
+  position: absolute;
+  top: 80px;
+  margin-left: -150px;
+  width: 300px;
+  text-align: center; }
+
+.searchBar {
+  left: 50%;
+  margin-left: -125px;
+  position: absolute; }
+
+.logo {
+  float: left;
+  color: white;
+  padding-left: 15px; }
+
+.logoTitle {
+  font-size: 2em; }
+
+.activityFeed {
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px; }
+
+.stats {
+  margin-top: 10px; }
+
+.currentClass {
+  color: white; }
+
+.benchmarkForm {
+  float: left;
+  padding: 12px; }
+
+.input {
+  height: 24px;
+  width: 250px;
+  border-radius: 5px;
+  font-size: 1em;
+  text-align: center; }
+
+.overflow {
+  overflow: hidden; }
+
+.summonerName {
+  font-size: 2.5em;
+  position: relative;
+  padding: 10px;
+  background-color: #1d1d1d;
+  border: black solid;
+  border-width: 1px; }
+
+.profile-img {
+  padding: 10px; }
+
+.profile {
+  padding: 10px;
+  background-color: #222222;
+  border: #4a4a4a solid;
+  border-width: 1px; }
+
+.currentGameLine {
+  top: -15px;
+  position: relative;
+  margin-top: 5px;
+  margin-right: 20px; }
+
+.floatLeft {
+  float: left; }
+
+.floatRight {
+  float: right; }
+
+.paddingRight {
+  padding-right: 210px; }
+
+.currentGameTime {
+  font-size: 1.5em;
+  float: right;
+  position: relative; }
+
+.laneCount {
+  font-size: 0.4em;
+  float: left; }
+
+.jgCount {
+  font-size: 0.4em;
+  float: right; }
+
+.slide-up {
+  -webkit-animation: slideup 1s;
+  animation: slideup 1s;
+  position: relative; }
+
+.slide-down {
+  -webkit-animation: slidedown 1s;
+  animation: slidedown 1s;
+  position: relative; }
+
+.imageHeight {
+  height: 64px; }
+
+.statBox {
+  padding: 50px 50px 0px 50px;
+  text-align: center;
+  font-size: 3em;
+  margin-bottom: 10px;
+  height: 70px; }
+
+.role {
+  margin-left: 10px; }
+
+.wrapper {
+  overflow: hidden;
+  height: 900px; }
+
+.blackBox {
+  background: #1d1d1d;
+  margin-left: auto;
+  margin-right: auto;
+  width: 34%;
+  min-width: 300px;
+  padding: 50px;
+  border-radius: 10px;
+  border: #4a4a4a solid;
+  border-width: 1px; }
+
+.inline-block {
+  display: inline-block; }
+
+.overflowAuto {
+  overflow: auto; }
+
+.leftBox {
+  padding-top: 10px;
+  margin-right: 80px; }
+
+.visionWard {
+  margin-right: 60px; }
+
+.rightBox {
+  padding-top: 10px; }
+
+.littleFont {
+  font-size: 0.7em; }
+
+.bigFont {
+  font-size: 1.2em; }
+
+@-webkit-keyframes slideup {
+  from {
+    top: 1000px;
+    overflow: hidden; }
+  to {
+    top: 0px;
+    overflow: hidden; } }
+.csCounter {
+  /* basics */
+  background-color: #444;
+  color: #C4BE92;
+  text-align: center;
+  /* rounded corners */
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  padding: 0.8em 0.8em 0.8em 0.8em;
+  width: 8em;
+  margin: auto auto 20px auto;
+  -webkit-box-shadow: 0px 0px 12px 0px #000;
+  box-shadow: 0px 0px 12px 0px #000; }
+
+.cs {
+  font-size: 3em;
+  background-color: transparent;
+  text-align: center;
+  border-width: 0;
+  width: 100%;
+  margin: 0 0 0 0;
+  color: #fff; }
+
+label {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-align: center;
+  display: block;
+  font-size: 1em; }
+
+#chart {
+  margin: auto auto 10px auto; }
+
+@-webkit-keyframes slidedown {
+  0% {
+    top: 0px;
+    overflow: hidden; }
+  100% {
+    top: 1000px;
+    overflow: hidden; } }
+
+/*# sourceMappingURL=style.css.map */
+>>>>>>> 0b1b41e4f0c938792f5102b46a83695e64c4eb3e
