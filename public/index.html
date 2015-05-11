@@ -79,7 +79,7 @@
                 <div id="chartWard" style="background:white"></div>
                 <!--<button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>-->
         </div>
-        <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">
+        <div class="currentClass" ng-controller="CurrentCtrl" ng-show="showCurrentGame">
             <div class="currentHeader">
                 <div class="logo">
                     <div class="logoTitle">LeagueBenchmark</div>
@@ -99,48 +99,70 @@
                 <div class="profile">
                     <div class="summonerName">{{summonerName}}</div>
                     <div>
-                        <span><img height="50px" ng-src="http://ddragon.leagueoflegends.com/cdn/5.7.1/img/champion/{{champion.key}}.png"></span>
-                        <span class="currentGameLine">
-                            <span>{{champion.name}}(
-                                <span ng-show="gameTime">{{gameTime | date: 'mm:ss'}}</span>
-                                <span ng-show="searchMade && !gameTime">Waiting for game to start</span>
-                                )
+                        <div><img height="50px" ng-src="http://ddragon.leagueoflegends.com/cdn/5.7.1/img/champion/{{champion.key}}.png">
+                            <span class="currentGameLine paddingRight">
+                                <span>{{champion.name}}
+                                    <span ng-show="gameTime">({{gameTime | date: 'mm:ss'}})</span>
+                                    <span ng-show="searchMade && !gameTime">Waiting for game to start</span>
+                                </span>
+                                <span>
+                                    <role-dropdown ng-model="benchmarkRole" change="setRole"></role-dropdown>
+                                </span>
                             </span>
-                            <span>
-                                <role-dropdown ng-model="benchmarkRole" change="setRole"></role-dropdown>
+                            <span class="currentGameLine inline-block">
+                                <span>
+                                    Benchmark League:
+                                    <tier-dropdown ng-model="benchmarkLeague" change="setTier"></tier-dropdown>
+                                </span>
                             </span>
-                            <span>Benchmark League:
-                                <tier-dropdown ng-model="benchmarkLeague" change="setTier"></tier-dropdown>
-                            </span>
-                        </span>
+                        </div>
                     </div>
                 </div>
 
-                <div ng-show="showStats" ng-class="animateStatClass">
-                    <div class="statBox">
-                        CS: {{laneCount + jgCount}}
-                        <span>
-                            jungle: {{jgCount}}
-                        </span>
-                        <span>
-                            lane: {{laneCount}}
-                        </span>
-                    </div>
-                    <div class="statBox">
-                        <img src="../images/other/Warding_Totem_item.jpg">: {{yellowTrinketPlaced}}
-                        <img style="height:64px" src="../images/other/sightward.png">: {{sightWardsPlaced}}
-                        <img src="../images/other/Vision_Ward.png">: {{visionWardsPlaced}}
-                    </div>
-                    <div class="statBox">
-                        <img class="imageHeight" src="../images/other/DragonSquare.png">:{{dragonCount}}
-                        ({{dragonTime}})
-                        <img class="imageHeight" src="../images/other/Baron_NashorSquare.png">: {{baronCount}}
-                        ({{baronTime}})
-                    </div>
-                    <div class="statBox">
-                        Level: {{level}}
+                <div class="stats" ng-show="showStats" ng-class="animateStatClass">
+                    <div class="overflowAuto">
+                        <div class="statBox blackBox floatLeft leftBox">
+                            <div class="bigFont">CS: {{laneCount + jgCount}}</div>
+                            <div>
+                                <span class="laneCount">
+                                    lane: {{laneCount}}
+                                </span>
+                                <span class="jgCount">
+                                    jungle: {{jgCount}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="statBox blackBox floatLeft rightBox">
+                            <div class="level">
+                                Level: {{level}}
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="statBox blackBox floatLeft leftBox">
+                        <span class="floatLeft littleFont visionWard">
+                            <div><img src="../images/other/Vision_Ward.png"></div>
+                            {{visionWardsPlaced}}
+                        </span>
+                        <span class="floatRight littleFont">
+                            <div><img src="../images/other/Warding_Totem_item.jpg"></div>
+                            {{yellowTrinketPlaced}}
+                        </span>
+                        <span class="littleFont floatLeft">
+                            <div><img class="imageHeight" src="../images/other/sightward.png"></div>
+                            {{sightWardsPlaced}}
+                        </span>
+                    </div>
+                    <div class="statBox blackBox floatLeft rightBox">
+                        <span class="floatLeft littleFont">
+                            <div><img class="imageHeight" src="../images/other/DragonSquare.png"></div>
+                            {{dragonCount}}({{dragonTime}})
+                        </span>
+                        <span class="floatRight littleFont">
+                            <div><img class="imageHeight" src="../images/other/Baron_NashorSquare.png"></div>
+                            {{baronCount}}({{baronTime}})
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

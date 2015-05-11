@@ -1,13 +1,21 @@
 // variables
 $font-stack: Helvetica, sans-serif
-$primary-color: #333
+$panel-color: rgb(34, 34, 34)
+$light-border: rgb(74, 74, 74) solid
+
+$inner-panel:rgb(29, 29, 29)
+$dark-border: black solid
 
 
 //styling the body
 body
   font: 100% $font-stack
+<<<<<<< HEAD
   color: $primary-color
   //overflow: hidden
+=======
+  background: rgb(31, 17, 17)
+>>>>>>> 0c8fc871938777686ee1b8aa45d63cbdc27b45d5
 
 .submitButton
   top: 2px
@@ -36,7 +44,8 @@ body
 .currentHeader
   padding-top: 20px
   height: 70px
-  background-color: #333
+  background-color: #1D1D1D
+
 
 .searchStatus
   color: white
@@ -61,9 +70,17 @@ body
   font-size: 2em
 
 .activityFeed
-  width: 60%
-  left: 50%
-  margin-left: -30%
+  width: 100%
+  max-width: 900px
+  margin-left: auto
+  margin-right: auto
+  margin-top: 10px
+
+.stats
+  margin-top: 10px
+
+.currentClass
+  color: white
 
 .benchmarkForm
   float: left
@@ -83,17 +100,22 @@ body
   font-size: 2.5em
   position: relative
   padding: 10px
+  background-color: $inner-panel
+  border: $dark-border
 
 .profile-img
   padding: 10px
 
 .profile
-  border: solid black
   padding: 10px
+  background-color: $panel-color
+  border: $light-border
 
 .currentGameLine
   top: -15px
   position: relative
+  margin-top: 5px
+  margin-right: 20px
 
 .floatLeft
   float: left
@@ -101,10 +123,22 @@ body
 .floatRight
   float: right
 
+.paddingRight
+  padding-right: 210px
+
 .currentGameTime
   font-size: 1.5em
   float: right
   position: relative
+
+.laneCount
+  font-size: 0.4em
+  float: left
+
+
+.jgCount
+  font-size: 0.4em
+  float: right
 
 .slide-up
   -webkit-animation: slideup 1s
@@ -121,14 +155,56 @@ body
 
 .statBox
   padding: 50px 50px 0px 50px
-  border: solid black
   text-align: center
+  font-size: 3.0em
+  margin-bottom: 10px
+  height: 70px
+
+.role
+  margin-left: 10px
+
+.wrapper
+  overflow: hidden
+  height: 900px
+
+.blackBox
+  background: #1d1d1d
+  margin-left: auto
+  margin-right: auto
+  width: 35%
+  min-width: 300px
+  padding: 50px
+  border-radius: 10px
+
+.inline-block
+  display: inline-block
+
+.overflowAuto
+  overflow: auto
+
+.leftBox
+  padding-top: 10px
+  margin-right: 70px
+
+.visionWard
+  margin-right: 60px
+
+.rightBox
+  padding-top: 10px
+
+.littleFont
+  font-size: .7em
+
+.bigFont
+  font-size: 1.2em
 
 @-webkit-keyframes slideup
   from
     top: 1000px
+    overflow: hidden
   to
     top: 0px
+    overflow: hidden
 
 //Styling Static Page
 
