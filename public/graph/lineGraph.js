@@ -12,6 +12,11 @@ var chart;
 
 var makeLineGraphCS = function(dataLast, dataAvg){
 
+    //cut-off graphs
+    var lengthLast = dataLast['matchStatistics']['minionsKilled'].length;
+    var lengthAvg = dataAvg['minionsKilled'].length;
+    dataAvg['minionsKilled'].splice(lengthLast, lengthAvg - lengthLast);
+
     //put "object: array" into "array[array]"
     var timeLineData = [];
     timeLineData.push(
@@ -20,10 +25,8 @@ var makeLineGraphCS = function(dataLast, dataAvg){
 
     );
 
-    //cut-off graphs
-    var lengthLast = dataLast['matchStatistics']['minionsKilled'].length;
-    var lengthAvg = dataAvg['minionsKilled'].length;
-    dataAvg['minionsKilled'].splice(lengthLast, lengthAvg - lengthLast);
+    console.log(dataLast['matchStatistics']['minionsKilled']);
+    console.log(dataAvg['minionsKilled']);
 
 
     //generate chart
@@ -33,18 +36,17 @@ var makeLineGraphCS = function(dataLast, dataAvg){
             columns: timeLineData,
             //hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'sightWardsPlaced', 'yellowTrinketPlaced', 'level'],
             types: {
-                minionsKilled: 'area-spline',
-                'minionsKilled Last': 'area-spline'
+                minionsKilled: 'area',
+                'minionsKilled Last': 'area'
             },
             names: {
                 minionsKilled: 'CS - Average Stat',
                 'minionsKilled Last': 'CS - Your Last Game'
             },
             colors: {
-                minionsKilled: '#fdae6b',
-                'minionsKilled Last': '#a63603'
-            },
-            groups: [['minionsKilled', 'minionsKilled Last']]
+                minionsKilled: '#a63603',
+                'minionsKilled Last': '#fdae6b'
+            }
         }
     });
 
@@ -60,8 +62,10 @@ var makeLineGraphCS = function(dataLast, dataAvg){
 
 var makeLineGraphWard = function(dataLast, dataAvg){
 
-    console.log(dataLast);
-    console.log(dataAvg);
+    //cut off graph
+    var lengthLast = dataLast['matchStatistics']['sightWardsPlaced'].length;
+    var lengthAvg = dataAvg['sightWardsPlaced'].length;
+    dataAvg['sightWardsPlaced'].splice(lengthLast, lengthAvg - lengthLast);
 
     //put "object: array" into "array[array]"
     var timeLineData = [];
@@ -70,11 +74,11 @@ var makeLineGraphWard = function(dataLast, dataAvg){
         dataAvg['sightWardsPlaced']
     );
 
-    //cut off graph
-    var lengthLast = dataLast['matchStatistics']['sightWardsPlaced'].length;
-    var lengthAvg = dataAvg['sightWardsPlaced'].length;
-    dataAvg['sightWardsPlaced'].splice(lengthLast, lengthAvg - lengthLast);
+    console.log(dataLast['matchStatistics']['sightWardsPlaced']);
+    console.log(dataAvg['sightWardsPlaced']);
 
+    console.log(dataLast);
+    console.log(dataAvg);
 
     //generate chart
     chart = c3.generate({
@@ -92,8 +96,7 @@ var makeLineGraphWard = function(dataLast, dataAvg){
             colors: {
                 sightWardsPlaced: '#bae4b3',
                 'sightWardsPlaced Last': '#006d2c'
-            },
-            groups: [['sightWardsPlaced', 'sightWardsPlaced Last']]
+            }
         }
     });
 };

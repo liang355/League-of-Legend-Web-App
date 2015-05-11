@@ -35,10 +35,7 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
         $scope.showStatic = false;
     };
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 0b1b41e4f0c938792f5102b46a83695e64c4eb3e
     $scope.setChampion = function(name){
         $scope.$broadcast("setChampionDropdown", {name: name});
     };
