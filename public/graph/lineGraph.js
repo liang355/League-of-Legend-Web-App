@@ -5,40 +5,33 @@
 var x;
 var i;
 var chart;
-var theInterval;
-var timeLineLength;
-var cs;
-var rawCS;
+//var theInterval;
+//var timeLineLength;
+//var cs;
+//var rawCS;
 
-var makeLineGraph = function(dataLast, dataAvg){
+var makeLineGraphCS = function(dataLast, dataAvg){
 
     //put "object: array" into "array[array]"
-    var timelinedatas = [];
-    timelinedatas.push(
+    var timeLineData = [];
+    timeLineData.push(
         dataLast['matchStatistics']['minionsKilled'],
         dataAvg['minionsKilled']
 
-        //timeline['currentGold'],
-        //timeline['totalGold'],
-        //timeline['sightWardsPlaced'],
-        //timeline['visionWardsPlaced'],
-        //timeline['yellowTrinketPlaced'],
-        //timeline['level']
     );
 
+    //cut-off graphs
     var lengthLast = dataLast['matchStatistics']['minionsKilled'].length;
-    var lengthAvg = dataAvg['minionsKilled'].length
-
+    var lengthAvg = dataAvg['minionsKilled'].length;
     dataAvg['minionsKilled'].splice(lengthLast, lengthAvg - lengthLast);
-    console.log(dataLast);
-    console.log(dataAvg);
+
 
     //generate chart
     chart = c3.generate({
-        bindto: '#chart',
+        bindto: '#chartCS',
         data: {
-            columns: timelinedatas,
-            //hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'visionWardsPlaced', 'yellowTrinketPlaced', 'level'],
+            columns: timeLineData,
+            //hide: ['currentGold', 'totalGold', 'sightWardsPlaced', 'sightWardsPlaced', 'yellowTrinketPlaced', 'level'],
             types: {
                 minionsKilled: 'area-spline',
                 'minionsKilled Last': 'area-spline'
@@ -62,6 +55,47 @@ var makeLineGraph = function(dataLast, dataAvg){
 
     ////get the length of timeline
     //timeLineLength = timelinedatas[0].length - 1;
+};
+
+
+var makeLineGraphWard = function(dataLast, dataAvg){
+
+    console.log(dataLast);
+    console.log(dataAvg);
+
+    //put "object: array" into "array[array]"
+    var timeLineData = [];
+    timeLineData.push(
+        dataLast['matchStatistics']['sightWardsPlaced'],
+        dataAvg['sightWardsPlaced']
+    );
+
+    //cut off graph
+    var lengthLast = dataLast['matchStatistics']['sightWardsPlaced'].length;
+    var lengthAvg = dataAvg['sightWardsPlaced'].length;
+    dataAvg['sightWardsPlaced'].splice(lengthLast, lengthAvg - lengthLast);
+
+
+    //generate chart
+    chart = c3.generate({
+        bindto: '#chartWard',
+        data: {
+            columns: timeLineData,
+            types: {
+                sightWardsPlaced: 'area-step',
+                'sightWardsPlaced Last': 'area-step'
+            },
+            names: {
+                sightWardsPlaced: 'Sight Wards - Average Stat',
+                'sightWardsPlaced Last': 'Sight Wards - Your Last Game'
+            },
+            colors: {
+                sightWardsPlaced: '#bae4b3',
+                'sightWardsPlaced Last': '#006d2c'
+            },
+            groups: [['sightWardsPlaced', 'sightWardsPlaced Last']]
+        }
+    });
 };
 
 ////function that updates the position of xgrid

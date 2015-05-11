@@ -44,10 +44,13 @@
         <div class="siteHeader">
             <a href="" ng-click="currentGameSite()">Current Game</a>|<a href="" ng-click="staticSite(); setChampion()">Static</a>
         </div>
-            <div ng-controller="StaticCtrl" ng-show="showStatic">
+            <div class="staticBody" ng-controller="StaticCtrl" ng-show="showStatic">
                 <div class="staticHeader">
                     <!--<h1 style="float:left; padding-left:10px;">{{header}}</h1>-->
-
+                    <form class="summonerInputBox" ng-submit="getLastData()">
+                        <input class="input" placeholder="Enter Summoner Name" ng-model="summonerNameSearch" required/>
+                        <!--<button class="submitButton" ng-click="getLastData()">Submit</button>-->
+                    </form>
                     <span class="staticForm">
                         <champion-dropdown ng-model="dropdown.champion" set="set"></champion-dropdown>
                         <tier-dropdown ng-model="dropdown.tier"></tier-dropdown>
@@ -55,10 +58,7 @@
                         <button class="submitButton" ng-click="getDropDownData(dropdown)">Submit</button>
                     </span>
                 </div>
-                <form ng-submit="getLastData()">
-                    <input class="input" placeholder="Enter Summoner Name" ng-model="summonerNameSearch" required/>
-                    <!--<button class="submitButton" ng-click="getLastData()">Submit</button>-->
-                </form>
+
 
                 <br/><br/><br/>
 
@@ -73,7 +73,10 @@
                 <!--</div>-->
 
                 <!--line chart-->
-                <div id="chart" style="background:white"></div>
+                <h2></h2>
+                <div id="chartCS" style="background:white"></div>
+                <h2></h2>
+                <div id="chartWard" style="background:white"></div>
                 <!--<button id="start" onclick="gridAnimate()" ng-show="showStart">start</button>-->
         </div>
         <div ng-controller="CurrentCtrl" ng-show="showCurrentGame">

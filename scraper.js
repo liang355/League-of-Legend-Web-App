@@ -823,7 +823,7 @@ var storeStats = function(stats, tier) {
                 timeline[f]['visionWardsPlaced'] = oneTimeStamp['visionWardsPlaced'];
                 timeline[f]['sightWardsPlaced'] = oneTimeStamp['sightWardsPlaced'];
                 timeline[f]['yellowTrinketPlaced'] = oneTimeStamp['yellowTrinketPlaced'];
-                //console.log(" oneTimeStamp['visionWardsPlaced']= "+ oneTimeStamp['visionWardsPlaced']);
+                //console.log(" oneTimeStamp['sightWardsPlaced']= "+ oneTimeStamp['sightWardsPlaced']);
             }
 
 
@@ -864,7 +864,7 @@ var storeStats = function(stats, tier) {
 
          timeline: [{
          minute:Number,
-         visionWardsPlaced:Number,
+         sightWardsPlaced:Number,
          sightWardsPlaced:Number,
          jungleMinionsKilled:Number,
          minionsKilled:Number,

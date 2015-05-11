@@ -1049,7 +1049,7 @@ var calcMatchStatistics = function(match, summonerName, summonerId, summonerTier
         dragon:['Dragon Last'],
         baronNashor:['Baron Nashor Last'],
 
-        visionWardsPlaced : ['visionWardsPlaced Last'],
+        visionWardsPlaced : ['sightWardsPlaced Last'],
         sightWardsPlaced : ['sightWardsPlaced Last'],
         yellowTrinketPlaced : ['yellowTrinketPlaced Last'],
         jungleMinionsKilled : ['jungleMinionsKilled Last'],
@@ -1160,11 +1160,11 @@ var calcMatchStatistics = function(match, summonerName, summonerId, summonerTier
         }
     }
 
-    var whenVWActive = [], whenSWActive = [], whenYTActive = [];
+    var whenVWActive = ['visionWardsPlaced Last'], whenSWActive = ['sightWardsPlaced Last'], whenYTActive = ['yellowTrinketPlaced Last'];
     for(var m=0; m<gameLength; m++){
-        whenVWActive[m] = 0;
-        whenSWActive[m] = 0;
-        whenYTActive[m] = 0;
+        whenVWActive[m+1] = 0;
+        whenSWActive[m+1] = 0;
+        whenYTActive[m+1] = 0;
 
         // for each ward type see if it is active at this minute
         for(var w=0; w<matchStats['visionWardsPlaced'].length; w++){
@@ -1172,34 +1172,36 @@ var calcMatchStatistics = function(match, summonerName, summonerId, summonerTier
                 break;
             }
             if(doesMinuteFallsWithinWard(matchStats['level'][m], m, matchStats['visionWardsPlaced'][w], 'vision')){
-                whenVWActive[m] += 1;
+                whenVWActive[m+1] += 1;
             }
         }
-        if(whenVWActive[m]>3){ whenVWActive[m] = 3; }
+        if(whenVWActive[m+1]>3){ whenVWActive[m+1] = 3; }
 
         for(var w=0; w<matchStats['sightWardsPlaced'].length; w++){
             if(matchStats['sightWardsPlaced'][w]>m){
                 break;
             }
             if(doesMinuteFallsWithinWard(matchStats['level'][m], m, matchStats['sightWardsPlaced'][w], 'sight')){
-                whenSWActive[m] += 1;
+                whenSWActive[m+1] += 1;
             }
         }
-        if(whenSWActive[m]>3){ whenSWActive[m] = 3; }
+        if(whenSWActive[m+1]>3){ whenSWActive[m+1] = 3; }
 
         for(var w=0; w<matchStats['yellowTrinketPlaced'].length; w++){
             if(matchStats['yellowTrinketPlaced'][w]>m){
                 break;
             }
             if(doesMinuteFallsWithinWard(matchStats['level'][m], m, matchStats['yellowTrinketPlaced'][w], 'yellow')){
-                whenYTActive[m] += 1;
+                whenYTActive[m+1] += 1;
             }
         }
-        if(whenYTActive[m]>3){ whenYTActive[m] = 3; }
+        if(whenYTActive[m+1]>3){ whenYTActive[m+1] = 3; }
     }
+
     matchStats['visionWardsPlaced'] = whenVWActive;
     matchStats['sightWardsPlaced'] = whenSWActive;
     matchStats['yellowTrinketPlaced'] = whenYTActive;
+
 
     callback( matchStats);
 };

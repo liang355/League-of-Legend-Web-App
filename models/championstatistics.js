@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 
 //var Timeline = new mongoose.Schema({
 //    minute:Number,
-//    visionWardsPlaced:Number,
+//    sightWardsPlaced:Number,
 //    sightWardsPlaced:Number,
 //    yellowTrinketPlaced: Number,
 //    jungleMinionsKilled:Number,

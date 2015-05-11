@@ -290,7 +290,7 @@ var storeStats = function(stats) {
          //stored per player
          blue:[],
          red:[],
-         visionWardsPlaced:[],
+         sightWardsPlaced:[],
          sightWardsPlaced:[],
          yellowTrinketPlaced: [],
          jungleMinionsKilled:[],
@@ -609,12 +609,12 @@ var storeStats = function(stats) {
                 //    //    console.log(k+":"+eventsPerPlayerPerTimestamp[f]['yellowtrinket'][k]);
                 //    //}
                 //    //console.log("};");
-                //    oneTimeStamp['visionWardsPlaced'] = eventsPerPlayerPerTimestamp[f]['visionwards'][p];
+                //    oneTimeStamp['sightWardsPlaced'] = eventsPerPlayerPerTimestamp[f]['visionwards'][p];
                 //    oneTimeStamp['sightWardsPlaced'] = eventsPerPlayerPerTimestamp[f]['sightwards'][p];
                 //    oneTimeStamp['yellowTrinketPlaced'] = eventsPerPlayerPerTimestamp[f]['yellowtrinket'][p];
                 //}
                 //else {
-                //    oneTimeStamp['visionWardsPlaced'] = 0;
+                //    oneTimeStamp['sightWardsPlaced'] = 0;
                 //    oneTimeStamp['sightWardsPlaced'] = 0;
                 //    oneTimeStamp['yellowTrinketPlaced'] = 0;
                 //}

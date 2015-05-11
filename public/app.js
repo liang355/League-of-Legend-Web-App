@@ -41,6 +41,9 @@ app.controller('MainCtrl', ['$scope', 'championStatistics', 'expressApi', functi
     $scope.setTier = function(id){
         $scope.$broadcast("setTierDropdown", {id: id});
     };
+    $scope.setRole = function(id){
+        $scope.$broadcast("setRoleDropdown", {id: id});
+    };
 
 
     init();
@@ -63,12 +66,15 @@ app.controller('StaticCtrl', ['$scope', 'championStatistics', 'expressApi', func
         //"data" is the returned object championStatistics
 
         $scope.setChampion(dataAvg['name']);
+        $scope.setTier(dataAvg['tier']);
+        $scope.setRole(dataAvg['role']);
 
 
-        makeLineGraph(dataLast, dataAvg);
+        makeLineGraphCS(dataLast, dataAvg);
+        makeLineGraphWard(dataLast, dataAvg);
 
-        $scope.showStart = true;
-        $scope.showCounter = true;
+        //$scope.showStart = true;
+        //$scope.showCounter = true;
 
     };
 
@@ -274,7 +280,7 @@ app.controller('CurrentCtrl', ['$scope', '$interval', '$timeout', 'championStati
     var updateWardCount = function(time){
         $scope.yellowTrinketPlaced = $scope.championStatModel.yellowTrinketPlaced[time.getMinutes()+1];
         $scope.sightWardsPlaced = $scope.championStatModel.sightWardsPlaced[time.getMinutes()+1];
-        $scope.visionWardsPlaced = $scope.championStatModel.visionWardsPlaced[time.getMinutes()+1];
+        $scope.sightWardsPlaced = $scope.championStatModel.sightWardsPlaced[time.getMinutes()+1];
     };
 
     var updateCSCount = function(time){
