@@ -1,5 +1,5 @@
 # League-of-Legend-Web-App
-# Time: May 2015
+<p>Time: May 2015</p>
 <p>Author: Holland Herbert, Yingbin Liang, Cullen Prestegard</p>
 <p>An web application for benchmarking timeline statistics in game</p>
 
