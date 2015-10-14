@@ -1,3 +1,6 @@
+# League-of-Legend-Web-App
+An web application for benchmarking timeline statistics in game
+
 <h1>Lol App Setup</h1>
 <h2>config/config.js</h2>
 <p>You will need to open this file up and enter your username and password for the mongolab database as well as providing the Riot API key.<p>
@@ -22,6 +25,7 @@ bower.json </p>
 <p> <b> Test Webpage: </b> in browser 'localhost:1337'
 <p> If the server does not serve a webpage open 'server.js'
 and navigate to the comment labeled 'IMPORTANT' </p>
+
 
 
 
