@@ -1,5 +1,5 @@
 # League-of-Legend-Web-App
-<p>May 2015</p>
+<p>April 2015</p>
 <p>Author: Holland Herbert, Yingbin Liang, Cullen Prestegard</p>
 <p>This is an web application aims to provide benchmarking timeline statistics in online game League of Legends. The whole project consists of two applications: <b>the web app</b> and <b>the scrapper app</b>. Only the web application is hosted in this repository because this is the part I contributed to</p>
 
