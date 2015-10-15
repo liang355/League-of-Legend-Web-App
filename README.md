@@ -1,7 +1,8 @@
 # League-of-Legend-Web-App
 <p>May 2015</p>
 <p>Author: Holland Herbert, Yingbin Liang, Cullen Prestegard</p>
-<p>An web application for benchmarking timeline statistics in game</p>
+<p>This is an web application aims to provide benchmarking timeline statistics in online game League of Legends</p>
+<p>For more information, please visit the project page on my website/portfolio: http://www.yingbinliang.com/#!lol-page/c1p8</p>
 
 
 <h1>Lol App Setup</h1>
